@@ -9,6 +9,9 @@ def add_fed(feds):
 
 def rmfed(feds):
     fed.delete_one({"fed": feds})
+    
+def rm_all_fed():
+    fed.delete_many()
 
 
 def get_all_feds():
