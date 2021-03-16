@@ -1,2 +1,3 @@
 wikipedia
 pytgcalls
+pyromod>=1.5
