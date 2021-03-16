@@ -30,7 +30,7 @@ async def free_fbans(client, message):
     
 @friday_on_cmd(['frm', 'rmfed'])
 async def paid_fbans(client, message):
-    uj = await edit_or_reply(message, "`Adding Fed To Database!`")
+    uj = await edit_or_reply(message, "`Removing Fed From Database!`")
     f_id = get_text(message)
     if not f_id:
       await uj.edit("`Give Fed ID :/`")
