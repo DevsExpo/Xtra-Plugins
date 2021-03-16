@@ -97,8 +97,7 @@ async def fetch_all_fed(client, message):
     await asyncio.sleep(3)
     ok = (await client.get_history('@MissRose_bot', 1))[0]
     if '5 minutes' in ok.text:
-        await message.edit("`Try Again In 5 Min!`")
-        return
+        return None
     elif 'file to list' in ok.text:
         try:
             await ok.click(0)
@@ -107,8 +106,7 @@ async def fetch_all_fed(client, message):
         sed = (await client.get_history('@MissRose_bot', 1))[0]
         if sed.text:
             if '5 minutes' in sed.text:
-                await message.edit("`Please Try Again After 5 Min!`")
-                return
+                return None
             else:
                 # Todo
         if sed.media:
