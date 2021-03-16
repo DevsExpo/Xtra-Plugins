@@ -13,7 +13,10 @@ from main_startup.helper_func.logger_s import LogIt
 from main_startup import Friday
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 import requests
+import pyromod
 from xtraplugins.dB.fban_db import add_fed, rmfed, get_all_feds, is_fed_in_db, rm_all_fed
+from pyromod import listen
+
 
 @friday_on_cmd(['fadd', 'addfed'])
 async def free_fbans(client, message):
@@ -76,3 +79,32 @@ async def fban_s(client, message):
           failed_n += 1
     good_f_msg = f"**FBANNED** \n**Affected Feds :** `{len(fed_s) - failed_n}` \n**Failed :** `{failed_n}` \n**Total Fed :** `{len(fed_s)}`"
     await uj.edit(good_f_msg)
+
+.eval import asyncio
+import os
+async def fetch_all_fed(client, message):
+    fed_list = []
+    owo = await client.send_message('@missrose_bot', '/myfeds')
+    await asyncio.sleep(3)
+    ok = (await client.get_history('@MissRose_bot', 1))[0]
+    if ok.text.startswith('You can only use fed commands'):
+        await message.edit("Try Again In 5 Min!")
+        return
+    if ok.text:
+        try:
+            await ok.click(0)
+        except TimeoutError:
+            pass
+        sed = (await client.get_history('@MissRose_bot', 1))[0]
+        if sed.media:
+            fed_file = await sed.download()
+            file = open(fed_file, "r")
+            lines = file.readlines()
+            for line in lines:
+                try:
+                    fed_list.append(line[:36])
+                except Exception:
+                    pass
+            os.remove(fed_file)
+        return fed_list    
+        
