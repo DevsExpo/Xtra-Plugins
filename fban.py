@@ -20,11 +20,22 @@ from pyromod import listen
 
 @friday_on_cmd(['fadd', 'addfed'])
 async def free_fbans(client, message):
+    e = 0
     uj = await edit_or_reply(message, "`Adding Fed To Database!`")
     f_id = get_text(message)
     if not f_id:
       await uj.edit("`Give Fed ID :/`")
       return
+    if f_id == "all":
+        fed_l = await fetch_all_fed(client, message)
+        for ujwal in fed_l:
+            if is_fed_in_db(ujwal):
+                e += 1
+                pass
+            else:
+                add_fed(ujwal)
+        await uj.edit(f"`Added {fed_l-e} Feds To Database! Failed To Add {e} Feds!`")
+        return
     if is_fed_in_db(f_id):
       await uj.edit("`Fed Already Exists In DB!`")
       return
@@ -80,22 +91,26 @@ async def fban_s(client, message):
     good_f_msg = f"**FBANNED** \n**Affected Feds :** `{len(fed_s) - failed_n}` \n**Failed :** `{failed_n}` \n**Total Fed :** `{len(fed_s)}`"
     await uj.edit(good_f_msg)
 
-.eval import asyncio
-import os
 async def fetch_all_fed(client, message):
     fed_list = []
-    owo = await client.send_message('@missrose_bot', '/myfeds')
+    owo = await client.send_message('@MissRose_bot', '/myfeds')
     await asyncio.sleep(3)
     ok = (await client.get_history('@MissRose_bot', 1))[0]
-    if ok.text.startswith('You can only use fed commands'):
-        await message.edit("Try Again In 5 Min!")
+    if '5 minutes' in ok.text:
+        await message.edit("`Try Again In 5 Min!`")
         return
-    if ok.text:
+    elif 'file to list' in ok.text:
         try:
             await ok.click(0)
         except TimeoutError:
             pass
         sed = (await client.get_history('@MissRose_bot', 1))[0]
+        if sed.text:
+            if '5 minutes' in sed.text:
+                await message.edit("`Please Try Again After 5 Min!`")
+                return
+            else:
+                # Todo
         if sed.media:
             fed_file = await sed.download()
             file = open(fed_file, "r")
@@ -103,8 +118,7 @@ async def fetch_all_fed(client, message):
             for line in lines:
                 try:
                     fed_list.append(line[:36])
-                except Exception:
+                except:
                     pass
             os.remove(fed_file)
         return fed_list    
-        
