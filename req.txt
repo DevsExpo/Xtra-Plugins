@@ -1,3 +1,3 @@
 wikipedia
 pytgcalls
-pyromod>=1.5
+mal-api
