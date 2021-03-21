@@ -22,7 +22,11 @@ from random import randint
 s = []
 group_call = GroupCall(Friday, play_on_repeat=False)
 
-@friday_on_cmd(['playlist'])
+@friday_on_cmd(['playlist'], 
+cmd_help = {
+               'help': 'Get Current Chat Playlist!',
+               'example': '{ch}playlist'
+               },)
 async def pl(client, message):
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
@@ -32,7 +36,7 @@ async def pl(client, message):
             await play.edit(f"**Currently Playing :** `{group_call.input_filename}`")
         else:
             await play.edit("`Playlist is Empty Sar And Nothing is Playing Also :(!`")
-        return
+            return
     if group_call.is_connected:
         song += f"**Currently Playing :** `{group_call.input_filename}` \n\n"
     for i in s:
@@ -53,7 +57,11 @@ async def playout_ended_handler(group_call, filename):
     print("Now Playing " + str(holi))
     group_call.input_filename = holi
     
-@friday_on_cmd(["play", "playmusic"])
+@friday_on_cmd(["play", "playmusic"], 
+cmd_help = {
+               'help': 'Play The Song In VC!',
+               'example': '{ch}play (reply to song)'
+               },)
 async def test(client, message):
     u_s = await edit_or_reply(message, "`Processing..`")
     if not message.reply_to_message or not message.reply_to_message.audio:
@@ -83,7 +91,11 @@ async def test(client, message):
         await u_s.edit(f"Added To Position #{len(s)+1}!")
     
                 
-@friday_on_cmd(["stopvc"])
+@friday_on_cmd(["stopvc"], 
+cmd_help = {
+               'help': 'Stop VoiceChat!',
+               'example': '{ch}stopvc'
+               },)
 async def kill_vc_test(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
@@ -91,7 +103,11 @@ async def kill_vc_test(client, message):
     group_call.stop_playout()
     await edit_or_reply(message, "`Stopped Playing Songs!`")
     
-@friday_on_cmd(["rvc"])
+@friday_on_cmd(["rvc"], 
+cmd_help = {
+               'help': 'Replay Song In VC!',
+               'example': '{ch}rvc'
+               },)
 async def replay(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
@@ -99,7 +115,11 @@ async def replay(client, message):
     group_call.restart_playout()
     await edit_or_reply(message, "`Re-Playing!`")
     
-@friday_on_cmd(["rjvc"])
+@friday_on_cmd(["rjvc"], 
+cmd_help = {
+               'help': 'Rejoin Voice Chat!',
+               'example': '{ch}rjvc'
+               },)
 async def rejoinvcpls(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
@@ -107,7 +127,11 @@ async def rejoinvcpls(client, message):
     await group_call.reconnect()
     await edit_or_reply(message, f"`Rejoined! - Vc`")
     
-@friday_on_cmd(["leavevc"])
+@friday_on_cmd(["leavevc"], 
+cmd_help = {
+               'help': 'Leave Voice Call!',
+               'example': '{ch}leavevc'
+               },)
 async def leave_vc_test(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
@@ -115,7 +139,11 @@ async def leave_vc_test(client, message):
     await group_call.stop()
     await edit_or_reply(message, f"`Left : {message.chat.title} - Vc`")
     
-@friday_on_cmd(["setvolvc"])
+@friday_on_cmd(["setvolvc"], 
+cmd_help = {
+               'help': 'Set Voice Call Volume!',
+               'example': '{ch}setvolvc (Specifically Volume Between 2-100)'
+               },)
 async def set_vol(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
@@ -128,7 +156,7 @@ async def set_vol(client, message):
         await edit_or_reply(message, "Volume Should Be Above 2")
         return
     if int(volume) >= 100:
-        await edit_or_reply(message, "Volume Should Be Bellow 100")
+        await edit_or_reply(message, "Volume Should Be Below 100")
         return
     await group_call.set_my_volume(volume)
     await edit_or_reply(message, f"**Volume :** `{volume}`")
