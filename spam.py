@@ -8,7 +8,11 @@ from pyrogram import filters
 from main_startup.config_var import Config
 
 
-@friday_on_cmd(["spam", "ultraspam"])
+@friday_on_cmd(["spam", "ultraspam"], 
+cmd_help = {
+               'help': 'Spam Message Multiple Times!',
+               'example': '{ch}spam (number of times to spam) (reply to message)'
+               },)
 async def spam(client, message):
     pablo = await edit_or_reply(message, "Processing....")
     count = get_text(message)
