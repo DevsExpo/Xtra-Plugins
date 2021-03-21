@@ -5,7 +5,11 @@ from main_startup.core.decorators import friday_on_cmd
 from main_startup.config_var import Config
 import wikipedia
 
-@friday_on_cmd(["wiki", "wikipedia"])
+@friday_on_cmd(["wiki", "wikipedia"], 
+cmd_help = {
+               'help': 'Get Wikipedia Articles!',
+               'example': '{ch}wiki (Query of article)'
+               },)
 async def wikipediasearch(Client, message):
     event = await edit_or_reply(message, "`Searching..`")
     query = get_text(message)
