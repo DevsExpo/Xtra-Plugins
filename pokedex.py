@@ -10,7 +10,11 @@ from pyrogram import filters
 from main_startup.config_var import Config
 
 
-@friday_on_cmd(["pokedex", "pokemon"])
+@friday_on_cmd(["pokedex", "pokemon"], 
+cmd_help = {
+               'help': 'Get Details About Pokémon!',
+               'example': '{ch}pokedex (Pokemon name)'
+               },)
 async def pokedex(client, message):
     pablo = await edit_or_reply(message, "`Searching For Pokémon.....`")
     sgname = get_text(message)
@@ -114,10 +118,3 @@ Error:   {pokemon.get("error")}"""
     await pablo.delete()
 
 
-_name_ = "Pokedex"
-
-_help_ = """
-**「Pokedex」**
-♦ `{ch}pokedex (Pokémon-name)`
-➠ Get Information Of The Pokémon.
-"""
