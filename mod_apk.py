@@ -13,7 +13,11 @@ from bs4 import BeautifulSoup
 import re
 import time
 
-@friday_on_cmd(["modapk", "mapp"])
+@friday_on_cmd(["modapk", "mapp"],
+cmd_help = {
+               'help': 'Download Mod Apps Just With Name!',
+               'example': '{ch}modapk (app-name)'
+               },)
 async def anime(client, message):
     pablo = await edit_or_reply(message, "`Searching For Mod App.....`")
     sgname = get_text(message)
