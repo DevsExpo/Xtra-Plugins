@@ -14,11 +14,12 @@ import re
 import time
 
 @friday_on_cmd(["modapk", "mapp"],
+is_official=False,
 cmd_help = {
                'help': 'Download Mod Apps Just With Name!',
                'example': '{ch}modapk (app-name)'
-               },)
-async def anime(client, message):
+               })
+async def mudapk(client, message):
     pablo = await edit_or_reply(message, "`Searching For Mod App.....`")
     sgname = get_text(message)
     if not sgname:
@@ -64,11 +65,3 @@ async def anime(client, message):
     os.remove(f"{file_name}.apk")
     os.remove(imme)
     await pablo.delete()
-
-_name_ = "Mod AppDl"
-
-_help_ = """
-**「Mod AppDl」**
-♦ `{ch}modapk (app-name)`
-➠ Download Mod Apps Just With Name.
-"""
