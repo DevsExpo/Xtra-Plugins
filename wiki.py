@@ -6,6 +6,7 @@ from main_startup.config_var import Config
 import wikipedia
 
 @friday_on_cmd(["wiki", "wikipedia"], 
+               is_official=False,
 cmd_help = {
                'help': 'Get Wikipedia Articles!',
                'example': '{ch}wiki (Query of article)'
