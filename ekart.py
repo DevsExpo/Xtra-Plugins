@@ -9,7 +9,11 @@ from main_startup.config_var import Config
 import requests
 
 
-@friday_on_cmd(["ekart"])
+@friday_on_cmd(["ekart"], 
+cmd_help={
+        "help": "Get Ekart Details!",
+        "example": "{ch}ekart (ekart id)",
+    },)
 async def ekart(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
     input_str = get_text(message)
