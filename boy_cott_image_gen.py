@@ -5,6 +5,7 @@ import os
 from main_startup.helper_func.plugin_helpers import convert_to_image, convert_vid_to_vidnote, generate_meme
 
 @friday_on_cmd(['boycott'], 
+is_official=False,
 cmd_help={
         "help": "Creates Boycott Image!",
         "example": "{ch}boycott (reply to image)",
