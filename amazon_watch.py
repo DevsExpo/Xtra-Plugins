@@ -16,7 +16,12 @@ from bs4 import BeautifulSoup
 from xtraplugins.dB.amazon_price_tracker_db import add_amazon_tracker, get_all_amazon_trackers, is_amazon_tracker_in_db, rmamazon_tracker
 
 
-@friday_on_cmd(['atl', 'amazontrack'])
+@friday_on_cmd(['atl', 'amazontrack'],
+              is_official=False,
+              cmd_help = {
+               'help': 'Add Amazon Product To Tracking List!',
+               'example': '{ch}atl (amazon-url)'
+              })
 async def add_to_db(client, message):
     aurl = await edit_or_reply(message, "`Processing..`")
     headers = {"User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36'}
@@ -38,7 +43,12 @@ async def add_to_db(client, message):
     add_amazon_tracker(url, price)
     await aurl.edit(f"**Added To TrackList** \n**Title :** `{title}` \n**Price :** `{price}`")
     
-@friday_on_cmd(['rmlt', 'rmamazontrack'])
+@friday_on_cmd(['rmlt', 'rmamazontrack'],
+              is_official=False,
+              cmd_help = {
+               'help': 'Remove Amazon Product From Tracking List!',
+               'example': '{ch}rmlt (amazon-url)'
+              })
 async def rm_from_db(client, message):
     rmurl = await edit_or_reply(message, "`Processing..`")
     url = get_text(message)
