@@ -11,6 +11,7 @@ from main_startup.config_var import Config
 
 
 @friday_on_cmd(["pokedex", "pokemon"], 
+is_official=False,
 cmd_help = {
                'help': 'Get Details About Pokémon!',
                'example': '{ch}pokedex (Pokemon name)'
