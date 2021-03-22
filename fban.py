@@ -19,6 +19,7 @@ from pyromod import listen
 
 
 @friday_on_cmd(['fadd', 'addfed'], 
+is_official=False,
 cmd_help={
         "help": "Add Feds To dB!",
         "example": "{ch}fadd (enter your FED ID OR mention 'all' to add all)",
@@ -68,6 +69,7 @@ async def paid_fbans(client, message):
     await uj.edit(f"`Removed {f_id} From dB!`")
     
 @friday_on_cmd(['fban', 'fedban'], 
+is_official=False,
 cmd_help={
         "help": "Fban a user!",
         "example": "{ch}fban (enter username or id)",
