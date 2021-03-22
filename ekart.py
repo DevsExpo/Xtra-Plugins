@@ -10,6 +10,7 @@ import requests
 
 
 @friday_on_cmd(["ekart"], 
+is_official=False,
 cmd_help={
         "help": "Get Ekart Details!",
         "example": "{ch}ekart (ekart id)",
