@@ -137,7 +137,7 @@ async def fetch_all_fed(client, message):
                     for lo in lol:
                         if "you are the owner" not in lo.lower():
                             if "you are admin" not in lo.lower():
-                                if lo[:36] != '':
+                                if lo[:36] != "":
                                     if not lo.startswith("-"):
                                         fed_list.append(lo[:36])
                                     else:
