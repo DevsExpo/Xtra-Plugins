@@ -1,21 +1,16 @@
 import requests
-
-from main_startup.config_var import Config
 from main_startup.core.decorators import friday_on_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_readable_time, delete_or_pass, progress, get_text
-import asyncio
-import math
-import time
-from pyrogram import filters
-from main_startup.config_var import Config
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 
 
-@friday_on_cmd(["pokedex", "pokemon"], 
-is_official=False,
-cmd_help = {
-               'help': 'Get Details About Pokémon!',
-               'example': '{ch}pokedex (Pokemon name)'
-               },)
+@friday_on_cmd(
+    ["pokedex", "pokemon"],
+    is_official=False,
+    cmd_help={
+        "help": "Get Details About Pokémon!",
+        "example": "{ch}pokedex (Pokemon name)",
+    },
+)
 async def pokedex(client, message):
     pablo = await edit_or_reply(message, "`Searching For Pokémon.....`")
     sgname = get_text(message)
@@ -26,10 +21,10 @@ async def pokedex(client, message):
     r = requests.get(url).json()
     pokemon = r
     if pokemon.get("error") is not None:
-          kk = f"""
+        kk = f"""
 Error:   {pokemon.get("error")}"""
-          ommhg = await pablo.edit(kk)
-          return
+        await pablo.edit(kk)
+        return
     name = str(pokemon.get("name"))
     number = str(pokemon.get("number"))
     species = str(pokemon.get("species"))
@@ -64,43 +59,43 @@ Error:   {pokemon.get("error")}"""
         xy += str(p) + ",  "
 
     start = pokemon.get("starter")
-    if start == False:
+    if not start:
         start = "No"
-    elif start == True:
+    elif start:
         start = "True"
     else:
         pass
 
     leg = pokemon.get("legendary")
 
-    if leg == False:
+    if not leg:
         leg = "No"
-    elif leg == True:
+    elif leg:
         leg = "True"
     else:
         pass
 
     myt = pokemon.get("mythical")
-    if myt == False:
+    if not myt:
         myt = "No"
-    elif myt == True:
+    elif myt:
         myt = "True"
     else:
         pass
     ultra = pokemon.get("ultraBeast")
 
-    if ultra == False:
+    if not ultra:
         ultra = "No"
-    elif ultra == True:
+    elif ultra:
         ultra = "True"
     else:
         pass
 
     megA = pokemon.get("mega")
 
-    if megA == False:
+    if not megA:
         megA = "No"
-    elif megA == True:
+    elif megA:
         megA = "True"
     else:
         pass
@@ -112,10 +107,8 @@ Error:   {pokemon.get("error")}"""
 
     await client.send_photo(
         message.chat.id,
-        photo = link,
-        caption = caption,
+        photo=link,
+        caption=caption,
         parse_mode="HTML",
     )
     await pablo.delete()
-
-
