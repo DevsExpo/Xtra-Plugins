@@ -9,6 +9,7 @@ from main_startup.config_var import Config
 
 
 @friday_on_cmd(["spam", "ultraspam"], 
+is_official=False,
 cmd_help = {
                'help': 'Spam Message Multiple Times!',
                'example': '{ch}spam (number of times to spam) (reply to message)'
@@ -20,10 +21,10 @@ async def spam(client, message):
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
         return
     if not count.isdigit():
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Give Digits Idiot!`")
         return
     if not message.reply_to_message:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Reply To Message, Idiot!`")
         return
     count = int(count)
     x = 0
