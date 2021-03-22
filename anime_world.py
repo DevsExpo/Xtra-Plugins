@@ -10,10 +10,11 @@ from anime_downloader.sites import get_anime_class
 from mal import AnimeSearch, Anime, MangaSearch, Manga
 
 @friday_on_cmd(["anime", "animes"], 
-cmd_help={
-        "help": "Automatically Gets Streaming Link Of The Anime. Get Site names list from Here : https://devsexpoanime.netlify.app",
-        "example": "{ch}anime (anime name:site name)",
-    },)
+               is_official=False,
+               cmd_help={
+                        "help": "Automatically Gets Streaming Link Of The Anime. Get Site names list from Here : https://devsexpoanime.netlify.app",
+                        "example": "{ch}anime (anime name:site name)",
+                })
 async def anime(client, message):
     pablo = await edit_or_reply(message, "`Searching For Anime.....`")
     anime = get_text(message)
@@ -49,6 +50,7 @@ async def anime(client, message):
     await pablo.edit(NopZ, parse_mode="html")
     
 @friday_on_cmd(["animeinfo", "ainfo"], 
+is_official=False,
 cmd_help={
         "help": "Gives Anime Information!",
         "example": "{ch}ainfo (anime name)",
@@ -87,6 +89,7 @@ favorites:- {anime.favorites}</b>
 
 
 @friday_on_cmd(["manga", "mangainfo"], 
+is_official=False,
 cmd_help={
         "help": "Gives manga Information!",
         "example": "{ch}manga (manga name)",
@@ -122,19 +125,3 @@ Rank:- {manga.rank}
 favorites:- {manga.favorites}</b>
 """
     await pablo.edit(By, parse_mode="html")
-
-
-        
-_name_ = "Anime World"
-
-_help_ = """
-**「Anime World」**
-♦ `{ch}ainfo (Anime-Name)`
-➠ Gives anime information.!
-♦ `{ch}manga (Manga-name)`
-➠ Gives manga information.!
-♦ `{ch}anime (Amime Name:site Name)`
-➠  Automatically Gets Streaming Link Of The Anime!
-☄️ Example : {ch}anime one piece:animeonline360
-✖️  Get Site names list from [Here](https://devsexpoanime.netlify.app/).
-"""
