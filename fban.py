@@ -39,7 +39,9 @@ async def free_fbans(client, message):
                 e += 1
             else:
                 add_fed(ujwal)
-        await uj.edit(f"`Added {len(fed_l) - e} Feds To Database! Failed To Add {e} Feds!`")
+        await uj.edit(
+            f"`Added {len(fed_l) - e} Feds To Database! Failed To Add {e} Feds!`"
+        )
         return
     if is_fed_in_db(f_id):
         await uj.edit("`Fed Already Exists In DB!`")
