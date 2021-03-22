@@ -122,7 +122,10 @@ async def fetch_all_fed(client, message):
             if '5 minutes' in sed.text:
                 return None
             else:
-                # Todo
+                X = sed.text
+                Y = X[44:].splitlines()
+                for lol in Y:
+                    fed_list.append(lol)
         if sed.media:
             fed_file = await sed.download()
             file = open(fed_file, "r")
