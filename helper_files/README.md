@@ -1,1 +1,3 @@
-# Add Files That Helps Your Plugins, Like Images, Vid, Or Anything.
+# Xtra Helper Files
+Path : `xtraplugins/helper_files/`
+Purpose : `All Files That Helps Your Plugin To Run`
