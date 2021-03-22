@@ -23,10 +23,11 @@ s = []
 group_call = GroupCall(Friday, play_on_repeat=False)
 
 @friday_on_cmd(['playlist'], 
+is_official=False,
 cmd_help = {
                'help': 'Get Current Chat Playlist!',
                'example': '{ch}playlist'
-               },)
+               })
 async def pl(client, message):
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
@@ -58,6 +59,7 @@ async def playout_ended_handler(group_call, filename):
     group_call.input_filename = holi
     
 @friday_on_cmd(["play", "playmusic"], 
+is_official=False,
 cmd_help = {
                'help': 'Play The Song In VC!',
                'example': '{ch}play (reply to song)'
@@ -92,6 +94,7 @@ async def test(client, message):
     
                 
 @friday_on_cmd(["stopvc"], 
+is_official=False,
 cmd_help = {
                'help': 'Stop VoiceChat!',
                'example': '{ch}stopvc'
@@ -104,6 +107,7 @@ async def kill_vc_test(client, message):
     await edit_or_reply(message, "`Stopped Playing Songs!`")
     
 @friday_on_cmd(["rvc"], 
+is_official=False,
 cmd_help = {
                'help': 'Replay Song In VC!',
                'example': '{ch}rvc'
@@ -116,6 +120,7 @@ async def replay(client, message):
     await edit_or_reply(message, "`Re-Playing!`")
     
 @friday_on_cmd(["rjvc"], 
+is_official=False,
 cmd_help = {
                'help': 'Rejoin Voice Chat!',
                'example': '{ch}rjvc'
@@ -128,6 +133,7 @@ async def rejoinvcpls(client, message):
     await edit_or_reply(message, f"`Rejoined! - Vc`")
     
 @friday_on_cmd(["leavevc"], 
+is_official=False,
 cmd_help = {
                'help': 'Leave Voice Call!',
                'example': '{ch}leavevc'
@@ -140,6 +146,7 @@ async def leave_vc_test(client, message):
     await edit_or_reply(message, f"`Left : {message.chat.title} - Vc`")
     
 @friday_on_cmd(["setvolvc"], 
+is_official=False,
 cmd_help = {
                'help': 'Set Voice Call Volume!',
                'example': '{ch}setvolvc (Specifically Volume Between 2-100)'
@@ -160,21 +167,3 @@ async def set_vol(client, message):
         return
     await group_call.set_my_volume(volume)
     await edit_or_reply(message, f"**Volume :** `{volume}`")
-
-_name_ = "Music Player"
-
-_help_ = """
-**「Music Player」**
-♦ `{ch}play (reply to song)`
-➠ Plays The Song In Group Call.
-♦ `{ch}setvolvc (2-100)`
-➠ Increase Of Decrease Volume Of The VC.
-♦ `{ch}playlist`
-➠ Show What Currently is Being Played, Or If Playlist, Playlist Will Be Shown. 
-♦ `{ch}rvc`
-➠ Replay's Currently Playing Song.
-♦ `{ch}leavevc`
-➠ Leaves Voice Chat
-♦ `{ch}stopvc`
-➠ Stops Voice Chat
-"""
