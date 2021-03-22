@@ -35,6 +35,7 @@ async def free_fbans(client, message):
         fed_l = await fetch_all_fed(client, message)
         if not fed_l:
                 await uj.edit("`Either My Logic Broke Or You Are Not Admin in Any Fed!`")
+                return
         for ujwal in fed_l:
             if is_fed_in_db(ujwal):
                 e += 1
