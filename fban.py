@@ -18,7 +18,11 @@ from xtraplugins.dB.fban_db import add_fed, rmfed, get_all_feds, is_fed_in_db, r
 from pyromod import listen
 
 
-@friday_on_cmd(['fadd', 'addfed'])
+@friday_on_cmd(['fadd', 'addfed'], 
+cmd_help={
+        "help": "Add Feds To dB!",
+        "example": "{ch}fadd (enter your FED ID OR mention 'all' to add all)",
+    },)
 async def free_fbans(client, message):
     e = 0
     uj = await edit_or_reply(message, "`Adding Fed To Database!`")
@@ -42,7 +46,11 @@ async def free_fbans(client, message):
     add_fed(f_id)
     await uj.edit(f"`Added {f_id} To dB!`")
     
-@friday_on_cmd(['frm', 'rmfed'])
+@friday_on_cmd(['frm', 'rmfed'], 
+cmd_help={
+        "help": "Remove Feds From dB!",
+        "example": "{ch}frm (enter your FED ID OR mention 'all' to Remove all)",
+    },)
 async def paid_fbans(client, message):
     uj = await edit_or_reply(message, "`Removing Fed From Database!`")
     f_id = get_text(message)
@@ -59,7 +67,11 @@ async def paid_fbans(client, message):
     rmfed(f_id)
     await uj.edit(f"`Removed {f_id} From dB!`")
     
-@friday_on_cmd(['fban', 'fedban'])
+@friday_on_cmd(['fban', 'fedban'], 
+cmd_help={
+        "help": "Fban a user!",
+        "example": "{ch}fban (enter username or id)",
+    },)
 async def fban_s(client, message):
     uj = await edit_or_reply(message, "`Fbanning!`")
     failed_n = 0
