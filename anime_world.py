@@ -11,7 +11,7 @@ from mal import AnimeSearch, Anime, MangaSearch, Manga
 
 @friday_on_cmd(["anime", "animes"], 
 cmd_help={
-        "help": "Automatically Gets Streaming Link Of The Anime. Get Site names list from [Here](https://devsexpoanime.netlify.app/)!",
+        "help": "Automatically Gets Streaming Link Of The Anime. Get Site names list from Here : https://devsexpoanime.netlify.app",
         "example": "{ch}anime (anime name:site name)",
     },)
 async def anime(client, message):
