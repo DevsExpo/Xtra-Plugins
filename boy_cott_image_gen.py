@@ -4,7 +4,11 @@ from PIL import Image, ImageDraw, ImageFont, ImageColor
 import os
 from main_startup.helper_func.plugin_helpers import convert_to_image, convert_vid_to_vidnote, generate_meme
 
-@friday_on_cmd(['boycott'])
+@friday_on_cmd(['boycott'], 
+cmd_help={
+        "help": "Creates Boycott Image!",
+        "example": "{ch}boycott (reply to image)",
+    },)
 async def boycott_kangs(client, message):
   tgi = await edit_or_reply(message, "`Applying BoyCott Magic!`")
   if not message.reply_to_message:
