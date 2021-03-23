@@ -20,7 +20,7 @@ supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com"]
     is_official=False,
     cmd_help={
         "help": "Create Temporary Mail",
-        "example": "{ch}mail (mail-id)",
+        "example": "{ch}add_mail (mail-id)",
     },
 )
 async def add_mail_to_db(client, message):
@@ -44,3 +44,38 @@ async def add_mail_to_db(client, message):
         return
     add_mail_update_mail(mail_id)
     await pablo.edit(f"Your Mail ID {mail_id} successfully added to dB")
+
+
+@friday_on_cmd(
+    ["check_mail"],
+    is_official=False,
+    cmd_help={
+        "help": "Check Temporary Mail",
+        "example": "{ch}check_mail",
+    },
+)
+async def check_mail(client, message):
+    pablo = await edit_or_reply(message, "`Processing.....`")
+    email = get_mail_id()
+    if not email:
+        await pablo.edit("You Sure You Added Your Mail To dB?")
+        return
+    caption = ""
+    lmao = anime.split("@", 1)
+    login = lmao[0]
+    domain = lmao[1]
+    link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
+    r = requests.get(domain)
+    lmao = r.json()
+    kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={lmao[0].get('id')}"
+    r = requests.get(kk)
+    lmao = r.json()
+    last = f""" Mail From : {lmao.get("from")}
+
+Subject : {lmao.get("subject")}
+
+Body : {lmao.get("textBody")}
+"""
+    await pablo.edit(last)
+
+
