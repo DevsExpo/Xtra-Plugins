@@ -79,7 +79,7 @@ async def check_mail(client, message):
     if lmao["attachments"] != []:
         fl_name = lmao["attachments"][0].get("filename")
         is_file = True
-        lenk = f"https://www.1secmail.com/api/v1/?action=download&login={login}&domain={domain}&id={lmao.get("id")}&file=fl_name"
+        lenk = f'https://www.1secmail.com/api/v1/?action=download&login={login}&domain={domain}&id={lmao.get("id")}&file={fl_name}'
         r = requests.get(lenk)
         with open(fl_name, 'wb') as f:
             f.write(r.content)
