@@ -9,7 +9,8 @@ from xtraplugins.dB.mail_tools import (
     add_mail_update_mail,
     get_msg_id,
     get_mail_id,
-    add_msg_update_msg
+    add_msg_update_msg,
+    delete_mail_id
 )
 
 
@@ -98,7 +99,24 @@ async def check_mail(client, message):
         os.remove(fl_name)
         await pablo.delete()
         
-print("Test")
+
+
+@friday_on_cmd(
+    ["delete_mail"],
+    is_official=False,
+    cmd_help={
+        "help": "Delete Temporary Mail",
+        "example": "{ch}delete_mail",
+    },
+)
+async def delete_mail(client, message):
+    pablo = await edit_or_reply(message, "`Processing.....`")
+    email = get_mail_id()
+    if not email:
+        await pablo.edit("`You Sure You Added Your Mail To dB?`")
+        return
+    delete_mail_id()
+    await pablo.edit("Successfully Deleted Your Email")
 
 
 async def track_mails():
