@@ -28,3 +28,9 @@ def get_all_chats():
         return False
 
 
+def get_session(chat_id):
+    stark = lydia.find_one({"chat_id": chat_id})
+    if not stark:
+        return False
+    else:
+        return stark
