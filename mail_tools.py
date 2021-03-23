@@ -65,7 +65,7 @@ async def check_mail(client, message):
     login = lmao[0]
     domain = lmao[1]
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
-    r = requests.get(domain)
+    r = requests.get(link)
     lmao = r.json()
     try:
         latest_mail = lmao[0].get('id')
