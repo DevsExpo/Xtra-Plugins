@@ -52,7 +52,7 @@ async def remcf(client, message):
         return
     await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
 
-@listen(filters.incoming & ~filters.edited & filters.group)
+@listen(filters.incoming & ~filters.edited & filters.group & filters.text)
 async def livelydia(client, message):
     print(get_session(message.chat.id))
     print(message.chat.id)
