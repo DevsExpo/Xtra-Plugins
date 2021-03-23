@@ -66,6 +66,7 @@ async def livelydia(client, message):
     text_rep = session.think_thought((session, message.text))
     await client.send_chat_action(message.chat.id, "typing")
     await message.reply(text_rep)
+    message.continue_propagation()
 
     
 
