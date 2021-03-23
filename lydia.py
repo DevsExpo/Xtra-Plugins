@@ -29,7 +29,7 @@ async def addcf(client, message):
     pablo = await edit_or_reply(message, "`Processing...`")
     session = lydia.create_session()
     session_id = session.id
-    lol = add_chat(message.chat.id, session_id)
+    lol = add_chat(int(message.chat.id), session_id)
     if not lol:
         await pablo.edit("Lydia Already Activated In This Chat")
         return
@@ -46,26 +46,27 @@ async def addcf(client, message):
     )
 async def remcf(client, message):
     pablo = await edit_or_reply(message, "`Processing...`")
-    Escobar = remove_chat(message.chat.id)
+    Escobar = remove_chat(int(message.chat.id))
     if not Escobar:
         await pablo.edit("Lydia Was Not Activated In This Chat")
         return
     await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
 
 @listen(~filters.edited & filters.incoming & filters.group & filters.text)
-async def livelydia(client, message):
+async def live_lydia(client, message):
     if not message.text:
         message.continue_propagation()
-    #print(get_session(int(message.chat.id)))
-    #print(message.chat.id)
     if not get_session(int(message.chat.id)):
+        print("#1")
         message.continue_propagation()
-    else:
-        session = get_session(message.chat.id)
-    session = session.get("session_id")
-    text_rep = session.think_thought(session, message.text)
-    print(text_rep)
+    print("#2")
+    session = get_session(int(message.chat.id))
+    print("#3")
+    session_id = session.get("session_id")
+    text_rep = session.think_thought(session_id, message.text)
+    print("#4")
     await client.send_chat_action(message.chat.id, "typing")
     await message.reply(text_rep)
     await client.send_chat_action(message.chat.id, "cancel")
+    print("Done!")
     message.continue_propagation()
