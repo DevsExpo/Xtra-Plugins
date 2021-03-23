@@ -142,6 +142,10 @@ async def fetch_all_fed(client, message):
                                         fed_list.append(lo[:36])
                                     else:
                                         fed_list.append(lo[2:38])
+                else:
+                    Y = X[44:].splitlines()
+                    for lol in Y:
+                        fed_list.append(lol[2:38])
         if sed.media:
             fed_file = await sed.download()
             file = open(fed_file, "r")
