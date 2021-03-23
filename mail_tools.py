@@ -8,6 +8,7 @@ from xtraplugins.dB.mail_tools import (
     add_mail_update_mail,
     get_msg_id,
     get_mail_id,
+    add_msg_update_msg
 )
 
 
