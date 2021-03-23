@@ -12,7 +12,7 @@ def add_chat(chat_id):
         return True
 
 
-def remove_chat(chat_id, user_id):
+def remove_chat(chat_id):
     stark = lydia.find_one({"chat_id": chat_id})
     if not stark:
         return False
