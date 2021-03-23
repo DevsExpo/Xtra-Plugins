@@ -98,15 +98,50 @@ async def check_mail(client, message):
         os.remove(fl_name)
         await pablo.delete()
 
+
+
 async def track_mails():
     email = get_mail_id()
     if not email:
         return
     caption = ""
+    last_msg = get_msg_id(email)
     mail_ = email.split("@", 1)
     login = mail_[0]
     domain = mail_[1]
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
     r = requests.get(link)
     r_json = r.json()
-    
+    try:
+        latest_mail = r_json[0].get('id')
+    except IndexError:
+        return
+    if last_msg == latest_mail:
+        return
+    else:
+        add_msg_update_msg(latest_mail)
+    kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={latest_mail}"
+    r = requests.get(kk)
+    lmao = r.json()
+    is_file = False
+    if lmao["attachments"] != []:
+        fl_name = lmao["attachments"][0].get("filename")
+        is_file = True
+        lenk = f'https://www.1secmail.com/api/v1/?action=download&login={login}&domain={domain}&id={lmao.get("id")}&file={fl_name}'
+        r = requests.get(lenk)
+        with open(fl_name, 'wb') as f:
+            f.write(r.content)
+    last = f""" 
+<b>Mail From :</b> <code>{lmao.get("from")}</code>
+<b>Date :</b> <code>{lmao.get("date")}</code>
+<b>Subject :</b> <code>{lmao.get("subject")}</code>
+
+<b>Body :</b> <code>{lmao.get("textBody")}</code>
+"""
+    if not is_file:
+        await Friday.send_message(
+                Config.LOG_GRP, last, parse_mode="html")
+    else:
+        await Friday.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
+        os.remove(fl_name)
+        await pablo.delete()
