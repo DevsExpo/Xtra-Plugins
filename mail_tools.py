@@ -58,10 +58,10 @@ async def check_mail(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
     email = get_mail_id()
     if not email:
-        await pablo.edit("You Sure You Added Your Mail To dB?")
+        await pablo.edit("`You Sure You Added Your Mail To dB?`")
         return
     caption = ""
-    lmao = anime.split("@", 1)
+    lmao = email.split("@", 1)
     login = lmao[0]
     domain = lmao[1]
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
