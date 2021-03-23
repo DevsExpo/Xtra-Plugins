@@ -10,3 +10,35 @@ from xtraplugins.dB.mail_tools import (
     get_mail_id,
 )
 
+
+supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com"]
+
+
+@friday_on_cmd(
+    ["add_mail"],
+    is_official=False,
+    cmd_help={
+        "help": "Create Temporary Mail",
+        "example": "{ch}mail (mail-id)",
+    },
+)
+async def add_mail_to_db(client, message):
+    pablo = await edit_or_reply(message, "`Processing.....`")
+    mail_id = get_text(message)
+    if not mail_id:
+        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        return
+    lmao = anime.split("@", 1)
+    try:
+        domain = lmao[1]
+    except BaseException:
+        await pablo.edit(
+            "What are you providing me lmao?."
+        )
+        return
+    if domain.lower() in supported_domains:
+        pass
+    else:
+        await pablo.edit("oops, I don't own that domain.")
+        return
+    
