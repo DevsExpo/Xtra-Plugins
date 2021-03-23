@@ -61,13 +61,10 @@ async def check_mail(client, message):
         await pablo.edit("`You Sure You Added Your Mail To dB?`")
         return
     caption = ""
-    lmao = email.split("@", 1)
-    login = lmao[0]
-    domain = lmao[1]
+    mail_ = email.split("@", 1)
+    login = mail_[0]
+    domain = mail_[1]
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
-    print(login)
-    print(domain)
-    print(lmao)
     r = requests.get(link)
     r_json = r.json()
     try:
@@ -80,6 +77,7 @@ async def check_mail(client, message):
     lmao = r.json()
     last = f""" 
     <strong>Latest Mail Possible!</strong>
+    
 <b>Mail From :</b> <code>{lmao.get("from")}</code>
 
 <b>Subject :</b> <code>{lmao.get("subject")}</code>
