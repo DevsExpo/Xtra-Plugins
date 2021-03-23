@@ -15,7 +15,24 @@ from coffeehouse.lydia import LydiaAI
 
 if Config.LYDIA_API_KEY:
     api_key = Config.LYDIA_API_KEY
-    lydia = LydiaAI(api_key)
+    try:
+        lydia = LydiaAI(api_key)
+    except Exception as e:
+        print(f"Unable To Start Lydia Client \nTraceBack : {e}")
+        lydia = None
+else:
+    lydia = None
+
+
+def _check_lydia(func):
+    @wraps(func)
+    async def check_lydia(client, message):
+        if not lydia:
+            await edit_or_reply(message, "`Is Your Lydia Api Key Valid Or You Didn't Add It??`")
+        elif lydia:
+            await func(client, message)
+    return check_lydia
+    
 
 @friday_on_cmd(
         ["addcf"],
@@ -25,6 +42,7 @@ if Config.LYDIA_API_KEY:
             "example": "{ch}addcf"
         }
     )
+@_check_lydia
 async def addcf(client, message):
     pablo = await edit_or_reply(message, "`Processing...`")
     session = lydia.create_session()
@@ -44,6 +62,7 @@ async def addcf(client, message):
             "example": "{ch}remcf"
         }
     )
+@_check_lydia
 async def remcf(client, message):
     pablo = await edit_or_reply(message, "`Processing...`")
     Escobar = remove_chat(int(message.chat.id))
@@ -51,23 +70,18 @@ async def remcf(client, message):
         await pablo.edit("Lydia Was Not Activated In This Chat")
         return
     await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
-
-@listen(~filters.edited & filters.incoming & filters.group & filters.text)
-async def live_lydia(client, message):
-    if not message.text:
+    
+if lydia:
+    @listen(~filters.edited & filters.incoming & filters.group & filters.text)
+    async def live_lydia(client, message):
+        if not message.text:
+            message.continue_propagation()
+        if not get_session(int(message.chat.id)):
+            message.continue_propagation()
+        await client.send_chat_action(message.chat.id, "typing")
+        session = get_session(int(message.chat.id))
+        session_id = session.get("session_id")
+        text_rep = lydia.think_thought(session_id, message.text)
+        await message.reply(text_rep)
+        await client.send_chat_action(message.chat.id, "cancel")
         message.continue_propagation()
-    if not get_session(int(message.chat.id)):
-        print("#1")
-        message.continue_propagation()
-    print("#2")
-    session = get_session(int(message.chat.id))
-    print("#3")
-    session_id = session.get("session_id")
-    text_rep = lydia.think_thought(session_id, message.text)
-    print(text_rep)
-    print("#4")
-    await client.send_chat_action(message.chat.id, "typing")
-    await message.reply(text_rep)
-    await client.send_chat_action(message.chat.id, "cancel")
-    print("Done!")
-    message.continue_propagation()
