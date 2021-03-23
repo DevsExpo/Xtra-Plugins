@@ -1,4 +1,5 @@
-from main_startup.core.decorators import friday_on_cmd
+from main_startup.core.decorators import friday_on_cmd, listen
+from pyrogram import filters
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from main_startup.config_var import Config
 from xtraplugins.dB.lydia import (
@@ -57,6 +58,7 @@ async def livelydia(client, message):
         message.continue_propagation()
     else:
         session = get_session(message.chat.id)
+    session = session.get("session_id")
     if not message.text:
         message.continue_propagation()
     text_rep = session.think_thought((session, message.text))
