@@ -96,3 +96,4 @@ async def check_mail(client, message):
         await pablo.edit(last, parse_mode="html")
     else:
         await client.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
+        os.remove(fl_name)
