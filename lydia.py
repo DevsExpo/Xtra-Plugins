@@ -64,6 +64,7 @@ async def livelydia(client, message):
         session = get_session(message.chat.id)
     session = session.get("session_id")
     text_rep = session.think_thought(session, message.text)
+    print(text_rep)
     await client.send_chat_action(message.chat.id, "typing")
     await message.reply(text_rep)
     await client.send_chat_action(message.chat.id, "cancel")
