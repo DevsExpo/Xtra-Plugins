@@ -2,3 +2,4 @@ wikipedia
 pytgcalls
 mal-api
 coffeehouse
+tswift
