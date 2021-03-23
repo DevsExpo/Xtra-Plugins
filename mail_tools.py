@@ -11,10 +11,6 @@ from xtraplugins.dB.mail_tools import (
     get_mail_id,
     add_msg_update_msg
 )
-import logging
-
-logging.basicConfig()
-logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 
 supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com"]
@@ -106,14 +102,11 @@ print("Test")
 
 
 async def track_mails():
-    print("hmmm")
     email = get_mail_id()
     if not email:
         return
     caption = ""
-    print(email)
     last_msg = get_msg_id(email)
-    print(last_msg)
     mail_ = email.split("@", 1)
     login = mail_[0]
     domain = mail_[1]
@@ -155,6 +148,6 @@ async def track_mails():
         os.remove(fl_name)
         await pablo.delete()
         
-scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(track_mails, trigger="cron", minute=1)
+scheduler = AsyncIOScheduler()
+scheduler.add_job(track_mails, 'interval', minutes=2)
 scheduler.start()
