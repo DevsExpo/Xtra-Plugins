@@ -147,5 +147,5 @@ async def track_mails():
         await pablo.delete()
         
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(track_mails, trigger="cron", minute=5)
+scheduler.add_job(track_mails, trigger="cron", minute=1)
 scheduler.start()
