@@ -63,7 +63,7 @@ async def live_lydia(client, message):
     session = get_session(int(message.chat.id))
     print("#3")
     session_id = session.get("session_id")
-    text_rep = session.think_thought(session_id, message.text)
+    text_rep = lydia.think_thought(session_id, message.text)
     print(text_rep)
     print("#4")
     await client.send_chat_action(message.chat.id, "typing")
