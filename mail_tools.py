@@ -29,21 +29,21 @@ async def add_mail_to_db(client, message):
     if not mail_id:
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
         return
-    lmao = anime.split("@", 1)
+    lmao = mail_id.split("@", 1)
     try:
         domain = lmao[1]
     except BaseException:
         await pablo.edit(
-            "What are you providing me lmao?."
+            "`What are you providing me lmao?. Check Help Menu Idiot!`"
         )
         return
     if domain.lower() in supported_domains:
         pass
     else:
-        await pablo.edit("oops, I don't own that domain.")
+        await pablo.edit("`Oops, I don't Support that Domain! Check Help Menu To Get Supported Site List!`")
         return
     add_mail_update_mail(mail_id)
-    await pablo.edit(f"Your Mail ID {mail_id} successfully added to dB")
+    await pablo.edit(f"`Your Mail ID {mail_id} successfully added to dB`")
 
 
 @friday_on_cmd(
@@ -67,15 +67,20 @@ async def check_mail(client, message):
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
     r = requests.get(domain)
     lmao = r.json()
-    kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={lmao[0].get('id')}"
+    try:
+        latest_mail = lmao[0].get('id')
+    except IndexError:
+        await pablo.edit("`You Don't Have Any Mails Yet ;( Ask Your Gf To Send Some Nudes!`")
+        return
+    kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={latest_mail}"
     r = requests.get(kk)
     lmao = r.json()
-    last = f""" Mail From : {lmao.get("from")}
+    last = f""" 
+    <strong>Latest Mail Possible!</strong>
+<b>Mail From :</b> <code>{lmao.get("from")}</code>
 
-Subject : {lmao.get("subject")}
+<b>Subject :</b> <code>{lmao.get("subject")}</code>
 
-Body : {lmao.get("textBody")}
+<b>Body :</b> <code>{lmao.get("textBody")}</code>
 """
-    await pablo.edit(last)
-
-
+    await pablo.edit(last, parse_mode="html")
