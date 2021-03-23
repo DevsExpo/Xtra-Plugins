@@ -75,6 +75,14 @@ async def check_mail(client, message):
     kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={latest_mail}"
     r = requests.get(kk)
     lmao = r.json()
+    is_file = False
+    if lmao["attachments"] != []:
+        fl_name = lmao["attachments"][0].get("filename")
+        is_file = True
+        lenk = f"https://www.1secmail.com/api/v1/?action=download&login={login}&domain={domain}&id={lmao.get("id")}&file=fl_name"
+        r = requests.get(lenk)
+        with open(fl_name, 'wb') as f:
+            f.write(r.content)
     last = f""" 
     <strong>Latest Mail Possible!</strong>
     
@@ -84,4 +92,7 @@ async def check_mail(client, message):
 
 <b>Body :</b> <code>{lmao.get("textBody")}</code>
 """
-    await pablo.edit(last, parse_mode="html")
+    if not is_file:
+        await pablo.edit(last, parse_mode="html")
+    else:
+        await client.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
