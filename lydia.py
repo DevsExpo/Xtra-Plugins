@@ -8,6 +8,10 @@ from xtraplugins.dB.lydia import (
     get_session
 )
 
+import asyncio, coffeehouse
+
+from coffeehouse.lydia import LydiaAI
+
 if Config.LYDIA_API_KEY:
     api_key = Config.LYDIA_API_KEY
     lydia = LydiaAI(api_key)
