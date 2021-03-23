@@ -12,7 +12,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
     ["lyrics"],
     cmd_help={
         "help": "This plugin searches for song lyrics with song name",
-        "example": "{ch}lyrics <song name>",
+        "example": "{ch}lyrics (song name)",
     },
 )
 async def _(client,message):
