@@ -56,7 +56,7 @@ async def remcf(client, message):
 async def livelydia(client, message):
     if not message.text:
         message.continue_propagation()
-    print(get_session(message.chat.id))
+    print(get_session(int(message.chat.id)))
     print(message.chat.id)
     if not get_session(message.chat.id):
         message.continue_propagation()
