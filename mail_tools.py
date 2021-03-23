@@ -145,3 +145,6 @@ async def track_mails():
         await Friday.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
         os.remove(fl_name)
         await pablo.delete()
+scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
+scheduler.add_job(track_mails, trigger="cron", hour=0, minute=5)
+scheduler.start()
