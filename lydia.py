@@ -52,8 +52,10 @@ async def remcf(client, message):
         return
     await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
 
-@listen(filters.incoming & ~filters.edited & filters.group & filters.text)
+@listen(~filters.edited & filters.incoming & filters.group & filters.text)
 async def livelydia(client, message):
+    if not message.text:
+        message.continue_propagation()
     print(get_session(message.chat.id))
     print(message.chat.id)
     if not get_session(message.chat.id):
@@ -61,16 +63,8 @@ async def livelydia(client, message):
     else:
         session = get_session(message.chat.id)
     session = session.get("session_id")
-    if not message.text:
-        message.continue_propagation()
-    text_rep = session.think_thought((session, message.text))
+    text_rep = session.think_thought(session, message.text)
     await client.send_chat_action(message.chat.id, "typing")
     await message.reply(text_rep)
+    await client.send_chat_action(message.chat.id, "cancel")
     message.continue_propagation()
-
-    
-
-
-
-
-
