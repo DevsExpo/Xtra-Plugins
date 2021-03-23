@@ -41,4 +41,5 @@ async def add_mail_to_db(client, message):
     else:
         await pablo.edit("oops, I don't own that domain.")
         return
-    
+    add_mail_update_mail(mail_id)
+    await pablo.edit(f"Your Mail ID {mail_id} successfully added to dB")
