@@ -97,3 +97,16 @@ async def check_mail(client, message):
         await client.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
         os.remove(fl_name)
         await pablo.delete()
+
+async def track_mails():
+    email = get_mail_id()
+    if not email:
+        return
+    caption = ""
+    mail_ = email.split("@", 1)
+    login = mail_[0]
+    domain = mail_[1]
+    link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
+    r = requests.get(link)
+    r_json = r.json()
+    
