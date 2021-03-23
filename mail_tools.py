@@ -151,7 +151,7 @@ async def track_mails():
         r = requests.get(lenk)
         with open(fl_name, 'wb') as f:
             f.write(r.content)
-    last = f""" 
+    last = f""" #EMAIL_RECEIVED
 <b>Mail From :</b> <code>{lmao.get("from")}</code>
 <b>Date :</b> <code>{lmao.get("date")}</code>
 <b>Subject :</b> <code>{lmao.get("subject")}</code>
