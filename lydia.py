@@ -4,7 +4,8 @@ from main_startup.config_var import Config
 from xtraplugins.dB.lydia import (
     remove_chat,
     add_chat,
-    get_all_chats
+    get_all_chats,
+    get_session
 )
 
 if Config.LYDIA_API_KEY:
@@ -45,6 +46,21 @@ async def remcf(client, message):
         await pablo.edit("Lydia Was Not Activated In This Chat")
         return
     await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
+
+@listen(filters.incoming & ~filters.edited & filters.group)
+async def livelydia(client, message):
+    if not get_session(message.chat.id):
+        message.continue_propagation()
+    else:
+        session = get_session(message.chat.id)
+    if not message.text:
+        message.continue_propagation()
+    text_rep = session.think_thought((session, message.text))
+    await client.send_chat_action(message.chat.id, "typing")
+    await message.reply(text_rep)
+
+    
+
 
 
 
