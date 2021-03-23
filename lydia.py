@@ -58,7 +58,7 @@ async def livelydia(client, message):
         message.continue_propagation()
     print(get_session(int(message.chat.id)))
     print(message.chat.id)
-    if not get_session(message.chat.id):
+    if not get_session(int(message.chat.id)):
         message.continue_propagation()
     else:
         session = get_session(message.chat.id)
