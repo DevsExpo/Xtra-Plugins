@@ -27,5 +27,25 @@ async def addcf(client, message):
     if not lol:
         await pablo.edit("Lydia Already Activated In This Chat")
         return
+    await pablo.edit(f"Lydia AI Successfully Added For Users In The Chat {message.chat.id}")
+
     
-#todo
+@friday_on_cmd(
+        ["remcf"],
+        is_official=False,
+        cmd_help={
+            "help": "Deactivate Lydia In The Chat!",
+            "example": "{ch}remcf"
+        }
+    )
+async def remcf(client, message):
+    pablo = await edit_or_reply(message, "`Processing...`")
+    Escobar = remove_chat(message.chat.id)
+    if not Escobar:
+        await pablo.edit("Lydia Was Not Activated In This Chat")
+        return
+    await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
+
+
+
+
