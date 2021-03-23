@@ -101,7 +101,8 @@ async def check_mail(client, message):
         await client.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
         os.remove(fl_name)
         await pablo.delete()
-
+        
+print("Test")
 
 
 async def track_mails():
