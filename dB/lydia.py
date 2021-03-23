@@ -3,25 +3,25 @@ from database import db_x
 lydia = db_x["LYDIA"]
 
 
-def add_user(chat_id, user_id, string_id):
-    stark = lydia.find_one({"chat_id": chat_id, "user_id": user_id, "string_id": string_id})
+def add_chat(chat_id):
+    stark = lydia.find_one({"chat_id": chat_id})
     if stark:
         return False
     else:
-        lydia.insert_one({"chat_id": chat_id, "user_id": user_id, "string_id": string_id})
+        lydia.insert_one({"chat_id": chat_id})
         return True
 
 
-def remove_user(chat_id, user_id):
-    stark = lydia.find_one({"chat_id": chat_id, "user_id": user_id})
+def remove_chat(chat_id, user_id):
+    stark = lydia.find_one({"chat_id": chat_id})
     if not stark:
         return False
     else:
-        lydia.delete_one({"chat_id": chat_id, "user_id": user_id, "string_id": string_id})
+        lydia.delete_one({"chat_id": chat_id})
         return True
 
-def get_all_users(chat_id):
-    r = list(lydia.find({"chat_id": chat_id}))
+def get_all_chats():
+    r = list(lydia.find())
     if r:
         return r
     else:
