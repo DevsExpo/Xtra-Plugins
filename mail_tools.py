@@ -105,7 +105,9 @@ async def track_mails():
     if not email:
         return
     caption = ""
+    print(email)
     last_msg = get_msg_id(email)
+    print(last_msg)
     mail_ = email.split("@", 1)
     login = mail_[0]
     domain = mail_[1]
@@ -120,6 +122,7 @@ async def track_mails():
         return
     else:
         add_msg_update_msg(latest_mail)
+    print(latest_mail)
     kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={latest_mail}"
     r = requests.get(kk)
     lmao = r.json()
