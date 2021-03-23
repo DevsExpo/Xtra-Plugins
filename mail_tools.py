@@ -11,6 +11,10 @@ from xtraplugins.dB.mail_tools import (
     get_mail_id,
     add_msg_update_msg
 )
+import logging
+
+logging.basicConfig()
+logging.getLogger('apscheduler').setLevel(logging.DEBUG)
 
 
 supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com"]
