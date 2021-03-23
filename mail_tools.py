@@ -1,4 +1,5 @@
 import requests
+import os
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
@@ -84,10 +85,8 @@ async def check_mail(client, message):
         with open(fl_name, 'wb') as f:
             f.write(r.content)
     last = f""" 
-    <strong>Latest Mail Possible!</strong>
-    
 <b>Mail From :</b> <code>{lmao.get("from")}</code>
-
+<b>Date :</b> <code>{lmao.get("date")}</code>
 <b>Subject :</b> <code>{lmao.get("subject")}</code>
 
 <b>Body :</b> <code>{lmao.get("textBody")}</code>
