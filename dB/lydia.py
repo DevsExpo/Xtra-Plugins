@@ -3,12 +3,12 @@ from database import db_x
 lydia = db_x["LYDIA"]
 
 
-def add_chat(chat_id):
-    stark = lydia.find_one({"chat_id": chat_id})
+def add_chat(chat_id, session_id):
+    stark = lydia.find_one({"chat_id": chat_id, "session_id": session_id})
     if stark:
         return False
     else:
-        lydia.insert_one({"chat_id": chat_id})
+        lydia.insert_one({"chat_id": chat_id, "session_id": session_id})
         return True
 
 
