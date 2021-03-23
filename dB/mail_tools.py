@@ -3,7 +3,7 @@ from database import db_x
 mail = db_x["MAIL"]
 
 
-def add_mail_update_mail(mail_id, last_msg_id):
+def add_mail_update_mail(mail_id, last_msg_id=""):
     midhun = mail.find_one({"_id": "MAIL_DETAILS")
     if midhun:
         mail.update_one({"_id": "MAIL_DETAILS"}, {"$set": {"mail_id": mail_id}})
