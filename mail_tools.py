@@ -105,6 +105,7 @@ async def check_mail(client, message):
 
 
 async def track_mails():
+    print("hmmm")
     email = get_mail_id()
     if not email:
         return
