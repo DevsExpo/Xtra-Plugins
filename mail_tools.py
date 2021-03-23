@@ -16,13 +16,13 @@ supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com"]
 
 
 @friday_on_cmd(
-    ["add_mail"],
-    is_official=False,
-    cmd_help={
-        "help": "Create Temporary Mail",
-        "example": "{ch}add_mail (mail-id)",
-    },
-)
+        ["add_mail"],
+        is_official=False,
+        cmd_help={
+            "help": "Create Temporary Mail!",
+            "example": "{ch}add_mail (mail-id)"
+        }
+    )
 async def add_mail_to_db(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
     mail_id = get_text(message)
