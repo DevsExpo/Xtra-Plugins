@@ -65,10 +65,13 @@ async def check_mail(client, message):
     login = lmao[0]
     domain = lmao[1]
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
+    print(login)
+    print(domain)
+    print(lmao)
     r = requests.get(link)
-    lmao = r.json()
+    r_json = r.json()
     try:
-        latest_mail = lmao[0].get('id')
+        latest_mail = r_json[0].get('id')
     except IndexError:
         await pablo.edit("`You Don't Have Any Mails Yet ;( Ask Your Gf To Send Some Nudes!`")
         return
