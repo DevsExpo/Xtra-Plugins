@@ -17,7 +17,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 )
 async def _(client,message):
     query = get_text(message)
-    lel = await edit_or_reply("Searching For Lyrics.....")
+    lel = await edit_or_reply(message, "Searching For Lyrics.....")
     if not query:
         await lel.edit("`What I am Supposed to find `")
         return
