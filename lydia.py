@@ -2,6 +2,7 @@ from main_startup.core.decorators import friday_on_cmd, listen
 from pyrogram import filters
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from main_startup.config_var import Config
+from functools import wraps
 from xtraplugins.dB.lydia import (
     remove_chat,
     add_chat,
