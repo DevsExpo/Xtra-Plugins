@@ -52,7 +52,7 @@ async def bookdl(client, message):
     soup = BeautifulSoup(r.content, "html5lib")
     images = soup.findAll("img")
     imaeo = images[0]["src"]
-    print(imaeo)
+    
     try:
         imae = wget.download(imaeo)
     except BaseException:
