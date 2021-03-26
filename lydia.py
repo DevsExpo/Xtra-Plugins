@@ -11,7 +11,7 @@ from xtraplugins.dB.lydia import (
 )
 
 import asyncio, coffeehouse
-
+import logging
 from coffeehouse.lydia import LydiaAI
 
 if Config.LYDIA_API_KEY:
@@ -19,7 +19,7 @@ if Config.LYDIA_API_KEY:
     try:
         lydia = LydiaAI(api_key)
     except Exception as e:
-        print(f"Unable To Start Lydia Client \nTraceBack : {e}")
+        logging.error(f"Unable To Start Lydia Client \nTraceBack : {e}")
         lydia = None
 else:
     lydia = None
