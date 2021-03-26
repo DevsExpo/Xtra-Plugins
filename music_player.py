@@ -1,5 +1,5 @@
 import os
-
+import logging
 import ffmpeg
 from main_startup import Friday
 from main_startup.core.decorators import friday_on_cmd
@@ -48,7 +48,7 @@ async def playout_ended_handler(group_call, filename):
     )
     holi = s[0]
     s.pop(0)
-    print("Now Playing " + str(holi))
+    logging.info("Now Playing " + str(holi))
     group_call.input_filename = holi
 
 
