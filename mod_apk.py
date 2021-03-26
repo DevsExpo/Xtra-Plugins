@@ -33,11 +33,11 @@ async def mudapk(client, message):
     sucker = mydivs[0]
     pH9 = sucker.find("a").contents[0]
     file_name = pH9
-    print(2)
+    
     pH = sucker.findAll("img")
     imme = wget.download(pH[0]["src"])
     Pablo = Pop[0].a["href"]
-    print(3)
+    
     ro = requests.get(Pablo)
     soup = BeautifulSoup(ro.content, "html5lib")
 
@@ -49,13 +49,13 @@ async def mudapk(client, message):
 
     rr = requests.get(lemk)
     soup = BeautifulSoup(rr.content, "html5lib")
-    print(4)
+    
     script = soup.find("script", type="text/javascript")
 
     leek = re.search(r'href=[\'"]?([^\'" >]+)', script.text).group()
     dl_link = leek[5:]
 
-    print(5)
+    
     r = requests.get(dl_link)
     await pablo.edit("Downloading Mod App")
     open(f"{file_name}.apk", "wb").write(r.content)
