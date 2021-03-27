@@ -7,7 +7,8 @@ from xtraplugins.dB.rss_db import (
     del_rss,
     get_chat_rss,
     get_last_rss,
-    update_rss
+    update_rss,
+    basic_check
 )
 
 
@@ -44,3 +45,26 @@ async def addrss(client, message):
         pass
     await client.send_message(message.chat.id, content)
     add_rss(message.chat.id, lenk, rss_d.entries[0].link)
+    await pablo.delete()
+
+@friday_on_cmd(
+    ["test_rss"],
+    is_official=False,
+    cmd_help={
+        "help": "Test RSS Of The Chat",
+        "example": "{ch}test_rss",
+    },
+)
+async def testrss(client, message):
+    pablo = await edit_or_reply(message, "`Processing....`")
+    damn = basic_check(chat_id)
+    if not damn:
+        URL = "https://www.reddit.com/r/funny/new/.rss"
+        rss_d = feedparser.parse(url)
+        Content = (rss_d.entries[0]['title'] + "\n" + rss_d.entries[0]['link'])
+
+
+
+
+
+
