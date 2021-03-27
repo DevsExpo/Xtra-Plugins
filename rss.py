@@ -25,4 +25,22 @@ async def addrss(client, message):
     if not lenk:
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
         return
-    
+    try:
+        rss_d = feedparser.parse(lenk)
+        rss_d.entries[0].title
+    except:
+        await pablo.edit("ERROR: The link does not seem to be a RSS feed or is not supported")
+        return
+    lol = is_get_chat_rss(message.chat.id, lemk)
+    if lol:
+        await pablo.edit("This Link Already Added")
+        return
+    content = ""
+    content += rss_d.entries[0].title
+    content += f"\n\n{rss_d.entries[0].link}"
+    try:
+        content += f"\n{rss_d.entries[0].description}"
+    except:
+        pass
+    await client.send_message(message.chat.id, content)
+    add_rss(message.chat.id, lenk, rss_d.entries[0].link)
