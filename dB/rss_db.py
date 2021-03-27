@@ -28,7 +28,12 @@ def is_get_chat_rss(chat_id, rss_link):
     else:
         return False
 
-
+def basic_check(chat_id):
+    lol = rss.find({"chat_id": chat_id})
+    if lol:
+        return True
+    else:
+        return False
 
 
 
