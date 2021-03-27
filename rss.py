@@ -45,7 +45,7 @@ async def addrss(client, message):
         pass
     await client.send_message(message.chat.id, content)
     add_rss(message.chat.id, lenk, rss_d.entries[0].link)
-    await pablo.delete()
+    await pablo.edit("Successfully Added Link To RSS Watch")
 
 @friday_on_cmd(
     ["test_rss"],
@@ -59,10 +59,27 @@ async def testrss(client, message):
     pablo = await edit_or_reply(message, "`Processing....`")
     damn = basic_check(message.chat.id)
     if not damn:
+        
         URL = "https://www.reddit.com/r/funny/new/.rss"
         rss_d = feedparser.parse(url)
         Content = (rss_d.entries[0]['title'] + "\n\n" + rss_d.entries[0]['link'])
-
+        await client.send_message(message.chat.id, Content)
+        await pablo.edit("This Chat Has No RSS So Sent Reddit RSS")
+    else:
+        all = get_chat_rss(message.chat.id)
+        
+        for x in all:
+            link = x.get("rss_link")
+            rss_d = feedparser.parse(lenk)
+            rss_d.entries[0].title
+            content = ""
+            content += rss_d.entries[0].title
+            content += f"\n\nLink : {rss_d.entries[0].link}"
+            try:
+                content += f"\n{rss_d.entries[0].description}"
+           except:
+                pass
+           await client.send_message(message.chat.id, content)
 
 
 
