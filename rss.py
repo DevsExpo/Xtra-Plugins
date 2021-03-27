@@ -61,7 +61,7 @@ async def testrss(client, message):
     if not damn:
         URL = "https://www.reddit.com/r/funny/new/.rss"
         rss_d = feedparser.parse(url)
-        Content = (rss_d.entries[0]['title'] + "\n" + rss_d.entries[0]['link'])
+        Content = (rss_d.entries[0]['title'] + "\n\n" + rss_d.entries[0]['link'])
 
 
 
