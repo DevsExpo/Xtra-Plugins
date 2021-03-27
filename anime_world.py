@@ -99,7 +99,7 @@ favorites:- {anime.favorites}</b>
     },
 )
 async def manga(client, message):
-    pablo = await edit_or_reply(message, "`Searching For Anime.....`")
+    pablo = await edit_or_reply(message, "`Searching For Manga.....`")
     anime = get_text(message)
     if not anime:
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
