@@ -11,10 +11,6 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 
 
 
-def folder_create(images): 
-
-    download_images(images) 
-
 
 
 def download_images(images): 
@@ -57,7 +53,7 @@ def mainne(name, typeo):
     random.shuffle(images)
     if images is not None:
        print("level 1 pass")
-    folder_create(images)
+    download_images(images)
 
 
 @friday_on_cmd(
