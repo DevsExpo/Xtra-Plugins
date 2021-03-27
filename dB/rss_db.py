@@ -1,6 +1,24 @@
 from database import db_x
 
-fed = db_x["FED"]
+rss = db_x["RSS"]
 
 
-#todo
+def add_rss(chat_id, rss_link, latest_rss):
+    rss.insert_one({"chat_id": chat_id, "rss_link": rss_link, "latest_rss": latest_rss})
+         
+
+def del_rss(chat_id, rss_link):
+    rss.delete_one({"chat_id": chat_id, "rss_link": rss_link})
+
+
+
+
+
+
+
+
+
+
+
+
+
