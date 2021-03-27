@@ -14,6 +14,8 @@ def get_chat_rss(chat_id):
     lol = list(amazon_url.find({"chat_id": chat_id}))
     return lol
 
+def update_rss(chat_id, rss_link, latest_rss):
+    rss.update_one({"chat_id": chat_id, "rss_link": rss_link, {"$set": {"latest_rss": latest_rss}})
 
 def get_last_rss(chat_id, rss_link):
     lol = amazon_url.find({"chat_id": chat_id, "rss_link": rss_link})
