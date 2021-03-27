@@ -13,6 +13,28 @@ from xtraplugins.dB.rss_db import (
 
 
 @friday_on_cmd(
+    ["del_rss"],
+    is_official=False,
+    cmd_help={
+        "help": "Delete RSS From The Chat",
+        "example": "{ch}del_rss (rss link)",
+    },
+)
+async def delrss(client, message):
+    pablo = await edit_or_reply(message, "`Processing....`")
+    lenk = get_text(message)
+    if not lenk:
+        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        return
+    lol = is_get_chat_rss(message.chat.id, lenk)
+    if not lol:
+        await pablo.edit("This Link Was Never Added")
+        return
+    del_rss(message.chat.id, Lenk)
+    await pablo.edit(f"Successfully Removed `{lenk}` From Chat RSS")
+
+
+@friday_on_cmd(
     ["add_rss"],
     is_official=False,
     cmd_help={
