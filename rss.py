@@ -82,6 +82,25 @@ async def testrss(client, message):
             await client.send_message(message.chat.id, content)
 
 
-
+@friday_on_cmd(
+    ["List_rss"],
+    is_official=False,
+    cmd_help={
+        "help": "List all RSS Of The Chat",
+        "example": "{ch}list_rss",
+    },
+)
+async def listrss(client, message):
+    pablo = await edit_or_reply(message, "`Processing....`")
+    damn = basic_check(message.chat.id)
+    if not damn:
+        await pablo.edit("This Chat Has No RSS!")
+        return
+    links = ""
+    all = get_chat_rss(message.chat.id)
+    for x in all:
+        links += f"{x.get("rss_link")}\n"
+    content = f"Rss Found In The Chat Are : \n\n{links}"
+    await client.send_message(message.chat.id, content)
 
 
