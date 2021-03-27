@@ -70,7 +70,7 @@ async def testrss(client, message):
         
         for x in all:
             link = x.get("rss_link")
-            rss_d = feedparser.parse(lenk)
+            rss_d = feedparser.parse(link)
             rss_d.entries[0].title
             content = ""
             content += rss_d.entries[0].title
