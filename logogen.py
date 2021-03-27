@@ -65,7 +65,7 @@ def mainne(name, typeo):
     },
 )
 async def logogen(client, message):
-    pablo = await edit_or_reply(message, "`Searching For logo.....`")
+    pablo = await edit_or_reply(message, "`Creating The Logo.....`")
     Godzilla = get_text(message)
     if not Godzilla:
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
