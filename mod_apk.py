@@ -60,7 +60,7 @@ async def mudapk(client, message):
     await pablo.edit("Downloading Mod App")
     open(f"{file_name}.apk", "wb").write(r.content)
     c_time = time.time()
-    await pablo.edit(f"`Downloaded {file_name}! Now Uploading Song...`")
+    await pablo.edit(f"`Downloaded {file_name}! Now Uploading APK...`")
     await client.send_document(
         message.chat.id,
         document=open(f"{file_name}.apk", "rb"),
