@@ -19,7 +19,12 @@ def get_last_rss(chat_id, rss_link):
     lol = amazon_url.find({"chat_id": chat_id, "rss_link": rss_link})
     return lol
 
-
+def is_get_chat_rss(chat_id, rss_link):
+    lol = amazon_url.find_one({"chat_id": chat_id, "rss_link": rss_link})
+    if lol:
+        return True
+    else:
+        return False
 
 
 
