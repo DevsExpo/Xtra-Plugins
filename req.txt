@@ -3,3 +3,4 @@ pytgcalls
 mal-api
 coffeehouse
 tswift
+feedparser
