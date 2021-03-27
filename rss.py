@@ -99,7 +99,8 @@ async def listrss(client, message):
     links = ""
     all = get_chat_rss(message.chat.id)
     for x in all:
-        links += f"{x.get("rss_link")}\n"
+        l = x.get("rss_link")
+        links += f"{l}\n"
     content = f"Rss Found In The Chat Are : \n\n{links}"
     await client.send_message(message.chat.id, content)
 
