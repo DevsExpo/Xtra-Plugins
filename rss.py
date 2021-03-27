@@ -32,7 +32,7 @@ async def addrss(client, message):
     except:
         await pablo.edit("ERROR: The link does not seem to be a RSS feed or is not supported")
         return
-    lol = is_get_chat_rss(message.chat.id, lemk)
+    lol = is_get_chat_rss(message.chat.id, lenk)
     if lol:
         await pablo.edit("This Link Already Added")
         return
