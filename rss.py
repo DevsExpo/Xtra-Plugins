@@ -37,7 +37,7 @@ async def addrss(client, message):
         await pablo.edit("This Link Already Added")
         return
     content = ""
-    content += rss_d.entries[0].title
+    content += f"**{rss_d.entries[0].title}**"
     content += f"\n\n{rss_d.entries[0].link}"
     try:
         content += f"\n{rss_d.entries[0].description}"
