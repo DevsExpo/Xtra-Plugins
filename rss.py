@@ -77,9 +77,9 @@ async def testrss(client, message):
             content += f"\n\nLink : {rss_d.entries[0].link}"
             try:
                 content += f"\n{rss_d.entries[0].description}"
-           except:
+            except:
                 pass
-           await client.send_message(message.chat.id, content)
+            await client.send_message(message.chat.id, content)
 
 
 
