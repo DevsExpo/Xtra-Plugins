@@ -71,16 +71,16 @@ async def testrss(client, message):
         for x in all:
             link = x.get("rss_link")
             rss_d = feedparser.parse(link)
-            rss_d.entries[0].title
+            
             content = ""
-            content += rss_d.entries[0].title
+            content += f"**{rss_d.entries[0].title}**"
             content += f"\n\nLink : {rss_d.entries[0].link}"
             try:
                 content += f"\n{rss_d.entries[0].description}"
             except:
                 pass
             await client.send_message(message.chat.id, content)
-
+        await pablo.delete()
 
 @friday_on_cmd(
     ["List_rss"],
@@ -103,5 +103,5 @@ async def listrss(client, message):
         links += f"{l}\n"
     content = f"Rss Found In The Chat Are : \n\n{links}"
     await client.send_message(message.chat.id, content)
-
+    await pablo.delete()
 
