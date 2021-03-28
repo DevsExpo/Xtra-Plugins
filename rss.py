@@ -12,30 +12,12 @@ from xtraplugins.dB.rss_db import (
     update_rss,
     basic_check,
     get_all,
-    overall_check
+    overall_check,
+    delete_all
 )
 
 
-@friday_on_cmd(
-    ["del_rss"],
-    is_official=False,
-    cmd_help={
-        "help": "Delete RSS From The Chat",
-        "example": "{ch}del_rss (rss link)",
-    },
-)
-async def delrss(client, message):
-    pablo = await edit_or_reply(message, "`Processing....`")
-    lenk = get_text(message)
-    if not lenk:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
-        return
-    lol = is_get_chat_rss(message.chat.id, lenk)
-    if not lol:
-        await pablo.edit("This Link Was Never Added")
-        return
-    del_rss(message.chat.id, lenk)
-    await pablo.edit(f"Successfully Removed `{lenk}` From Chat RSS")
+
 
 
 @friday_on_cmd(
@@ -109,7 +91,7 @@ async def testrss(client, message):
         await pablo.delete()
 
 @friday_on_cmd(
-    ["List_rss"],
+    ["list_rss"],
     is_official=False,
     cmd_help={
         "help": "List all RSS Of The Chat",
@@ -131,6 +113,44 @@ async def listrss(client, message):
     await client.send_message(message.chat.id, content)
     await pablo.delete()
 
+
+
+@friday_on_cmd(
+    ["del_rss"],
+    is_official=False,
+    cmd_help={
+        "help": "Delete RSS From The Chat",
+        "example": "{ch}del_rss (rss link)",
+    },
+)
+async def delrss(client, message):
+    pablo = await edit_or_reply(message, "`Processing....`")
+    lenk = get_text(message)
+    if not lenk:
+        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        return
+    lol = is_get_chat_rss(message.chat.id, lenk)
+    if not lol:
+        await pablo.edit("This Link Was Never Added")
+        return
+    del_rss(message.chat.id, lenk)
+    await pablo.edit(f"Successfully Removed `{lenk}` From Chat RSS")
+
+@friday_on_cmd(
+    ["del_all_rss", "rm_all_rss"],
+    is_official=False,
+    cmd_help={
+        "help": "Deletes All RSS From The Chat",
+        "example": "{ch}del_all_rss",
+    },
+)
+async def delrss(client, message):
+    pablo = await edit_or_reply(message, "`Processing....`")
+    if not basic_check(message.chat.id):
+        await pablo.edit("This Chat Has No RSS To Delete")
+        return
+    delete_all()
+    await pablo.edit("Successfully Deleted All RSS From The Chat")
 
 async def check_rss():
     if not overall_check():
