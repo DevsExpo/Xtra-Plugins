@@ -82,8 +82,14 @@ if lydia:
             message.continue_propagation()
         await client.send_chat_action(message.chat.id, "typing")
         session = get_session(int(message.chat.id))
-        session_id = session.get("session_id")
-        text_rep = lydia.think_thought(session_id, message.text)
+        try:
+            session_id = session.get("session_id")
+            text_rep = lydia.think_thought(session_id, message.text)
+        except:
+             session = lydia.create_session()
+             session_id = session.id
+             text_rep = lydia.think_thought(session_id, message.text)
+             update_session(message.chat.id, session_id)
         await message.reply(text_rep)
         await client.send_chat_action(message.chat.id, "cancel")
         message.continue_propagation()
