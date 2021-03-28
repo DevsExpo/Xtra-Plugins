@@ -34,3 +34,8 @@ def get_session(chat_id):
         return False
     else:
         return stark
+
+def update_session(chat_id, session_id):
+    lydia.update_one({"chat_id": chat_id}, {"$set": {"session_id": session_id}})
+
+
