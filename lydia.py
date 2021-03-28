@@ -7,7 +7,8 @@ from xtraplugins.dB.lydia import (
     remove_chat,
     add_chat,
     get_all_chats,
-    get_session
+    get_session,
+    update_session
 )
 
 import asyncio, coffeehouse
