@@ -36,6 +36,8 @@ def basic_check(chat_id):
         return False
 
 
-
+def overall_check():
+    lol = rss.find_one()
+    return lol
 
 
