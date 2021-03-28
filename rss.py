@@ -8,7 +8,6 @@ from xtraplugins.dB.rss_db import (
     is_get_chat_rss,
     del_rss,
     get_chat_rss,
-    get_last_rss,
     update_rss,
     basic_check,
     get_all,
