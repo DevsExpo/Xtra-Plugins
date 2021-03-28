@@ -30,7 +30,7 @@ async def delrss(client, message):
     if not lol:
         await pablo.edit("This Link Was Never Added")
         return
-    del_rss(message.chat.id, Lenk)
+    del_rss(message.chat.id, lenk)
     await pablo.edit(f"Successfully Removed `{lenk}` From Chat RSS")
 
 
