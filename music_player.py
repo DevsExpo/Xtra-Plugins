@@ -75,7 +75,7 @@ async def test(client, message):
     if not group_call.is_connected:
         await u_s.edit(f"Playing `{audio.title}...` in {message.chat.title}!")
         try:
-            await group_call.start(message.chat.id, False)
+            await group_call.start(message.chat.id)
         except BaseException as e:
             await u_s.edit(f"**Error While Joining VC:** `{e}`")
             return
