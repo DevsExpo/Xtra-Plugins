@@ -38,6 +38,15 @@ def basic_check(chat_id):
 
 def overall_check():
     lol = rss.find_one()
+    if lol:
+        return True 
+    else:
+        return False
+
+
+def get_all():
+    lol = rss.find()
     return lol
+
 
 
