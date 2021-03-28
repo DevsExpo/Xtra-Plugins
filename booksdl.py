@@ -182,7 +182,7 @@ async def bookdl(client, message):
     if nbx == "0":
         await pablo.edit("No Books Found with that name.")
     else:
-
+        lool = 0
         for tr in soup.find_all("td"):
             for td in tr.find_all("h3"):
                 for ts in td.find_all("a"):
