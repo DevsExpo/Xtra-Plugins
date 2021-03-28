@@ -48,5 +48,8 @@ def get_all():
     lol = rss.find()
     return lol
 
+def delete_all():
+    lol = rss.delete_many({})
+    
 
 
