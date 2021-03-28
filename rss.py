@@ -1,6 +1,8 @@
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 import feedparser
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from xtraplugins.dB.rss_db import (
     add_rss,
     is_get_chat_rss,
@@ -148,4 +150,11 @@ async def check_rss():
                 pass
              await client.send_message(message, content)
              update_rss(message, link, rss_d.entries[0].link)
+
+
+scheduler = AsyncIOScheduler()
+scheduler.add_job(check_rss, 'interval', minutes=5)
+scheduler.start()
+
+
 
