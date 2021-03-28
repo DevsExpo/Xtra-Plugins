@@ -17,9 +17,7 @@ def get_chat_rss(chat_id):
 def update_rss(chat_id, rss_link, latest_rss):
     rss.update_one({"chat_id": chat_id, "rss_link": rss_link}, {"$set": {"latest_rss": latest_rss}})
 
-def get_last_rss(chat_id, rss_link):
-    lol = rss.find_one({"chat_id": chat_id, "rss_link": rss_link})
-    return lol
+
 
 def is_get_chat_rss(chat_id, rss_link):
     lol = rss.find_one({"chat_id": chat_id, "rss_link": rss_link})
