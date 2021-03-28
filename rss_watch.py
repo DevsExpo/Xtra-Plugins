@@ -173,7 +173,7 @@ async def check_rss():
 
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(check_rss, 'interval', minutes=1)
+scheduler.add_job(check_rss, 'interval', minutes=3)
 scheduler.start()
 
 
