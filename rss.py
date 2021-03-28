@@ -8,7 +8,8 @@ from xtraplugins.dB.rss_db import (
     get_chat_rss,
     get_last_rss,
     update_rss,
-    basic_check
+    basic_check,
+    get_all
 )
 
 
@@ -126,4 +127,25 @@ async def listrss(client, message):
     content = f"Rss Found In The Chat Are : \n\n{links}"
     await client.send_message(message.chat.id, content)
     await pablo.delete()
+
+
+async def check_rss():
+    if not overall_check():
+        return
+    all = get_all()
+    for one in all:
+        link = one.get("rss_link")
+        old = one.get("latest_rss")
+        rss_d = feedparser.parse(link)
+        if rss_d.entries[0].link != old:
+             message = one.get("chat_id")
+             content = ""
+             content += f"**{rss_d.entries[0].title}**"
+             content += f"\n\nLink : {rss_d.entries[0].link}"
+             try:
+                content += f"\n{rss_d.entries[0].description}"
+             except:
+                pass
+             await client.send_message(message, content)
+             update_rss(message, link, rss_d.entries[0].link)
 
