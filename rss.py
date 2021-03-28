@@ -83,7 +83,7 @@ async def testrss(client, message):
     if not damn:
         
         URL = "https://www.reddit.com/r/funny/new/.rss"
-        rss_d = feedparser.parse(url)
+        rss_d = feedparser.parse(URL)
         Content = (rss_d.entries[0]['title'] + "\n\n" + rss_d.entries[0]['link'])
         await client.send_message(message.chat.id, Content)
         await pablo.edit("This Chat Has No RSS So Sent Reddit RSS")
