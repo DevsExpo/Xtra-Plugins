@@ -73,5 +73,38 @@ async def job_close():
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_close, trigger="cron", hour=17, minute=10)
+scheduler.add_job(job_close, trigger="cron", hour=23, minute=55)
 scheduler.start()
+
+async def job_open():
+    lol = get_all_night_chats()
+    if len(lol) == 0:
+        return
+    for warner in lol:
+        try:
+            await Friday.send_message(
+              int(warner.get("chat_id")), "`06:00 Am, Group Is Opening.`\n**Powered By @FRidayOT**"
+            )
+            await Friday.set_chat_permissions(
+                        warner.get("chat_id"),
+                        ChatPermissions(
+                            can_send_messages=True,
+                            can_send_media_messages=True,
+                            can_send_stickers=True,
+                            can_send_animations=True
+                         )
+            )
+            
+        except Exception as e:
+            logging.info(str(e))
+            ido = warner.get("chat_id")
+            try:
+                await Friday.send_message(Config.LOG_GRP, f"[NIGHT MODE]\n\nFailed To Open The Group {ido}.\nError : {e}")
+            except:
+                pass
+            
+
+scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
+scheduler.add_job(job_open, trigger="cron", hour=18, minute=12)
+scheduler.start()
+
