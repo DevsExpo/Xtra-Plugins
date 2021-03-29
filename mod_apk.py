@@ -54,10 +54,9 @@ async def mudapk(client, message):
 
     leek = re.search(r'href=[\'"]?([^\'" >]+)', script.text).group()
     dl_link = leek[5:]
-
-    
     r = requests.get(dl_link)
     await pablo.edit("Downloading Mod App")
+    ca = f"**App Name :** `{file_name}` \n\n**Uploaded Using @FridayOT**"
     open(f"{file_name}.apk", "wb").write(r.content)
     c_time = time.time()
     await pablo.edit(f"`Downloaded {file_name}! Now Uploading APK...`")
@@ -65,6 +64,7 @@ async def mudapk(client, message):
         message.chat.id,
         document=open(f"{file_name}.apk", "rb"),
         thumb=imme,
+        caption=co,
         progress=progress,
         progress_args=(
             pablo,
