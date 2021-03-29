@@ -5,11 +5,6 @@ from pyrogram.types import ChatPermissions
 from main_startup.helper_func.logger_s import LogIt
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-
-
-
-
-
 @friday_on_cmd(
     ["scgrp"],
     is_official=False,
@@ -56,20 +51,20 @@ async def job_close():
         return
     for warner in lol:
         try:
-            await client.send_message(
+            await Friday.send_message(
               int(warner.get("chat_id")), "`12:00 Am, Group Is Closing Till 6 Am. Night Mode Started !` \n**Powered By @FRidayOT**"
             )
-            await client.set_chat_permissions(warner.get("chat_id"), ChatPermissions())
-            async for member in client.iter_chat_members(warner.get("chat_id")):
+            await Friday.set_chat_permissions(warner.get("chat_id"), ChatPermissions())
+            async for member in Friday.iter_chat_members(warner.get("chat_id")):
              if member.user.is_deleted:
                 try:
-                    await client.kick_chat_member(warner.get("chat_id"), member.user.id)
+                    await Friday.kick_chat_member(warner.get("chat_id"), member.user.id)
                 except:
                     pass
         except Exception as e:
             log = LogIt(message)
             ido = warner.get("chat_id")
-            await log.log_msg(client, f"[NIGHT MODE]\n\nFailed To Close The Group {ido}.\nError : {e}")
+            await log.log_msg(Friday, f"[NIGHT MODE]\n\nFailed To Close The Group {ido}.\nError : {e}")
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
