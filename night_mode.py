@@ -1,6 +1,6 @@
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
-from database.nightmodedb import is_night_chat_in_db, get_all_night_chats, rm_night_chat, add_night_chat
+from xtraplugins.dB.nightmodedb import is_night_chat_in_db, get_all_night_chats, rm_night_chat, add_night_chat
 from pyrogram.types import ChatPermissions
 from main_startup.helper_func.logger_s import LogIt
 
@@ -73,7 +73,7 @@ async def job_close():
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_close, trigger="cron", hour=16, minute=13)
+scheduler.add_job(job_close, trigger="cron", hour=16, minute=17)
 scheduler.start()
 
 
