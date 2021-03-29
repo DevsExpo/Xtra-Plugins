@@ -27,3 +27,4 @@ async def mask(client, message):
     except:
        print(messi)
     await message.reply_photo(messi.photo.file_id)
+    await pablo.delete()
