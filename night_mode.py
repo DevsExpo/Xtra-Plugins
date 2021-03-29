@@ -54,7 +54,7 @@ async def job_close():
     lol = get_all_night_chats()
     if len(lol) == 0:
         return
-    for warner in ws_chats:
+    for warner in lol:
         try:
             await client.send_message(
               int(warner.get("chat_id")), "`12:00 Am, Group Is Closing Till 6 Am. Night Mode Started !` \n**Powered By @FRidayOT**"
@@ -73,7 +73,7 @@ async def job_close():
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_close, trigger="cron", hour=16, minute=27)
+scheduler.add_job(job_close, trigger="cron", hour=16, minute=50)
 scheduler.start()
 
 
