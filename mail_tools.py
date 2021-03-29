@@ -49,6 +49,21 @@ async def add_mail_to_db(client, message):
 
 
 @friday_on_cmd(
+        ["list_mails"],
+        is_official=False,
+        cmd_help={
+            "help": "Get List Of Available Mail Domains!",
+            "example": "{ch}list_mails"
+        }
+    )
+async def list_mails(client, message):
+    pablo = await edit_or_reply(message, "`Processing.....`")
+    cap = "List Of Available Mail Domains Are : \n\n"
+    for x in supported_domains:
+        cap +=f"`{x}`"
+    await pablo.edit(cap)
+
+@friday_on_cmd(
     ["check_mail"],
     is_official=False,
     cmd_help={
