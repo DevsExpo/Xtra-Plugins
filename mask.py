@@ -21,3 +21,5 @@ async def mask(client, message):
         else:
            return
     message.reply_to_message.copy("hazmat_suit_bot")
+    messi = (await client.get_history("hazmat_suit_bot", 1))[0]
+    await message.reply_photo(messi.photo.file_id)
