@@ -20,4 +20,4 @@ async def mask(client, message):
            pass
         else:
            return
-    
+    message.reply_to_message.copy("hazmat_suit_bot")
