@@ -1,6 +1,6 @@
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
-
+import asyncio
 
 @friday_on_cmd(
     ["mask"],
@@ -21,5 +21,6 @@ async def mask(client, message):
         else:
            return
     await message.reply_to_message.copy("hazmat_suit_bot")
+    await asyncio.sleep(1)
     messi = (await client.get_history("hazmat_suit_bot", 1))[0]
     await message.reply_photo(messi.photo.file_id)
