@@ -68,7 +68,8 @@ async def job_close():
                     pass
         except Exception as e:
             log = LogIt(message)
-            await log.log_msg(client, f"[NIGHT MODE]\n\nFailed To Close The Group {warner.get("chat_id")}.\nError : {e}")
+            ido = warner.get("chat_id")
+            await log.log_msg(client, f"[NIGHT MODE]\n\nFailed To Close The Group {ido}.\nError : {e}")
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
