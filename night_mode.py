@@ -3,7 +3,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from xtraplugins.dB.nightmodedb import is_night_chat_in_db, get_all_night_chats, rm_night_chat, add_night_chat
 from pyrogram.types import ChatPermissions
 from main_startup.helper_func.logger_s import LogIt
-
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 
 
@@ -73,7 +73,7 @@ async def job_close():
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_close, trigger="cron", hour=16, minute=17)
+scheduler.add_job(job_close, trigger="cron", hour=16, minute=18)
 scheduler.start()
 
 
