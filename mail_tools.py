@@ -60,7 +60,7 @@ async def list_mails(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
     cap = "List Of Available Mail Domains Are : \n\n"
     for x in supported_domains:
-        cap +=f"`{x}`"
+        cap +=f"`{x}` \n"
     await pablo.edit(cap)
 
 @friday_on_cmd(
