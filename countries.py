@@ -20,7 +20,7 @@ async def anime(client, message):
     if not lol:
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
         return
-    lol = input_str
+    
     country = CountryInfo(lol)
     try:
 	    a = country.info()
