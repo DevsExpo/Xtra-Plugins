@@ -61,7 +61,7 @@ async def job_close():
             )
             await client.set_chat_permissions(warner.get("chat_id"), ChatPermissions())
             async for member in client.iter_chat_members(warner.get("chat_id")):
-            if member.user.is_deleted:
+             if member.user.is_deleted:
                 try:
                     await client.kick_chat_member(warner.get("chat_id"), member.user.id)
                 except:
