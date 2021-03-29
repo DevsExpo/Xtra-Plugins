@@ -14,8 +14,8 @@ from countryinfo import CountryInfo
         "example": "{ch}country India",
     },
 )
-async def anime(client, message):
-    pablo = await edit_or_reply(message, "`Searching For Anime.....`")
+async def country(client, message):
+    pablo = await edit_or_reply(message, "`Searching For Country.....`")
     lol = get_text(message)
     if not lol:
         await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
