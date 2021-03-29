@@ -21,7 +21,7 @@ async def mask(client, message):
         else:
            return
     await message.reply_to_message.copy("hazmat_suit_bot")
-    await time.sleep(1.5)
+    time.sleep(1.5)
     try:
        messi = (await client.get_history("hazmat_suit_bot", 1))[0]
     except:
