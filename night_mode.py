@@ -1,10 +1,11 @@
 from main_startup.core.decorators import friday_on_cmd
-from main_startup import bot, Friday
+from main_startup import bot, Friday, Config
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from xtraplugins.dB.nightmodedb import is_night_chat_in_db, get_all_night_chats, rm_night_chat, add_night_chat
 from pyrogram.types import ChatPermissions
 from main_startup.helper_func.logger_s import LogIt
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+import logging
 
 @friday_on_cmd(
     ["scgrp"],
@@ -63,9 +64,12 @@ async def job_close():
                 except:
                     pass
         except Exception as e:
-            log = LogIt(message)
+            logging.info(str(e))
             ido = warner.get("chat_id")
-            await log.log_msg(Friday, f"[NIGHT MODE]\n\nFailed To Close The Group {ido}.\nError : {e}")
+            try:
+                await Friday.send_message(Config.LOG_GRP, f"[NIGHT MODE]\n\nFailed To Close The Group {ido}.\nError : {e}")
+            except:
+                pass
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
