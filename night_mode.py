@@ -73,5 +73,5 @@ async def job_close():
 
 
 scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_close, trigger="cron", hour=16, minute=50)
+scheduler.add_job(job_close, trigger="cron", hour=17, minute=10)
 scheduler.start()
