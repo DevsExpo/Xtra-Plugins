@@ -168,8 +168,9 @@ async def check_rss():
                 content += f"\n{rss_d.entries[0].description}"
              except:
                 pass
-             await Friday.send_message(message, content)
              update_rss(message, link, rss_d.entries[0].link)
+             await Friday.send_message(message, content)
+             
 
 
 scheduler = AsyncIOScheduler()
