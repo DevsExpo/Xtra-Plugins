@@ -2,6 +2,11 @@ from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from database.nightmodedb import is_night_chat_in_db, get_all_night_chats, rm_night_chat, add_night_chat
 from pyrogram.types import ChatPermissions
+from main_startup.helper_func.logger_s import LogIt
+
+
+
+
 
 
 
@@ -31,8 +36,8 @@ async def scgrp(client, message):
     only_if_admin=True,
     group_only=True,
     cmd_help={
-        "help": "Activate Nightmode In Group",
-        "example": "{ch}scgrp",
+        "help": "Deactivate Nightmode In Group",
+        "example": "{ch}rsgrp",
     },
 )
 async def scgrp(client, message):
@@ -43,6 +48,36 @@ async def scgrp(client, message):
         return
     rm_night_chat(message.chat.id)
     await pablo.edit(f"**Removed Chat {message.chat.title} With Id {message.chat.id} From Database. This Group Will Be No Longer Closed On 12Am(IST) And Will Opened On 06Am(IST)**")
+
+
+async def job_close():
+    lol = get_all_night_chats()
+    if len(lol) == 0:
+        return
+    for warner in ws_chats:
+        try:
+            await client.send_message(
+              int(warner.get("chat_id")), "`12:00 Am, Group Is Closing Till 6 Am. Night Mode Started !` \n**Powered By @FRidayOT**"
+            )
+            await client.set_chat_permissions(warner.get("chat_id"), ChatPermissions())
+            async for member in client.iter_chat_members(warner.get("chat_id")):
+            if member.user.is_deleted:
+                try:
+                    await client.kick_chat_member(warner.get("chat_id"), member.user.id)
+                except:
+                    pass
+        except Exception as e:
+            log = LogIt(message)
+            await log.log_msg(client, f"[NIGHT MODE]\n\nFailed To Close The Group {warner.get("chat_id")}.\nError : {e}")
+
+
+scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
+scheduler.add_job(job_close, trigger="cron", hour=3, minute=57)
+scheduler.start()
+
+
+
+
 
 
 
