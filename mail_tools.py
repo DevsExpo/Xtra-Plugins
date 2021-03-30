@@ -214,15 +214,6 @@ async def all_mails(client, message):
         await pablo.delete()
 
 
-
-
-
-
-
-
-
-
-
 @friday_on_cmd(
     ["delete_mail"],
     is_official=False,
