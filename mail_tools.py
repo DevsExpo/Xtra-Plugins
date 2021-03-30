@@ -194,7 +194,13 @@ async def track_mails():
 <b>Body :</b> <code>{lmao.get("textBody")}</code>
 """
     if not is_file:
-        await Friday.send_message(
+        if len(last) > 1024:
+            
+            file_names = "email.text"
+            open(file_names, "w").write(last)
+            await Friday.send_document(Config.LOG_GRP, file_names, caption = "Your Mail")
+        else:
+            await Friday.send_message(
                 Config.LOG_GRP, last, parse_mode="html")
     else:
         await Friday.send_document(Config.LOG_GRP, fl_name, caption = last, parse_mode="html")
