@@ -100,19 +100,28 @@ async def check_mail(client, message):
         r = requests.get(lenk)
         with open(fl_name, 'wb') as f:
             f.write(r.content)
-    last = f""" 
-<b>Mail From :</b> <code>{lmao.get("from")}</code>
-<b>Date :</b> <code>{lmao.get("date")}</code>
-<b>Subject :</b> <code>{lmao.get("subject")}</code>
-
-<b>Body :</b> <code>{lmao.get("textBody")}</code>
-"""
+    last = f"""**Mail From :** {from}
+**Date :** {date}
+**Subject :** {sub}
+**Body :** {body}"""
     if not is_file:
-        await pablo.edit(last, parse_mode="html")
+        if len(last) > 1024:
+            file_names = "email.text"
+            open(file_names, "w").write(last)
+            await client.send_document(message.chat.id, file_names, caption = "Your Mail")
+            os.remove(file_names)
+        else:
+            await client.send_message(
+                message.chat.id, last)
     else:
-        await client.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
-        os.remove(fl_name)
-        await pablo.delete()
+        if len(last) > 1024:
+            await client.send_document(message.chat.id, fl_name, caption = "Your Mail Attachment")
+            await client.send_document(message.chat.id, file_names, caption = "Your Mail")
+            os.remove(fl_name)
+            os.remove(file_names)
+        else:
+            await client.send_document(message.chat.id, fl_name, caption = last)
+            os.remove(fl_name)
         
 
 @friday_on_cmd(
@@ -202,7 +211,7 @@ async def track_mails():
             os.remove(file_names)
         else:
             await Friday.send_message(
-                Config.LOG_GRP, last, parse_mode="html")
+                Config.LOG_GRP, last)
     else:
         if len(last) > 1024:
             await Friday.send_document(Config.LOG_GRP, fl_name, caption = "Your Mail Attachment")
