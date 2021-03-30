@@ -3,5 +3,6 @@ pytgcalls
 mal-api
 coffeehouse
 tswift
+countryinfo
 emoji-country-flag
 feedparser
