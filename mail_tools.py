@@ -115,6 +115,26 @@ async def check_mail(client, message):
         await pablo.delete()
         
 
+@friday_on_cmd(
+    ["my_mail"],
+    is_official=False,
+    cmd_help={
+        "help": "Get Your Temporary Mail Id",
+        "example": "{ch}my_mail",
+    },
+)
+async def my_mail(client, message):
+    pablo = await edit_or_reply(message, "`Processing.....`")
+    email = get_mail_id()
+    if not email:
+        await pablo.edit("`You Sure You Added Your Mail To dB?`")
+        return
+    await pablo.edit(f"Hey Boss, Your Mail ID is : `{email}`")
+
+
+
+
+
 
 @friday_on_cmd(
     ["delete_mail"],
