@@ -126,6 +126,7 @@ async def check_mail(client, message):
         else:
             await client.send_document(message.chat.id, fl_name, caption = last)
             os.remove(fl_name)
+    await pablo.delete()
         
 
 @friday_on_cmd(
