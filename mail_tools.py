@@ -14,7 +14,7 @@ from xtraplugins.dB.mail_tools import (
 )
 
 
-supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com"]
+supported_domains = ["esiix.com", "1secmail.net", "wwjmp.com", "1secmail.org", "1secmail.com"]
 
 
 @friday_on_cmd(
