@@ -168,7 +168,7 @@ async def all_mails(client, message):
     link = f"https://www.1secmail.com/api/v1/?action=getMessages&login={login}&domain={domain}"
     r = requests.get(link)
     r_json = r.json()
-    for lol in f_json:
+    for lol in r_json:
        msg_ids.append(lol.get("id"))
     if msg_ids == []:
         await pablo.edit("You Didn't Receive Any Mails")
