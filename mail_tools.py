@@ -197,7 +197,7 @@ async def track_mails():
         await Friday.send_message(
                 Config.LOG_GRP, last, parse_mode="html")
     else:
-        await Friday.send_document(message.chat.id, fl_name, caption = last, parse_mode="html")
+        await Friday.send_document(Config.LOG_GRP, fl_name, caption = last, parse_mode="html")
         os.remove(fl_name)
         await pablo.delete()
         
