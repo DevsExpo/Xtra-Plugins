@@ -15,10 +15,10 @@ from countryinfo import CountryInfo
     },
 )
 async def country(client, message):
-    pablo = await edit_or_reply(message, "`Searching For Country.....`")
+    pablo09 = await edit_or_reply(message, "`Searching For Country.....`")
     lol = get_text(message)
     if not lol:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo09.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
         return
     
     country = CountryInfo(lol)
@@ -110,4 +110,4 @@ wikipedia:- {wiki}</b>
 Information Gathered By Friday.
 Get Your Own Friday From @FRIDAYCHAT.</b></u>
 """
-    await pablo.edit(caption, parse_mode="html")
+    await pablo09.edit(caption, parse_mode="html")
