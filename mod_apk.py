@@ -30,7 +30,11 @@ async def mudapk(client, message):
     soup = BeautifulSoup(r.content, "html5lib")
     mydivs = soup.find_all("div", {"class": "search-results"})
     Pop = soup.find_all("div", {"class": "title"})
-    sucker = mydivs[0]
+    try:
+        sucker = mydivs[0]
+    except IndexError:
+        await pablo.edit("**404 Mod App Not Found!")
+        return
     pH9 = sucker.find("a").contents[0]
     file_name = pH9
     
