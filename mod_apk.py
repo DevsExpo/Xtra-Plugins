@@ -68,7 +68,7 @@ async def mudapk(client, message):
         message.chat.id,
         document=open(f"{file_name}.apk", "rb"),
         thumb=imme,
-        caption=co,
+        caption=ca,
         progress=progress,
         progress_args=(
             pablo,
