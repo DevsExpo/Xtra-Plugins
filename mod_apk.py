@@ -50,7 +50,7 @@ async def mudapk(client, message):
     Lol = mydis[0]
 
     lemk = "https://an1.com" + Lol["href"]
-
+    print(lemk)
     rr = requests.get(lemk)
     soup = BeautifulSoup(rr.content, "html5lib")
     
