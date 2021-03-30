@@ -37,6 +37,6 @@ def delete_mail_id():
     midhun = mail.find_one({"_id": "MAIL_DETAILS"})
     if midhun:
         mail.delete_one({"_id": "MAIL_DETAILS"})
-        return true
+        return True
     else:
         return False
