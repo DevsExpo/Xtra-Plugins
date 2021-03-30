@@ -227,5 +227,5 @@ async def track_mails():
             await Friday.send_document(Config.LOG_GRP, fl_name, caption = last)
             os.remove(fl_name)
 scheduler = AsyncIOScheduler()
-scheduler.add_job(track_mails, 'interval', minutes=10)
+scheduler.add_job(track_mails, 'interval', minutes=5)
 scheduler.start()
