@@ -186,27 +186,32 @@ async def track_mails():
         r = requests.get(lenk)
         with open(fl_name, 'wb') as f:
             f.write(r.content)
-    last = f""" #EMAIL_RECEIVED
-<b>Mail From :</b> <code>{lmao.get("from")}</code>
-<b>Date :</b> <code>{lmao.get("date")}</code>
-<b>Subject :</b> <code>{lmao.get("subject")}</code>
-
-<b>Body :</b> <code>{lmao.get("textBody")}</code>
-"""
+    from = lmao.get("from")
+    date = lmao.get("date")
+    sub = lmao.get("subject")
+    body = lmao.get("textBody")
+    last = f"""**Mail From :** {from}
+**Date :** {date}
+**Subject :** {sub}
+**Body :** {body}"""
     if not is_file:
         if len(last) > 1024:
-            
             file_names = "email.text"
             open(file_names, "w").write(last)
             await Friday.send_document(Config.LOG_GRP, file_names, caption = "Your Mail")
+            os.remove(file_names)
         else:
             await Friday.send_message(
                 Config.LOG_GRP, last, parse_mode="html")
     else:
-        await Friday.send_document(Config.LOG_GRP, fl_name, caption = last, parse_mode="html")
-        os.remove(fl_name)
-        await pablo.delete()
-        
+        if len(last) > 1024:
+            await Friday.send_document(Config.LOG_GRP, fl_name, caption = "Your Mail Attachment")
+            await Friday.send_document(Config.LOG_GRP, file_names, caption = "Your Mail")
+            os.remove(fl_name)
+            os.remove(file_names)
+        else:
+            await Friday.send_document(Config.LOG_GRP, fl_name, caption = last)
+            os.remove(fl_name)
 scheduler = AsyncIOScheduler()
 scheduler.add_job(track_mails, 'interval', minutes=10)
 scheduler.start()
