@@ -100,11 +100,11 @@ async def check_mail(client, message):
         r = requests.get(lenk)
         with open(fl_name, 'wb') as f:
             f.write(r.content)
-    from = lmao.get("from")
+    fromo = lmao.get("from")
     date = lmao.get("date")
     sub = lmao.get("subject")
     body = lmao.get("textBody")
-    last = f"""**Mail From :** {from}
+    last = f"""**Mail From :** {fromo}
 **Date :** {date}
 **Subject :** {sub}
 **Body :** {body}"""
@@ -199,11 +199,11 @@ async def track_mails():
         r = requests.get(lenk)
         with open(fl_name, 'wb') as f:
             f.write(r.content)
-    from = lmao.get("from")
+    fromo = lmao.get("from")
     date = lmao.get("date")
     sub = lmao.get("subject")
     body = lmao.get("textBody")
-    last = f"""**Mail From :** {from}
+    last = f"""**Mail From :** {fromo}
 **Date :** {date}
 **Subject :** {sub}
 **Body :** {body}"""
