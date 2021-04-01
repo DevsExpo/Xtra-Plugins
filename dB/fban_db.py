@@ -12,7 +12,7 @@ def rmfed(feds):
 
 
 def rm_all_fed():
-    fed.delete_many()
+    fed.delete_many({})
 
 
 def get_all_feds():
