@@ -32,4 +32,4 @@ async def _am_search_by_lackhac(client,message):
         name = products['productName']
         price= products['productPrice']
         product += f"<a href='{link}'>• {name}\n{price}</a>\n"
-    await edit_or_reply(message,product,parse_mode="HTML")
+    await msg_.edit(product, parse_mode="HTML")
