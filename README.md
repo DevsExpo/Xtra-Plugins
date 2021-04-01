@@ -5,7 +5,7 @@
 
 ### Plugins 🔧
 
-```python
+```python3
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply
 
@@ -19,7 +19,7 @@ async def hello_world(client, message):
 ```
 ### Custom Filters 📣
 
-```python
+```python3
 from main_startup.core.decorators import listen
 
 @listen(filters.mentioned & ~filters.me)
@@ -35,6 +35,8 @@ async def mentioned_(client, message):
 ### GuideLines
 * No Stealing. Please Don't Steal Any Plugins. 
 * If You Have Ported The Plugin, Make Sure To Mention Real Creator Of The Plugin.
-* Plugin Should Be Linted Before Creating Pull Request
-
+* Plugin Should Be Linted Before Creating Pull Request.
+* Make Sure Your Plugin Doesn't Already Exists In Repo.
+* Please Don't Make Duplicate Pull Requests.
+* 
 > Thats All, Happy Contributing!
