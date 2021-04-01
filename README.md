@@ -12,7 +12,8 @@ from main_startup.helper_func.basic_helpers import edit_or_reply
 @friday_on_cmd(['helloworld'],
     cmd_help={
     "help": "This is A TEST",
-    "example": ".helloworld")
+    "example": ".helloworld"
+    })
 async def hello_world(client, message):
     mg = await edit_or_reply(message, "`Hello World! This Works!`")
 ```
