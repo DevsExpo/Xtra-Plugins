@@ -26,6 +26,6 @@ async def _(client,message):
         link = products['productLink']
         name = products['productName']
         price= products['productPrice']
-        product += f"<a href='{link}'>{name}\n{price}</a>\n• "
+        product += f"<a href='{link}'>• {name}\n{price}</a>\n"
 
     await edit_or_reply(message,product,parse_mode="HTML")
