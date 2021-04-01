@@ -38,5 +38,5 @@ async def mentioned_(client, message):
 * Plugin Should Be Linted Before Creating Pull Request.
 * Make Sure Your Plugin Doesn't Already Exists In Repo.
 * Please Don't Make Duplicate Pull Requests.
-* 
+  
 > Thats All, Happy Contributing!
