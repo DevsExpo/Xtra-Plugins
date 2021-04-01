@@ -7,7 +7,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from pytgcalls import GroupCall
 
 s = []
-group_call = GroupCall(Friday, play_on_repeat=False)
+group_call = GroupCall(None, play_on_repeat=False)
 
 
 @friday_on_cmd(
@@ -16,6 +16,7 @@ group_call = GroupCall(Friday, play_on_repeat=False)
     cmd_help={"help": "Get Current Chat Playlist!", "example": "{ch}playlist"},
 )
 async def pl(client, message):
+    group_call.client = client
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
     sno = 0
@@ -57,7 +58,8 @@ async def playout_ended_handler(group_call, filename):
     is_official=False,
     cmd_help={"help": "Play The Song In VC!", "example": "{ch}play (reply to song)"},
 )
-async def test(client, message):
+async def play_m(client, message):
+    group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
     if not message.reply_to_message or not message.reply_to_message.audio:
         await u_s.edit("`Reply To Audio To Play It`")
@@ -90,7 +92,8 @@ async def test(client, message):
     is_official=False,
     cmd_help={"help": "Stop VoiceChat!", "example": "{ch}stopvc"},
 )
-async def kill_vc_test(client, message):
+async def kill_vc_(client, message):
+    group_call.client = client
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -104,6 +107,7 @@ async def kill_vc_test(client, message):
     cmd_help={"help": "Replay Song In VC!", "example": "{ch}rvc"},
 )
 async def replay(client, message):
+    group_call.client = client
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -117,6 +121,7 @@ async def replay(client, message):
     cmd_help={"help": "Rejoin Voice Chat!", "example": "{ch}rjvc"},
 )
 async def rejoinvcpls(client, message):
+    group_call.client = client
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -130,6 +135,7 @@ async def rejoinvcpls(client, message):
     cmd_help={"help": "Leave Voice Call!", "example": "{ch}leavevc"},
 )
 async def leave_vc_test(client, message):
+    group_call.client = client
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -146,6 +152,7 @@ async def leave_vc_test(client, message):
     },
 )
 async def set_vol(client, message):
+    group_call.client = client
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
