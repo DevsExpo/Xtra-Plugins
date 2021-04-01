@@ -1,9 +1,9 @@
-# Xtra-Plugins - FridayUB
-> A Repo That Contains Many X-Tra Plugins From FridayDevs And Third Party.
+# Xtra-Plugins - FridayUB ✨
+> A Repo That Contains Many X-Tra Plugins From FridayDevs And Third Parties.
 
-## Example
+# Example 👊
 
-### Plugins
+### Plugins 🔧
 
 ```python
 from main_startup.core.decorators import friday_on_cmd
@@ -13,26 +13,24 @@ from main_startup.helper_func.basic_helpers import edit_or_reply
 async def hello_world(client, message):
     mg = await edit_or_reply(message, "`Hello World! This Works!`")
 ```
-# Custom Filters
+### Custom Filters 📣
 
 ```python
-from main_startup.core.decorators import friday_on_cmd, listen
+from main_startup.core.decorators import listen
 
 @listen(filters.mentioned & ~filters.me)
 async def mentioned_(client, message):
-    await message.reply_text("`Hello World!`")
+    await message.reply_text("`Hello World! Btw Why Did You Mention Me?`")
 ```
 
-## Contributing
+# Contributing 🎨
 * Contributers Are Always Welcome. You Can Contribute To This Project With Your Plugins.
-
 ### How To?
 * Just Create A Pull Request With Your Plugin And Some Info in Description.
 * Please Make Sure Your Plugin Passes The GuideLines.
-
 ### GuideLines
 * No Stealing. Please Don't Steal Any Plugins. 
 * If You Have Ported The Plugin, Make Sure To Mention Real Creator Of The Plugin.
 * Plugin Should Be Linted Before Creating Pull Request
 
-> Thats All, Happy Contributing
+> Thats All, Happy Contributing!
