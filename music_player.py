@@ -37,14 +37,15 @@ async def pl(client, message):
 @group_call.on_playout_ended
 async def playout_ended_handler(group_call, filename):
     global s
+    client_ = group_call.client
     if not s:
-        await Friday.send_message(
+        await client_.send_message(
             int(f"-100{group_call.full_chat.id}"),
             f"`Finished Playing, No More Playlist Left! :( Leaving VC!`",
         )
         await group_call.stop()
         return
-    await Friday.send_message(
+    await client_.send_message(
         int(f"-100{group_call.full_chat.id}"), f"**Now Playing :** `{s[0]}`."
     )
     holi = s[0]
