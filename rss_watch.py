@@ -47,7 +47,7 @@ async def addrss(client, message):
     except:
         await pablo.edit("ERROR: The link does not seem to be a RSS feed or is not supported")
         return
-    lol =await is_get_chat_rss(message.chat.id, lenk)
+    lol = await is_get_chat_rss(message.chat.id, lenk)
     if lol:
         await pablo.edit("This Link Already Added")
         return
@@ -74,7 +74,6 @@ async def testrss(client, message):
     pablo = await edit_or_reply(message, "`Processing....`")
     damn = await basic_check(message.chat.id)
     if not damn:
-        
         URL = "https://www.reddit.com/r/funny/new/.rss"
         rss_d = feedparser.parse(URL)
         Content = (rss_d.entries[0]['title'] + "\n\n" + rss_d.entries[0]['link'])
@@ -82,11 +81,9 @@ async def testrss(client, message):
         await pablo.edit("This Chat Has No RSS So Sent Reddit RSS")
     else:
         all = await get_chat_rss(message.chat.id)
-        
         for x in all:
             link = x.get("rss_link")
             rss_d = feedparser.parse(link)
-            
             content = ""
             content += f"**{rss_d.entries[0].title}**"
             content += f"\n\nLink : {rss_d.entries[0].link}"

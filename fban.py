@@ -43,18 +43,18 @@ async def free_fbans(client, message):
             await uj.edit("`Either My Logic Broke Or You Are Not Admin in Any Fed!`")
             return
         for ujwal in fed_l:
-            if is_fed_in_db(ujwal):
+            if await is_fed_in_db(ujwal):
                 e += 1
             else:
-                add_fed(ujwal)
+                await add_fed(ujwal)
         await uj.edit(
             f"`Added {len(fed_l) - e} Feds To Database! Failed To Add {e} Feds!`"
         )
         return
-    if is_fed_in_db(f_id):
+    if await is_fed_in_db(f_id):
         await uj.edit("`Fed Already Exists In DB!`")
         return
-    add_fed(f_id)
+    await add_fed(f_id)
     await uj.edit(f"`Added {f_id} To dB!`")
 
 
@@ -72,13 +72,13 @@ async def paid_fbans(client, message):
         await uj.edit("`Give Fed ID :/`")
         return
     if f_id == "all":
-        rm_all_fed()
+        await rm_all_fed()
         await uj.edit("`Removed All Fed From DB!`")
         return
-    if not is_fed_in_db(f_id):
+    if not await is_fed_in_db(f_id):
         await uj.edit("`Fed Doesn't Exists In DB!`")
         return
-    rmfed(f_id)
+    await rmfed(f_id)
     await uj.edit(f"`Removed {f_id} From dB!`")
 
 
@@ -100,7 +100,7 @@ async def fban_s(client, message):
     if not Config.FBAN_GROUP:
         await uj.edit("`Please Setup Fban Group!`")
         return
-    fed_s = get_all_feds()
+    fed_s = await get_all_feds()
     if len(fed_s) > 1:
         await uj.edit("`You Need Atleast One Fed In Db To Use This Plugin!`")
         return

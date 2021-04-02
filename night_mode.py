@@ -27,11 +27,11 @@ import logging
 )
 async def scgrp(client, message):
     pablo = await edit_or_reply(message, "`Processing...`")
-    lol = is_night_chat_in_db(message.chat.id)
+    lol = await is_night_chat_in_db(message.chat.id)
     if lol:
         await pablo.edit("This Chat is Has Already Enabled Night Mode.")
         return
-    add_night_chat(message.chat.id)
+    await add_night_chat(message.chat.id)
     await pablo.edit(f"**Added Chat {message.chat.title} With Id {message.chat.id} To Database. This Group Will Be Closed On 12Am(IST) And Will Opened On 06Am(IST)**")
 
 
@@ -47,16 +47,16 @@ async def scgrp(client, message):
 )
 async def scgrp(client, message):
     pablo = await edit_or_reply(message, "`Searching For Anime.....`")
-    lol = is_night_chat_in_db(message.chat.id)
+    lol = await is_night_chat_in_db(message.chat.id)
     if not lol:
         await message.edit("This Chat is Has Not Enabled Night Mode.")
         return
-    rm_night_chat(message.chat.id)
+    await rm_night_chat(message.chat.id)
     await pablo.edit(f"**Removed Chat {message.chat.title} With Id {message.chat.id} From Database. This Group Will Be No Longer Closed On 12Am(IST) And Will Opened On 06Am(IST)**")
 
 
 async def job_close():
-    lol = get_all_night_chats()
+    lol = await get_all_night_chats()
     if len(lol) == 0:
         return
     for warner in lol:
@@ -85,7 +85,7 @@ scheduler.add_job(job_close, trigger="cron", hour=23, minute=55)
 scheduler.start()
 
 async def job_open():
-    lol = get_all_night_chats()
+    lol = await get_all_night_chats()
     if len(lol) == 0:
         return
     for warner in lol:
