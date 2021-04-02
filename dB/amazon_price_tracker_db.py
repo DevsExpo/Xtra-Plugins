@@ -12,7 +12,7 @@ async def rmamazon_tracker(amazon_link):
 
 
 async def get_all_amazon_trackers():
-    lol = list[lakhac async for lakhac in amazon_url.find({})]
+    lol = [lakhac async for lakhac in amazon_url.find({})]
     return lol
 
 
