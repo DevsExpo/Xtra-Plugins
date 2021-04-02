@@ -46,10 +46,10 @@ async def add_to_db(client, message):
         await aurl.edit("`Url is Invalid!`")
         return
     price = round(float("".join(price)))
-    if is_amazon_tracker_in_db(str(url)):
+    if await is_amazon_tracker_in_db(str(url)):
         await aurl.edit("`Tracker Already Found In DB. Whats Point in Adding Again?`")
         return
-    add_amazon_tracker(url, price)
+    await add_amazon_tracker(url, price)
     await aurl.edit(
         f"**Added To TrackList** \n**Title :** `{title}` \n**Price :** `{price}`"
     )
@@ -66,10 +66,10 @@ async def add_to_db(client, message):
 async def rm_from_db(client, message):
     rmurl = await edit_or_reply(message, "`Processing..`")
     url = get_text(message)
-    if not is_amazon_tracker_in_db(str(url)):
+    if not await is_amazon_tracker_in_db(str(url)):
         await rmurl.edit("`This Url Was Not Found In My DB!`")
         return
-    rmamazon_tracker(str(url))
+    await rmamazon_tracker(str(url))
     await rmurl.edit("`Removed This Product From DB!`")
     return
 
@@ -78,7 +78,7 @@ async def track_amazon():
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36"
     }
-    kk = get_all_amazon_trackers()
+    kk = await get_all_amazon_trackers()
     
     if len(kk) == 0:
         return
@@ -95,7 +95,7 @@ async def track_amazon():
                 Config.LOG_GRP,
                 f"#Tracker - Price Reduced \nProduct Name : {title} \nCurrent price : {price}",
             )
-            rmamazon_tracker(str(ujwal["amazon_link"]))
+            await rmamazon_tracker(str(ujwal["amazon_link"]))
         else:
             pass
 
