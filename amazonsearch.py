@@ -26,7 +26,7 @@ async def _am_search_by_lackhac(client,message):
         await msg_.edit("`Please, Give Input!`")
         return
     product = ""
-    r = requests.get(f"https://amznsearch.vercel.app/api/?query={msgg}").json()
+    r = requests.get(f"https://amznsearch.vercel.app/api/?query={query}").json()
     for products in r:
         link = products['productLink']
         name = products['productName']
