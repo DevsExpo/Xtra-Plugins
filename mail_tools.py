@@ -52,7 +52,7 @@ async def add_mail_to_db(client, message):
     else:
         await pablo.edit("`Oops, I don't Support that Domain! Check Help Menu To Get Supported Site List!`")
         return
-    add_mail_update_mail(mail_id)
+    await add_mail_update_mail(mail_id)
     await pablo.edit(f"`Your Mail ID {mail_id} successfully added to dB`")
 
 
@@ -81,7 +81,7 @@ async def list_mails(client, message):
 )
 async def check_mail(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
-    email = get_mail_id()
+    email = await get_mail_id()
     if not email:
         await pablo.edit("`You Sure You Added Your Mail To dB?`")
         return
@@ -147,7 +147,7 @@ async def check_mail(client, message):
 )
 async def my_mail(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
-    email = get_mail_id()
+    email = await get_mail_id()
     if not email:
         await pablo.edit("`You Sure You Added Your Mail To dB?`")
         return
@@ -164,11 +164,11 @@ async def my_mail(client, message):
 )
 async def all_mails(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
-    email = get_mail_id()
+    email = await get_mail_id()
     if not email:
         await pablo.edit("`You Sure You Added Your Mail To dB?`")
         return
-    last_msg = get_msg_id(email)
+    last_msg = await get_msg_id(email)
     msg_ids = []
     mail_ = email.split("@", 1)
     login = mail_[0]
@@ -232,19 +232,19 @@ async def all_mails(client, message):
 )
 async def delete_mail(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
-    email = get_mail_id()
+    email = await get_mail_id()
     if not email:
         await pablo.edit("`You Sure You Added Your Mail To dB?`")
         return
-    delete_mail_id()
+    await delete_mail_id()
     await pablo.edit("Successfully Deleted Your Email")
 
 async def track_mails():
-    email = get_mail_id()
+    email = await get_mail_id()
     if not email:
         return
     caption = ""
-    last_msg = get_msg_id(email)
+    last_msg = await get_msg_id(email)
     mail_ = email.split("@", 1)
     login = mail_[0]
     domain = mail_[1]
@@ -258,7 +258,7 @@ async def track_mails():
     if last_msg == latest_mail:
         return
     else:
-        add_msg_update_msg(latest_mail)
+        await add_msg_update_msg(latest_mail)
     
     kk = f"https://www.1secmail.com/api/v1/?action=readMessage&login={login}&domain={domain}&id={latest_mail}"
     r = requests.get(kk)
@@ -297,6 +297,7 @@ async def track_mails():
         else:
             await Friday.send_document(Config.LOG_GRP, fl_name, caption = last)
             os.remove(fl_name)
+
 scheduler = AsyncIOScheduler()
 scheduler.add_job(track_mails, 'interval', minutes=5)
 scheduler.start()
