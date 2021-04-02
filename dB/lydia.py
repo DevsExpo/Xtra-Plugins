@@ -3,39 +3,39 @@ from database import db_x
 lydia = db_x["LYDIA"]
 
 
-def add_chat(chat_id, session_id):
-    stark = lydia.find_one({"chat_id": chat_id})
+async def add_chat(chat_id, session_id):
+    stark = await lydia.find_one({"chat_id": chat_id})
     if stark:
         return False
     else:
-        lydia.insert_one({"chat_id": chat_id, "session_id": session_id})
+        await lydia.insert_one({"chat_id": chat_id, "session_id": session_id})
         return True
 
 
-def remove_chat(chat_id):
-    stark = lydia.find_one({"chat_id": chat_id})
+async def remove_chat(chat_id):
+    stark = await lydia.find_one({"chat_id": chat_id})
     if not stark:
         return False
     else:
-        lydia.delete_one({"chat_id": chat_id})
+        await lydia.delete_one({"chat_id": chat_id})
         return True
 
-def get_all_chats():
-    r = list(lydia.find())
+async def get_all_chats():
+    r = [o async for o in lydia.find()]
     if r:
         return r
     else:
         return False
 
 
-def get_session(chat_id):
-    stark = lydia.find_one({"chat_id": chat_id})
+async def get_session(chat_id):
+    stark = await lydia.find_one({"chat_id": chat_id})
     if not stark:
         return False
     else:
         return stark
 
-def update_session(chat_id, session_id):
-    lydia.update_one({"chat_id": chat_id}, {"$set": {"session_id": session_id}})
+async def update_session(chat_id, session_id):
+    await lydia.update_one({"chat_id": chat_id}, {"$set": {"session_id": session_id}})
 
 
