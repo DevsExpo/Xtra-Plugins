@@ -72,7 +72,7 @@ async def addrss(client, message):
 )
 async def testrss(client, message):
     pablo = await edit_or_reply(message, "`Processing....`")
-    damn = basic_check(message.chat.id)
+    damn = await basic_check(message.chat.id)
     if not damn:
         
         URL = "https://www.reddit.com/r/funny/new/.rss"
