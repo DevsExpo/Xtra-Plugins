@@ -104,6 +104,7 @@ async def fban_s(client, message):
     if len(fed_s) == 0:
         await uj.edit("`You Need Atleast One Fed In Db To Use This Plugin!`")
         return
+    await uj.edit(f"`Fbanning In {len(fed_s)} Groups!`")
     try:
         await client.send_message(Config.FBAN_GROUP, "/start")
     except BaseException:
@@ -112,7 +113,7 @@ async def fban_s(client, message):
     for i in fed_s:
         await asyncio.sleep(2)
         try:
-            await client.send_message(Config.FBAN_GROUP, f"/joinfed {i['feds_s']}")
+            await client.send_message(Config.FBAN_GROUP, f"/joinfed {i['fed_s']}")
             await client.send_message(Config.FBAN_GROUP, f"/fban {ur}")
         except FloodWait as e:
             await asyncio.sleep(e.x)
