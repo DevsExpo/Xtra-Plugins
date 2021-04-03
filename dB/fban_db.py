@@ -1,27 +1,27 @@
 from database import db_x
 
-fed = db_x["FED"]
+fed_s = db_x["FEDS"]
 
 
 async def add_fed(feds):
-    await fed.insert_one({"fed": feds})
+    await fed_s.insert_one({"fed_s": feds})
 
 
 async def rmfed(feds):
-    await fed.delete_one({"fed": feds})
+    await fed_s.delete_one({"fed_s": feds})
 
 
 async def rm_all_fed():
-    await fed.delete_many({})
+    await fed_s.delete_many({})
 
 
 async def get_all_feds():
-    lol = [wow async for wow in fed.find()]
+    lol = [n async for n in fed_s.find()]
     return lol
 
 
 async def is_fed_in_db(feds):
-    k = await fed.find_one({"fed": feds})
+    k = await fed_s.find_one({"fed_s": feds})
     if k:
         return True
     else:
