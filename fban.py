@@ -104,7 +104,7 @@ async def fban_s(client, message):
     if len(fed_s) == 0:
         await uj.edit("`You Need Atleast One Fed In Db To Use This Plugin!`")
         return
-    await uj.edit(f"`Fbanning In {len(fed_s)} Groups!`")
+    await uj.edit(f"`Fbanning In {len(fed_s)} Feds!`")
     try:
         await client.send_message(Config.FBAN_GROUP, "/start")
     except BaseException:
