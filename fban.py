@@ -101,7 +101,7 @@ async def fban_s(client, message):
         await uj.edit("`Please Setup Fban Group!`")
         return
     fed_s = await get_all_feds()
-    if len(fed_s) > 1:
+    if len(fed_s) == 0:
         await uj.edit("`You Need Atleast One Fed In Db To Use This Plugin!`")
         return
     try:
