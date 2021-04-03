@@ -43,10 +43,10 @@ async def free_fbans(client, message):
             await uj.edit("`Either My Logic Broke Or You Are Not Admin in Any Fed!`")
             return
         for ujwal in fed_l:
-            if await is_fed_in_db(ujwal):
-                e += 1
-            else:
+            if not await is_fed_in_db(ujwal):
                 await add_fed(ujwal)
+            else:
+                e += 1
         await uj.edit(
             f"`Added {len(fed_l) - e} Feds To Database! Failed To Add {e} Feds!`"
         )
@@ -112,7 +112,7 @@ async def fban_s(client, message):
     for i in fed_s:
         await asyncio.sleep(2)
         try:
-            await client.send_message(Config.FBAN_GROUP, f"/joinfed {i}")
+            await client.send_message(Config.FBAN_GROUP, f"/joinfed {i['feds_s']}")
             await client.send_message(Config.FBAN_GROUP, f"/fban {ur}")
         except FloodWait as e:
             await asyncio.sleep(e.x)
@@ -154,7 +154,7 @@ async def fetch_all_fed(client, message):
                     Y = X[44:].splitlines()
                     for lol in Y:
                         fed_list.append(lol[2:38])
-        if sed.media:
+        elif sed.media:
             fed_file = await sed.download()
             file = open(fed_file, "r")
             lines = file.readlines()
