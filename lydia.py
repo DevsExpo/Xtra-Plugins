@@ -86,8 +86,10 @@ if lydia:
     async def live_lydia(client, message):
         if not message.text:
             message.continue_propagation()
+            return
         if not await get_session(int(message.chat.id)):
             message.continue_propagation()
+            return
         await client.send_chat_action(message.chat.id, "typing")
         session = await get_session(int(message.chat.id))
         try:
