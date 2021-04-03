@@ -8,7 +8,7 @@
 
 import asyncio
 import os
-
+import logging
 from main_startup.config_var import Config
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
@@ -116,7 +116,8 @@ async def fban_s(client, message):
             await client.send_message(Config.FBAN_GROUP, f"/fban {ur}")
         except FloodWait as e:
             await asyncio.sleep(e.x)
-        except BaseException:
+        except BaseException as eb:
+            logging.error(eb)
             failed_n += 1
     good_f_msg = f"**FBANNED** \n**Affected Feds :** `{len(fed_s) - failed_n}` \n**Failed :** `{failed_n}` \n**Total Fed :** `{len(fed_s)}`"
     await uj.edit(good_f_msg)
