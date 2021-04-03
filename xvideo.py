@@ -1,33 +1,36 @@
 import requests
-import bs4
-
+from bs4 import BeautifulSoup
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 
 
 @friday_on_cmd(
-    ["xvideo"],
+    ["xsearch"],
     cmd_help={
-        "help": "Get direct Downloadable",
-        "example": "{ch}xvideo xvideo_link",
+        "help": "Xvideo Searcher",
+        "example": "{ch}xsearch query",
     },
 )
-async def xvid(client, message):
+
+async def xvidsearch(client, message):
     editer= await edit_or_reply(message, "`Please Wait.....`")
     msg = get_text(message)
     if not msg:
             await editer.edit("`Please Enter Valid Input`")
             return
     try:
-        req = requests.get(msg)
-        soup = bs4.BeautifulSoup(req.content, 'html.parser')
+        qu = msg.replace(" ","+")
+        page= requests.get(f"https://www.xvideos.com/?k={qu}").content
+        soup = BeautifulSoup(page, 'html.parser')
+        col = soup.findAll("div",{"class":"thumb"})
+        links = ""
+        for i in col:
+            a = i.find("a")
+            link = a.get('href')
 
-        soups = soup.find("div",{"id":"video-player-bg"})
-        link =""
-        for a in soups.find_all('a', href=True):
-            link = a["href"]
-        await editer.edit(f"HERE IS YOUR LINK:\n`{link}`")
+            semd = link.split("/")[2]
+
+            links += f"<a href='https://www.xvideos.com{link}'>• {semd.upper()}</a>\n"
+        await editer.edit(links,parse_mode="HTML")
     except:
-        await editer.edit("Something went wrong")
-
-
+         await editer.edit("`Something Went Wrong!`")
