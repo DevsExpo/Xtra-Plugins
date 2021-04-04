@@ -22,77 +22,68 @@ from countryinfo import CountryInfo
         "example": "{ch}country India",
     },
 )
-async def country(client, message):
-    pablo09 = await edit_or_reply(message, "`Searching For Country.....`")
+async def country_(client, message):
+    msg_ = await edit_or_reply(message, "`Searching For Country.....`")
     lol = get_text(message)
     if not lol:
-        await pablo09.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await msg_.edit("`Please Give Input!`")
         return
-    
     country = CountryInfo(lol)
     try:
-	    a = country.info()
+	a = country.info()
     except:
-	    await event.edit("Country Not Avaiable Currently")
+	await msg_.edit("`Country Not Found. Maybe You Need to Learn Geography!`")
+	return
     name = a.get("name")
-    bb= a.get("altSpellings")
-    hu = ''
+    bb = a.get("altSpellings")
+    hu = ""
     for p in bb:
-    	hu += p+",  "
-	
+    	hu += p + ",  "
     area = a.get("area")
     borders = ""
     hell = a.get("borders")
     for fk in hell:
-	    borders += fk+",  "
-	
+	    borders += fk + ",  "
     call = "" 
     WhAt = a.get("callingCodes")
     for what in WhAt:
-	    call+= what+"  "
-	
+	    call+= what + "  "
     capital = a.get("capital")
     currencies = ""
     fker = a.get("currencies")
     for FKer in fker:
-	    currencies += FKer+",  "
-
+	    currencies += FKer + ",  "
     HmM = a.get("demonym")
     geo = a.get("geoJSON")
     pablo = geo.get("features")
     Pablo = pablo[0]
     PAblo = Pablo.get("geometry")
-    EsCoBaR= PAblo.get("type")
+    EsCoBaR = PAblo.get("type")
     iso = ""
     iSo = a.get("ISO")
     for hitler in iSo:
       po = iSo.get(hitler)
-      iso += po+",  "
+      iso += po + ",  "
     fla = iSo.get("alpha2")
     nox = fla.upper()
     okie = flag.flag(nox)
-
     languages = a.get("languages")
-    lMAO=""
+    lMAO = ""
     for lmao in languages:
-	    lMAO += lmao+",  "
-
+	    lMAO += lmao + ",  "
     nonive = a.get("nativeName")
     waste = a.get("population")
     reg = a.get("region")
     sub = a.get("subregion")
     tik = a.get("timezones")
-    tom =""
+    tom = ""
     for jerry in tik:
-	    tom+=jerry+",   "
-
+	    tom += jerry + ",   "
     GOT = a.get("tld")
     lanester = ""
     for targaryen in GOT:
-	    lanester+=targaryen+",   "
-
+	    lanester += targaryen + ",   "
     wiki = a.get("wiki")
-
     caption = f"""<b><u>information gathered successfully</b></u>
 <b>
 Country Name:- {name}
@@ -115,7 +106,6 @@ Time Zones:- {tom}
 Top Level Domain:- {lanester}
 wikipedia:- {wiki}</b>
 <u><b>
-Information Gathered By Friday.
-Get Your Own Friday From @FRIDAYCHAT.</b></u>
+Information Gathered By FridayUB.
 """
-    await pablo09.edit(caption, parse_mode="html")
+    await msg_.edit(caption, parse_mode="html")
