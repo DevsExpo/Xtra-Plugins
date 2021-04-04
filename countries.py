@@ -30,10 +30,10 @@ async def country_(client, message):
         return
     country = CountryInfo(lol)
     try:
-	a = country.info()
+        a = country.info()
     except:
-	await msg_.edit("`Country Not Found. Maybe You Need to Learn Geography!`")
-	return
+        await msg_.edit("`Country Not Found. Maybe You Need to Learn Geography!`")
+        return
     name = a.get("name")
     bb = a.get("altSpellings")
     hu = ""
