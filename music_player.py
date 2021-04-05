@@ -49,7 +49,7 @@ async def playout_ended_handler(group_call, filename):
     if not s:
         await client_.send_message(
             int(f"-100{group_call.full_chat.id}"),
-            f"`Finished Playing, No More Playlist Left! :( Leaving VC!`",
+            f"`Finished Playing. Nothing Left Play! Left VC.`",
         )
         await group_call.stop()
         return
@@ -84,7 +84,7 @@ async def play_m(client, message):
     ).overwrite_output().run()
     os.remove(audio_original)
     if not group_call.is_connected:
-        await u_s.edit(f"Playing `{audio.title}...` in {message.chat.title}!")
+        await u_s.edit(f"Playing [{audio.title}](message.reply_to_message.link) in {message.chat.title}!")
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
@@ -93,9 +93,37 @@ async def play_m(client, message):
         group_call.input_filename = raw_file_name
     else:
         s.append(raw_file_name)
-        await u_s.edit(f"Added To Position #{len(s)+1}!")
+        await u_s.edit(f"Added [{audio.title}](message.reply_to_message.link) To Position #{len(s)+1}!")
 
 
+@friday_on_cmd(
+    ["pause"],
+    is_official=False,
+    cmd_help={"help": "Pause Currently Playing Song.", "example": "{ch}pause"},
+)
+async def no_song_play(client, message):
+    group_call.client = client
+    if not group_call.is_connected:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return    
+    await edit_or_reply(message, f"`⏸ Paused {group_call.input_filename}.`")
+    group_call.pause_playout()
+    
+    
+@friday_on_cmd(
+    ["resume"],
+    is_official=False,
+    cmd_help={"help": "Resume Paused Song.", "example": "{ch}resume"},
+)
+async def wow_dont_stop_songs(client, message):
+    group_call.client = client
+    if not group_call.is_connected:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return    
+    group_call.pause_playout()
+    await edit_or_reply(message, f"`▶️ Resumed.`")
+        
+        
 @friday_on_cmd(
     ["stopvc"],
     is_official=False,
