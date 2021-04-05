@@ -2,6 +2,7 @@ wikipedia
 pytgcalls
 mal-api
 coffeehouse
+speedtest-cli
 tswift
 countryinfo
 emoji-country-flag
