@@ -24,8 +24,8 @@ async def spee_test(client, message):
 ▶ <b>IP :</b> <code>{client_infos['ip']}</code>
 ▶ <b>ISP :</b> <code>{client_infos['isp']}</code>
 ▶ <b>Country :</b> <code>{client_infos['country']}</code>
-▶ <b>Download Speed :</b> <code>{download_speed}</code>
-▶ <b>Upload Speed :</b> <code>{upload_speed}</code>
+▶ <b>Download Speed :</b> <code>{convert_from_bytes_to_human_formats(download_speed)}</code>
+▶ <b>Upload Speed :</b> <code>{convert_from_bytes_to_human_formats(upload_speed)}</code>
 ▶ <b>ISP RATING :</b> <code>{client_infos['isprating']}</code>
 ▶ <b>PING TIME :</b> <code>{ping_time}</code>
 """
@@ -46,3 +46,19 @@ async def spee_test(client, message):
       await ms_g.delete()
     else:
       await ms_g.edit(_neat_test)
+
+
+def convert_from_bytes_to_human_formats(size):
+    power = 2**10
+    n = 0
+    units = {
+        0: "",
+        1: "KB",
+        2: "MB",
+        3: "GB",
+        4: "TB"
+    }
+    while size > power:
+        size /= power
+        n += 1
+    return f"{round(size, 2)} {units[n]}"
