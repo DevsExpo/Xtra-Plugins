@@ -23,9 +23,9 @@ async def pokedex(client, message):
     pablo = await edit_or_reply(message, "`Searching For Pokémon.....`")
     sgname = get_text(message)
     if not sgname:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
-    url = f"https://starkapi.herokuapp.com/pokedex/{sgname}"
+    url = f"https://starkapis.herokuapp.com/pokedex/{sgname}"
     r = requests.get(url).json()
     pokemon = r
     if pokemon.get("error") is not None:

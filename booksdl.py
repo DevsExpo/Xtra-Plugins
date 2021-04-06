@@ -41,7 +41,7 @@ async def bookdl(client, message):
     pablo = await edit_or_reply(message, "`Please Wait!`")
     book = get_text(message)
     if not book:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     lin = "https://b-ok.cc/s/"
     text = book

@@ -23,7 +23,7 @@ async def ekart(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
     input_str = get_text(message)
     if not input_str:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     urlo = (
         "https://track.aftership.com/trackings?courier=ekart&tracking-numbers="

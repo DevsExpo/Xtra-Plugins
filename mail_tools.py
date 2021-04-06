@@ -37,7 +37,7 @@ async def add_mail_to_db(client, message):
     pablo = await edit_or_reply(message, "`Processing.....`")
     mail_id = get_text(message)
     if not mail_id:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     lmao = mail_id.split("@", 1)
     try:

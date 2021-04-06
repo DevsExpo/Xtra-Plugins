@@ -29,7 +29,7 @@ async def mudapk(client, message):
     pablo = await edit_or_reply(message, "`Searching For Mod App.....`")
     sgname = get_text(message)
     if not sgname:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     PabloEscobar = (
         f"https://an1.com/tags/MOD/?story={sgname}&do=search&subaction=search"

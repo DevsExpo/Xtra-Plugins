@@ -39,7 +39,7 @@ async def addrss(client, message):
     pablo = await edit_or_reply(message, "`Processing....`")
     lenk = get_text(message)
     if not lenk:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     try:
         rss_d = feedparser.parse(lenk)
@@ -131,7 +131,7 @@ async def delrss(client, message):
     pablo = await edit_or_reply(message, "`Processing....`")
     lenk = get_text(message)
     if not lenk:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     lol = await is_get_chat_rss(message.chat.id, lenk)
     if not lol:

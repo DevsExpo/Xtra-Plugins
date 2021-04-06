@@ -24,7 +24,7 @@ async def anime(client, message):
     pablo = await edit_or_reply(message, "`Searching For Anime.....`")
     anime = get_text(message)
     if not anime:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     lmao = anime.split(":", 1)
     try:
@@ -69,7 +69,7 @@ async def animeinfo(client, message):
     pablo = await edit_or_reply(message, "`Searching For Anime.....`")
     anime = get_text(message)
     if not anime:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     search = AnimeSearch(anime)
     ID = search.results[0].mal_id
@@ -110,7 +110,7 @@ async def manga(client, message):
     pablo = await edit_or_reply(message, "`Searching For Manga.....`")
     anime = get_text(message)
     if not anime:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     search = MangaSearch(anime)
     ID = search.results[0].mal_id

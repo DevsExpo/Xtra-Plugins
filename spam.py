@@ -22,7 +22,7 @@ async def spam(client, message):
     pablo = await edit_or_reply(message, "Processing....")
     count = get_text(message)
     if not count:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     if not count.isdigit():
         await pablo.edit("`Give Digits Idiot!`")

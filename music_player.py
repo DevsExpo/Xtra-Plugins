@@ -58,6 +58,8 @@ async def playout_ended_handler(group_call, filename):
     )
     holi = s[0]
     s.pop(0)
+    if os.path.exists(group_call.input_filename):
+        os.remove(group_call.input_filename)
     logging.info("Now Playing " + str(holi))
     group_call.input_filename = holi
 

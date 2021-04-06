@@ -29,6 +29,10 @@ async def me_great(client, message):
     if not os.path.exists(file_n):
         await msg_.edit("`Unable To Fetch Data. Maybe This User Likes To Keep A Air Of Mystery!`")
         return
+    file_size = os.stat(file_n).st_size
+    if file_size == 0:
+        await msg_.edit("`Unable To Fetch Data. Maybe This User Likes To Keep A Air Of Mystery!`")
+        return
     if message.reply_to_message:
         await client.send_document(
             message.chat.id,

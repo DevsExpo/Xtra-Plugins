@@ -76,7 +76,7 @@ async def logogen(client, message):
     pablo = await edit_or_reply(message, "`Creating The Logo.....`")
     Godzilla = get_text(message)
     if not Godzilla:
-        await pablo.edit("Invalid Command Syntax, Please Check Help Menu To Know More!")
+        await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
     lmao = Godzilla.split(":", 1)
     try:
