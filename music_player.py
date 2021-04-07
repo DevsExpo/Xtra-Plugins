@@ -15,6 +15,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from pytgcalls import GroupCall
 
 s = []
+s_dict = {}
 group_call = GroupCall(None, play_on_repeat=False)
 
 
@@ -30,16 +31,18 @@ async def pl(client, message):
     sno = 0
     if not s:
         if group_call.is_connected:
-            await play.edit(f"**Currently Playing :** `{group_call.input_filename}`")
+            await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace(".raw", "")}`")
         else:
             await play.edit("`Playlist is Empty Sar And Nothing is Playing Also :(!`")
             return
     if group_call.is_connected:
-        song += f"**Currently Playing :** `{group_call.input_filename}` \n\n"
+        song += f"**Currently Playing :** `{str(group_call.input_filename).replace(".raw", "")}` \n\n"
     for i in s:
         sno += 1
-        song += f"**{sno})** `{i}` \n"
+        song += f"**▶ {sno}** `{i.replace('.raw', '')}` - `{s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
     await play.edit(song)
+                            
+                            
 
 
 @group_call.on_playout_ended
@@ -56,14 +59,43 @@ async def playout_ended_handler(group_call, filename):
         await group_call.stop()
         return
     await client_.send_message(
-        int(f"-100{group_call.full_chat.id}"), f"**Now Playing :** `{s[0]}`."
+        int(f"-100{group_call.full_chat.id}"), f"**Now Playing :** `{str(s[0]).replace('.raw', '')}` - `{s_dict[s[0]]['singer']} | {s_dict[s[0]]['dur']}` \n\n"
     )
     holi = s[0]
     s.pop(0)
-    logging.info("Now Playing " + str(holi))
+    logging.info("Now Playing " + str(holi).replace(".raw", ""))
     group_call.input_filename = holi
 
-
+@friday_on_cmd(
+    ["skip"],
+    is_official=False,
+    cmd_help={"help": "Skip Song in Playlist.", "example": "{ch}skip (key_len)"}
+)
+async def ski_p(client, message):
+    m_ = await edit_or_reply(message, "`Please Wait!`")
+    no_t_s = get_text(message)
+    if no_t_s:
+        return await m_.edit("`Give Me Valid List Key Len.`")
+    group_call.client = client
+    if not group_call.is_connected:
+        await m_.edit("`Is Group Call Even Connected?`")
+        return        
+    if not s:
+        return m_.edit("`There is No Playlist.`")
+    if len(s) == 1:
+        return m_.edit("`There is No Playlist.`")
+    if not no_t_s.isdigits():
+        return await m_.edit("`Give Me Valid List Key Len.`")
+    no_t_s += 1
+    if len(s) < no_t_s:
+        return await m_.edit("`This Playlist Key Doesn't Exits`")
+    if no_t_s == 0:
+        return await m_.edit("`This Playlist Key Doesn't Exits`")
+    try:
+        s.pop(no_t_s)
+    except:
+        return await m_.edit("`This Playlist Key Doesn't Exits`")
+                            
 @friday_on_cmd(
     ["play", "playmusic"],
     is_official=False,
@@ -78,6 +110,9 @@ async def play_m(client, message):
     await u_s.edit_text("`Please Wait, Let Me Download This File!`")
     audio = message.reply_to_message.audio
     audio_original = await message.reply_to_message.download()
+    sing_r = message.reply_to_message.audio.performer or "Unknown Artist."
+    dura_ = message.reply_to_message.audio.duration
+    fd = time.strftime("%Hh:%Mm:%Ss", time.gmtime(dura_))
     raw_file_name = (
         f"{audio.file_name}.raw" if not audio.title else f"{audio.title}.raw"
     )
@@ -95,6 +130,11 @@ async def play_m(client, message):
         group_call.input_filename = raw_file_name
     else:
         s.append(raw_file_name)
+        f_info = {"song name": audio.title,
+                  "singer": sing_r,
+                  "dur": fd
+                 }
+        s_dict[raw_file_name] = f_info
         await u_s.edit(f"Added [{audio.title}](message.reply_to_message.link) To Position #{len(s)+1}!")
 
 
@@ -108,7 +148,7 @@ async def no_song_play(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return    
-    await edit_or_reply(message, f"`⏸ Paused {group_call.input_filename}.`")
+    await edit_or_reply(message, f"`⏸ Paused {str(group_call.input_filename).replace('.raw', '')}.`")
     group_call.pause_playout()
     
     
