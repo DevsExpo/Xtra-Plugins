@@ -36,7 +36,7 @@ async def pl(client, message):
             await play.edit("`Playlist is Empty Sar And Nothing is Playing Also :(!`")
             return
     if group_call.is_connected:
-        song += f"**Currently Playing :** `{str(group_call.input_filename).replace(".raw", "")}` \n\n"
+        song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
         sno += 1
         song += f"**▶ {sno}** `{i.replace('.raw', '')}` - `{s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
