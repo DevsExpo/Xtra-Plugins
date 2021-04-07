@@ -40,7 +40,7 @@ async def pl(client, message):
         song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
         sno += 1
-        song += f"**▶ {sno}** `{i.replace('.raw', '')}` - `{s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
+        song += f"**{sno} ▶** `{i.replace('.raw', '')} | {s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
     await play.edit(song)
                             
                             
@@ -60,7 +60,7 @@ async def playout_ended_handler(group_call, filename):
         await group_call.stop()
         return
     await client_.send_message(
-        int(f"-100{group_call.full_chat.id}"), f"**Now Playing :** `{str(s[0]).replace('.raw', '')}` - `{s_dict[s[0]]['singer']} | {s_dict[s[0]]['dur']}` \n\n"
+        int(f"-100{group_call.full_chat.id}"), f"**Now Playing :** `{str(s[0]).replace('.raw', '')} | {s_dict[s[0]]['singer']} | {s_dict[s[0]]['dur']}` \n\n"
     )
     holi = s[0]
     s.pop(0)
@@ -68,9 +68,9 @@ async def playout_ended_handler(group_call, filename):
     group_call.input_filename = holi
 
 @friday_on_cmd(
-    ["skip"],
+    ["skipvc"],
     is_official=False,
-    cmd_help={"help": "Skip Song in Playlist.", "example": "{ch}skip (key_len)"}
+    cmd_help={"help": "Skip Song in Playlist.", "example": "{ch}skipvc (key_len)"}
 )
 async def ski_p(client, message):
     m_ = await edit_or_reply(message, "`Please Wait!`")
@@ -87,7 +87,6 @@ async def ski_p(client, message):
         return m_.edit("`There is No Playlist.`")
     if not no_t_s.isdigits():
         return await m_.edit("`Give Me Valid List Key Len.`")
-    no_t_s += 1
     if len(s) < no_t_s:
         return await m_.edit("`This Playlist Key Doesn't Exits`")
     if no_t_s == 0:
