@@ -31,7 +31,7 @@ async def pl(client, message):
     sno = 0
     if not s:
         if group_call.is_connected:
-            await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace(".raw", "")}`")
+            await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}`")
         else:
             await play.edit("`Playlist is Empty Sar And Nothing is Playing Also :(!`")
             return
