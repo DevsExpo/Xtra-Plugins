@@ -42,9 +42,6 @@ async def pl(client, message):
         sno += 1
         song += f"**{sno} ▶** `{i.replace('.raw', '')} | {s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
     await play.edit(song)
-                            
-                            
-
 
 @group_call.on_playout_ended
 async def playout_ended_handler(group_call, filename):
@@ -83,14 +80,8 @@ async def ski_p(client, message):
         return        
     if not s:
         return m_.edit("`There is No Playlist.`")
-    if len(s) == 1:
-        return m_.edit("`There is No Playlist.`")
     if not no_t_s.isdigits():
-        return await m_.edit("`Give Me Valid List Key Len.`")
-    if len(s) < no_t_s:
-        return await m_.edit("`This Playlist Key Doesn't Exits`")
-    if no_t_s == 0:
-        return await m_.edit("`This Playlist Key Doesn't Exits`")
+        return await m_.edit("`Input Should Be In Digits.`")
     try:
         s.pop(no_t_s)
     except:
