@@ -9,4 +9,3 @@ tswift
 countryinfo
 emoji-country-flag
 feedparser
-html5lib
