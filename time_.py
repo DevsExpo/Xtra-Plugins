@@ -27,4 +27,4 @@ async def _d(client, message):
     dt = mydate.strftime("Hour : %H \nMinute : %M")
     cal_ = calendar.month(year_, month_)
     f_d = f"<code>{cal_}\n{da} \n\n{dt}</code>"
-    await edit_or_reply(message, f_d)
+    await edit_or_reply(message, f_d, parse_mode="html")
