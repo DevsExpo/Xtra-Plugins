@@ -82,7 +82,7 @@ async def remcf(client, message):
     await pablo.edit(f"Lydia AI Successfully Deactivated For Users In The Chat {message.chat.id}")
     
 if lydia:
-    @listen(~filters.edited & filters.incoming & filters.group & filters.text)
+    @listen(~filters.edited & filters.mentioned & filters.incoming & filters.group)
     async def live_lydia(client, message):
         if not message.text:
             message.continue_propagation()
