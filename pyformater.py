@@ -50,9 +50,8 @@ async def convert_to_image_or_html(client, message):
 
 async def create_html_or_img(file, force_html=False):
     file_t = open(file, "r")
-    file_len = len(file_t.readlines())
-    code_ = file_t.read()
-    if file_len >= 79:
+    file_z = file_t.readlines()
+    if len(file_z) >= 79:
         force_html = True
     if force_html:
         file_name = "code.html"
@@ -61,6 +60,6 @@ async def create_html_or_img(file, force_html=False):
     else:
         file_name = "code.jpg"
         f_jpg = open(file_name, 'wb')
-        lexer = guess_lexer(code_)
-        f_jpg.write(highlight(code_, lexer, JpgImageFormatter()))
+        lexer = guess_lexer(file_z)
+        f_jpg.write(highlight(file_z, lexer, JpgImageFormatter()))
         return file_name

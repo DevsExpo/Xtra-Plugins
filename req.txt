@@ -9,3 +9,5 @@ tswift
 countryinfo
 emoji-country-flag
 feedparser
+asyncurban
+rotten_tomatoes_client
