@@ -37,4 +37,4 @@ async def u_d_(client, message):
     except asyncurban.UrbanException as exc:
         return await ms_.edit(f"`[UrbanDict - Async] : {exc}`")
     nice_t = f"<b>Query :</b> <code>{u_d_.word}</code> \n<b>Definition :</b> <i>{u_d_.definition}</i> \n<b>Example :</b> <i>{u_d_.example}</i>"
-    await edit_or_send_as_file(nice_t, message, client, f"`[URBAN_DICT] - {query_}`", f"{query_}_ud", parse_mode="html")
+    await edit_or_send_as_file(nice_t, ms_, client, f"`[URBAN_DICT] - {query_}`", f"{query_}_ud", parse_mode="html")
