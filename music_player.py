@@ -112,13 +112,13 @@ async def play_m(client, message):
     ).overwrite_output().run()
     os.remove(audio_original)
     if not group_call.is_connected:
-        await u_s.edit(f"Playing [{audio.title}](message.reply_to_message.link) in {message.chat.title}!")
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
             await u_s.edit(f"**Error While Joining VC:** `{e}`")
             return
         group_call.input_filename = raw_file_name
+        await u_s.edit(f"Playing [{audio.title}](message.reply_to_message.link) in {message.chat.title}!")
     else:
         s.append(raw_file_name)
         f_info = {"song name": audio.title,
@@ -153,7 +153,7 @@ async def wow_dont_stop_songs(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return    
-    group_call.pause_playout()
+    group_call.resume_playout()
     await edit_or_reply(message, f"`▶️ Resumed.`")
         
         
@@ -167,6 +167,8 @@ async def kill_vc_(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
+    if os.path.exists(group_call.input_filename):
+        os.remove(group_call.input_filename)
     group_call.stop_playout()
     await edit_or_reply(message, "`Stopped Playing Songs!`")
 
@@ -209,6 +211,8 @@ async def leave_vc_test(client, message):
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
+    if os.path.exists(group_call.input_filename):
+        os.remove(group_call.input_filename)
     await group_call.stop()
     await edit_or_reply(message, f"`Left : {message.chat.title} - Vc`")
 
