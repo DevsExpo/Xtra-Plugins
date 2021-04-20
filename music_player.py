@@ -14,6 +14,12 @@ import time
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from pytgcalls import GroupCall
+import asyncio
+import os
+import time
+import requests
+from youtube_dl import YoutubeDL
+from youtubesearchpython import SearchVideos
 
 s = []
 s_dict = {}
@@ -105,30 +111,101 @@ async def play_m(client, message):
     dura_ = message.reply_to_message.audio.duration
     fd = time.strftime("%Hh:%Mm:%Ss", time.gmtime(dura_))
     raw_file_name = (
-        f"{audio.file_name}.raw" if not audio.title else f"{audio.title}.raw"
+        f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
     )
-    ffmpeg.input(audio_original).output(
-        raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k"
-    ).overwrite_output().run()
+    raw_file_name = await convert_to_raw(audio_original, raw_file_name)
+    if not raw_file_name:
+         return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
     os.remove(audio_original)
+    await play_it(raw_file_name, u_s, fd, sing_r, audio, s, group_call)
+
+
+@friday_on_cmd(
+    ["yt_play"],
+    is_official=False,
+    cmd_help={"help": "Play The Song In VC Directly From Youtube.!", "example": "{ch}yt_play (song query)"},
+)
+async def play_m(client, message):
+    group_call.client = client
+    u_s = await edit_or_reply(message, "`Processing..`")
+    input_str = get_text(message)
+    if not input_str:
+        return await u_s.edit("`Give Me Song Name`")
+    search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
+    rt = search.result()
+    try:
+        result_s = rt["search_result"]
+    except:
+        await u_s.edit(
+            f"Song Not Found With Name {input_str}, Please Try Giving Some Other Name."
+        )
+        return
+    url = result_s[0]["link"]
+    dur = result_s[0]["duration"]
+    vid_title = result_s[0]["title"]
+    yt_id = result_s[0]["id"]
+    uploade_r = result_s[0]["channel"]
+    opts = {
+        "format": "bestaudio",
+        "addmetadata": True,
+        "key": "FFmpegMetadata",
+        "writethumbnail": True,
+        "prefer_ffmpeg": True,
+        "geo_bypass": True,
+        "nocheckcertificate": True,
+        "postprocessors": [
+            {
+                "key": "FFmpegExtractAudio",
+                "preferredcodec": "mp3",
+                "preferredquality": "720",
+            }
+        ],
+        "outtmpl": "%(id)s.mp3",
+        "quiet": True,
+        "logtostderr": False,
+    }
+    try:
+        with YoutubeDL(opts) as ytdl:
+            ytdl_data = ytdl.extract_info(url, download=True)
+    except Exception as e:
+        await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
+        return
+    audio_original = f"{ytdl_data['id']}.mp3"
+    raw_file_name = f"{vid_title}.raw"
+    raw_file_name = await convert_to_raw(audio_original, raw_file_name)
+    if not raw_file_name:
+         return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
+    os.remove(audio_original)
+    await play_it(raw_file_name, u_s, dur, uploade_r, vid_title, s, group_call)
+
+       
+
+async def convert_to_raw(audio_original, raw_file_name):
+    try:
+         ffmpeg.input(audio_original).output(
+              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k").overwrite_output().run()
+    except:
+         return None
+    return raw_file_name
+
+
+async def play_it(file_, message, fd, sing_r, title, s, group_call):
     if not group_call.is_connected:
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
-            await u_s.edit(f"**Error While Joining VC:** `{e}`")
-            return
-        group_call.input_filename = raw_file_name
-        await u_s.edit(f"Playing [{audio.title}](message.reply_to_message.link) in {message.chat.title}!")
+            return await message.edit(f"**Error While Joining VC:** `{e}`")
+        group_call.input_filename = file_
+        return await message.edit(f"Playing [{title}](message.reply_to_message.link) in {message.chat.title}!")
     else:
-        s.append(raw_file_name)
-        f_info = {"song name": audio.title,
+        s.append(file_)
+        f_info = {"song name": title,
                   "singer": sing_r,
                   "dur": fd
                  }
-        s_dict[raw_file_name] = f_info
-        await u_s.edit(f"Added [{audio.title}](message.reply_to_message.link) To Position #{len(s)+1}!")
-
-
+        s_dict[file_] = f_info
+        return await message.edit(f"Added [{title}](message.reply_to_message.link) To Position #{len(s)+1}!")
+    
 @friday_on_cmd(
     ["pause"],
     is_official=False,
