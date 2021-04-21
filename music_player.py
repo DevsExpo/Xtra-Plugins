@@ -105,28 +105,27 @@ async def play_m(client, message):
     group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
     if message.reply_to_message:
-        if message.reply_to_message.audio:
-            await u_s.edit_text("`Please Wait, Let Me Download This File!`")
-            audio = message.reply_to_message.audio
-            audio_original = await message.reply_to_message.download()
-            vid_title = audio.title or audio.file_name
-            uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
-            dura_ = message.reply_to_message.audio.duration
-            dur = time.strftime("%Hh:%Mm:%Ss", time.gmtime(dura_))
-            raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
+         if message.reply_to_message.audio:
+             await u_s.edit_text("`Please Wait, Let Me Download This File!`")
+             audio = message.reply_to_message.audio
+             audio_original = await message.reply_to_message.download()
+             vid_title = audio.title or audio.file_name
+             uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
+             dura_ = message.reply_to_message.audio.duration
+             dur = time.strftime("%Hh:%Mm:%Ss", time.gmtime(dura_))
+             raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
+         else:
+             return await us_.edit("`Reply To A File To PLay It.`")
     else:
-        input_str = get_text(message)
-        if not input_str:
-            return await u_s.edit("`Give Me Song Name`")
-        search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
-        rt = search.result()
-        try:
-            result_s = rt["search_result"]
-        except:
-            await u_s.edit(
-             f"Song Not Found With Name {input_str}, Please Try Giving Some Other Name."
-         )
-            return
+         input_str = get_text(message)
+         if not input_str:
+             return await u_s.edit("`Give Me Song Name`")
+         search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
+         rt = search.result()
+         try:
+             result_s = rt["search_result"]
+         except:
+             return await u_s.edit(f"Song Not Found With Name {input_str}, Please Try Giving Some Other Name.")
          url = result_s[0]["link"]
          dur = result_s[0]["duration"]
          vid_title = result_s[0]["title"]
