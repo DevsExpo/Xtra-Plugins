@@ -93,104 +93,75 @@ async def ski_p(client, message):
     except:
         return await m_.edit("`This Playlist Key Doesn't Exits`")
                             
-@friday_on_cmd(
-    ["play", "playmusic"],
-    is_official=False,
-    cmd_help={"help": "Play The Song In VC!", "example": "{ch}play (reply to song)"},
-)
-async def play_m(client, message):
-    group_call.client = client
-    u_s = await edit_or_reply(message, "`Processing..`")
-    if not message.reply_to_message or not message.reply_to_message.audio:
-        await u_s.edit("`Reply To Audio To Play It`")
-        return
-    await u_s.edit_text("`Please Wait, Let Me Download This File!`")
-    audio = message.reply_to_message.audio
-    audio_original = await message.reply_to_message.download()
-    sing_r = message.reply_to_message.audio.performer or "Unknown Artist."
-    dura_ = message.reply_to_message.audio.duration
-    fd = time.strftime("%Hh:%Mm:%Ss", time.gmtime(dura_))
-    raw_file_name = (
-        f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
-    )
-    raw_file_name = await convert_to_raw(audio_original, raw_file_name)
-    if not raw_file_name:
-         return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
-    os.remove(audio_original)
-    if not group_call.is_connected:
-        try:
-            await group_call.start(message.chat.id)
-        except BaseException as e:
-            return await message.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.input_filename = raw_file_name
-        return await message.edit(f"Playing [{audio.title}](message.reply_to_message.link) in {message.chat.title}!")
-    else:
-        s.append(raw_file_name)
-        f_info = {"song name": title,
-                  "singer": sing_r,
-                  "dur": fd
-                 }
-        s_dict[raw_file_name] = f_info
-        return await message.edit(f"Added [{audio.title}](message.reply_to_message.link) To Position #{len(s)+1}!")
     
-                            
-
-
 @friday_on_cmd(
-    ["yt_play"],
+    ["play"],
     is_official=False,
-    cmd_help={"help": "Play The Song In VC Directly From Youtube.!", "example": "{ch}yt_play (song query)"},
+    cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play (song query)"},
 )
 async def play_m(client, message):
+    global s
+    global s_dict
     group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
-    input_str = get_text(message)
-    if not input_str:
-        return await u_s.edit("`Give Me Song Name`")
-    search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
-    rt = search.result()
-    try:
-        result_s = rt["search_result"]
-    except:
-        await u_s.edit(
-            f"Song Not Found With Name {input_str}, Please Try Giving Some Other Name."
-        )
-        return
-    url = result_s[0]["link"]
-    dur = result_s[0]["duration"]
-    vid_title = result_s[0]["title"]
-    yt_id = result_s[0]["id"]
-    uploade_r = result_s[0]["channel"]
-    opts = {
-        "format": "bestaudio",
-        "addmetadata": True,
-        "key": "FFmpegMetadata",
-        "writethumbnail": True,
-        "prefer_ffmpeg": True,
-        "geo_bypass": True,
-        "nocheckcertificate": True,
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "mp3",
-                "preferredquality": "720",
-            }
-        ],
-        "outtmpl": "%(id)s.mp3",
-        "quiet": True,
-        "logtostderr": False,
-    }
-    try:
-        with YoutubeDL(opts) as ytdl:
-            ytdl_data = ytdl.extract_info(url, download=True)
-    except Exception as e:
-        await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
-        return
-    audio_original = f"{ytdl_data['id']}.mp3"
-    raw_file_name = f"{vid_title}.raw"
+    if message.reply_to_message:
+        if message.reply_to_message.audio:
+            await u_s.edit_text("`Please Wait, Let Me Download This File!`")
+            audio = message.reply_to_message.audio
+            audio_original = await message.reply_to_message.download()
+            vid_title = audio.title or audio.file_name
+            uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
+            dura_ = message.reply_to_message.audio.duration
+            dur = time.strftime("%Hh:%Mm:%Ss", time.gmtime(dura_))
+            raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
+    else:
+        input_str = get_text(message)
+        if not input_str:
+            return await u_s.edit("`Give Me Song Name`")
+        search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
+        rt = search.result()
+        try:
+            result_s = rt["search_result"]
+        except:
+            await u_s.edit(
+             f"Song Not Found With Name {input_str}, Please Try Giving Some Other Name."
+         )
+            return
+         url = result_s[0]["link"]
+         dur = result_s[0]["duration"]
+         vid_title = result_s[0]["title"]
+         yt_id = result_s[0]["id"]
+         uploade_r = result_s[0]["channel"]
+         opts = {
+             "format": "bestaudio",
+             "addmetadata": True,
+             "key": "FFmpegMetadata",
+             "writethumbnail": True,
+             "prefer_ffmpeg": True,
+             "geo_bypass": True,
+             "nocheckcertificate": True,
+             "postprocessors": [
+                 {
+                     "key": "FFmpegExtractAudio",
+                     "preferredcodec": "mp3",
+                     "preferredquality": "720",
+                 }
+             ],
+             "outtmpl": "%(id)s.mp3",
+             "quiet": True,
+             "logtostderr": False,
+         }
+         try:
+             with YoutubeDL(opts) as ytdl:
+                 ytdl_data = ytdl.extract_info(url, download=True)
+         except Exception as e:
+             await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
+             return
+         audio_original = f"{ytdl_data['id']}.mp3"
+         raw_file_name = f"{vid_title}.raw"
     raw_file_name = await convert_to_raw(audio_original, raw_file_name)
     if not raw_file_name:
-         return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
+         return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid File.`")
     os.remove(audio_original)
     if not group_call.is_connected:
         try:
@@ -198,7 +169,7 @@ async def play_m(client, message):
         except BaseException as e:
             return await message.edit(f"**Error While Joining VC:** `{e}`")
         group_call.input_filename = raw_file_name
-        return await message.edit(f"Playing [{vid_title}](message.reply_to_message.link) in {message.chat.title}!")
+        return await message.edit(f"Playing [`{vid_title}`] in {message.chat.title}!")
     else:
         s.append(raw_file_name)
         f_info = {"song name": vid_title,
@@ -206,7 +177,7 @@ async def play_m(client, message):
                   "dur": dur
                  }
         s_dict[raw_file_name] = f_info
-        return await message.edit(f"Added [{vid_title}](message.reply_to_message.link) To Position #{len(s)+1}!")
+        return await message.edit(f"Added [`{vid_title}`] To Position #{len(s)+1}!")
     
 
       
