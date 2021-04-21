@@ -99,7 +99,6 @@ async def ski_p(client, message):
     cmd_help={"help": "Play The Song In VC!", "example": "{ch}play (reply to song)"},
 )
 async def play_m(client, message):
-    group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
     if not message.reply_to_message or not message.reply_to_message.audio:
         await u_s.edit("`Reply To Audio To Play It`")
