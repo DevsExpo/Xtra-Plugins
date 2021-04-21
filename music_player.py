@@ -117,7 +117,7 @@ async def play_m(client, message):
     if not raw_file_name:
          return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
     os.remove(audio_original)
-    await play_it(raw_file_name, u_s, fd, sing_r, audio, s, group_call)
+    await play_it(raw_file_name, u_s, fd, sing_r, audio, client)
 
 
 @friday_on_cmd(
@@ -176,7 +176,7 @@ async def play_m(client, message):
     if not raw_file_name:
          return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
     os.remove(audio_original)
-    await play_it(raw_file_name, u_s, dur, uploade_r, vid_title, s, group_call)
+    await play_it(raw_file_name, u_s, dur, uploade_r, vid_title, client)
 
        
 
@@ -189,7 +189,9 @@ async def convert_to_raw(audio_original, raw_file_name):
     return raw_file_name
 
 
-async def play_it(file_, message, fd, sing_r, title, s, group_call):
+async def play_it(file_, message, fd, sing_r, title, client):
+    global s
+    group_call.client = client
     if not group_call.is_connected:
         try:
             await group_call.start(message.chat.id)
