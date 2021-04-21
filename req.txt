@@ -1,5 +1,5 @@
 wikipedia
-pytgcalls
+pytgcalls==0.0.17
 mal-api
 git+https://github.com/chsaiujwal/maigret
 git+https://github.com/gleitz/howdoi
