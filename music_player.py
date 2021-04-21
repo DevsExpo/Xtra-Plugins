@@ -125,7 +125,6 @@ async def play_m(client, message):
     cmd_help={"help": "Play The Song In VC Directly From Youtube.!", "example": "{ch}yt_play (song query)"},
 )
 async def play_m(client, message):
-    group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
     input_str = get_text(message)
     if not input_str:
