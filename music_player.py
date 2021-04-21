@@ -99,6 +99,7 @@ async def ski_p(client, message):
     cmd_help={"help": "Play The Song In VC!", "example": "{ch}play (reply to song)"},
 )
 async def play_m(client, message):
+    group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
     if not message.reply_to_message or not message.reply_to_message.audio:
         await u_s.edit("`Reply To Audio To Play It`")
@@ -116,7 +117,23 @@ async def play_m(client, message):
     if not raw_file_name:
          return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
     os.remove(audio_original)
-    await play_it(raw_file_name, u_s, fd, sing_r, audio, client)
+    if not group_call.is_connected:
+        try:
+            await group_call.start(message.chat.id)
+        except BaseException as e:
+            return await message.edit(f"**Error While Joining VC:** `{e}`")
+        group_call.input_filename = raw_file_name
+        return await message.edit(f"Playing [{audio.title}](message.reply_to_message.link) in {message.chat.title}!")
+    else:
+        s.append(raw_file_name)
+        f_info = {"song name": title,
+                  "singer": sing_r,
+                  "dur": fd
+                 }
+        s_dict[raw_file_name] = f_info
+        return await message.edit(f"Added [{audio.title}](message.reply_to_message.link) To Position #{len(s)+1}!")
+    
+                            
 
 
 @friday_on_cmd(
@@ -125,6 +142,7 @@ async def play_m(client, message):
     cmd_help={"help": "Play The Song In VC Directly From Youtube.!", "example": "{ch}yt_play (song query)"},
 )
 async def play_m(client, message):
+    group_call.client = client
     u_s = await edit_or_reply(message, "`Processing..`")
     input_str = get_text(message)
     if not input_str:
@@ -174,10 +192,24 @@ async def play_m(client, message):
     if not raw_file_name:
          return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid Fine.`")
     os.remove(audio_original)
-    await play_it(raw_file_name, u_s, dur, uploade_r, vid_title, client)
+    if not group_call.is_connected:
+        try:
+            await group_call.start(message.chat.id)
+        except BaseException as e:
+            return await message.edit(f"**Error While Joining VC:** `{e}`")
+        group_call.input_filename = raw_file_name
+        return await message.edit(f"Playing [{vid_title}](message.reply_to_message.link) in {message.chat.title}!")
+    else:
+        s.append(raw_file_name)
+        f_info = {"song name": vid_title,
+                  "singer": uploade_r,
+                  "dur": dur
+                 }
+        s_dict[raw_file_name] = f_info
+        return await message.edit(f"Added [{vid_title}](message.reply_to_message.link) To Position #{len(s)+1}!")
+    
 
-       
-
+      
 async def convert_to_raw(audio_original, raw_file_name):
     try:
          ffmpeg.input(audio_original).output(
@@ -186,26 +218,7 @@ async def convert_to_raw(audio_original, raw_file_name):
          return None
     return raw_file_name
 
-
-async def play_it(file_, message, fd, sing_r, title, client):
-    global s
-    group_call.client = client
-    if not group_call.is_connected:
-        try:
-            await group_call.start(message.chat.id)
-        except BaseException as e:
-            return await message.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.input_filename = file_
-        return await message.edit(f"Playing [{title}](message.reply_to_message.link) in {message.chat.title}!")
-    else:
-        s.append(file_)
-        f_info = {"song name": title,
-                  "singer": sing_r,
-                  "dur": fd
-                 }
-        s_dict[file_] = f_info
-        return await message.edit(f"Added [{title}](message.reply_to_message.link) To Position #{len(s)+1}!")
-    
+ 
 @friday_on_cmd(
     ["pause"],
     is_official=False,
