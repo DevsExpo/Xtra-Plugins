@@ -116,7 +116,7 @@ async def play_m(client, message):
              dur = datetime.timedelta(seconds=dura_)
              raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
          else:
-             return await us_.edit("`Reply To A File To PLay It.`")
+             return await u_s.edit("`Reply To A File To PLay It.`")
     else:
          input_str = get_text(message)
          if not input_str:
