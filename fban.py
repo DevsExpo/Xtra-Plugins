@@ -131,32 +131,14 @@ async def fetch_all_fed(client, message):
     ok = (await client.get_history("@MissRose_bot", 1))[0]
     if "5 minutes" in ok.text:
         return None
-    elif "file to list" in ok.text:
+    if "file to list" in ok.text.lower():
         try:
             await ok.click(0)
         except TimeoutError:
             pass
+        await asyncio.sleep(7)
         sed = (await client.get_history("@MissRose_bot", 1))[0]
-        if sed.text:
-            if "5 minutes" in sed.text:
-                return None
-            else:
-                X = sed.text
-                lol = X.splitlines()
-                if "you are the owner" in X.lower():
-                    for lo in lol:
-                        if "you are the owner" not in lo.lower():
-                            if "you are admin" not in lo.lower():
-                                if lo[:36] != "":
-                                    if not lo.startswith("-"):
-                                        fed_list.append(lo[:36])
-                                    else:
-                                        fed_list.append(lo[2:38])
-                else:
-                    Y = X[44:].splitlines()
-                    for lol in Y:
-                        fed_list.append(lol[2:38])
-        elif sed.media:
+        if sed.media:
             fed_file = await sed.download()
             file = open(fed_file, "r")
             lines = file.readlines()
@@ -166,4 +148,22 @@ async def fetch_all_fed(client, message):
                 except BaseException:
                     pass
             os.remove(fed_file)
-        return fed_list
+        else:
+            return None
+    else:
+        X = ok.text
+        lol = X.splitlines()
+        if "you are the owner" in X.lower():
+            for lo in lol:
+                if "you are the owner" not in lo.lower():
+                    if "you are admin" not in lo.lower():
+                        if lo[:36] != "":
+                            if not lo.startswith("-"):
+                                fed_list.append(lo[:36])
+                            else:
+                                fed_list.append(lo[2:38])
+        else:
+            Y = X[44:].splitlines()
+            for lol in Y:
+               fed_list.append(lol[2:38])
+    return fed_list
