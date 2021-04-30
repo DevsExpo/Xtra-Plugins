@@ -8,9 +8,8 @@
 
 
 import urllib.request
-
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from bs4 import BeautifulSoup
-
 from pyrogram import filters
 from main_startup.core.decorators import friday_on_cmd
 
@@ -30,8 +29,9 @@ async def _(client, message):
     Sed = ""
     for match in result:
         Sed += match.get_text() + "\n\n"
-    await message.edit(
+    await edit_or_reply(
+        message,
         f"<b><u>Match information gathered successful</b></u>\n\n\n<code>{Sed}</code>",
-        parse_mode="HTML",
+        parse_mode="html",
     )
 
