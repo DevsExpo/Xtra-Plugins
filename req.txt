@@ -7,6 +7,7 @@ speedtest-cli
 tswift
 countryinfo
 emoji-country-flag
+quotefancy
 feedparser
 asyncurban
 validators>=0.18.2
