@@ -49,7 +49,7 @@ async def scgrp(client, message):
     pablo = await edit_or_reply(message, "`Searching For Anime.....`")
     lol = await is_night_chat_in_db(message.chat.id)
     if not lol:
-        await message.edit("This Chat is Has Not Enabled Night Mode.")
+        await pablo.edit("This Chat is Has Not Enabled Night Mode.")
         return
     await rm_night_chat(message.chat.id)
     await pablo.edit(f"**Removed Chat {message.chat.title} With Id {message.chat.id} From Database. This Group Will Be No Longer Closed On 12Am(IST) And Will Opened On 06Am(IST)**")
