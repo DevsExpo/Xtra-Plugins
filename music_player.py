@@ -167,9 +167,9 @@ async def play_m(client, message):
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
-            return await message.edit(f"**Error While Joining VC:** `{e}`")
+            return await u_s.edit(f"**Error While Joining VC:** `{e}`")
         group_call.input_filename = raw_file_name
-        return await message.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
+        return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
         s.append(raw_file_name)
         f_info = {"song name": vid_title,
@@ -177,7 +177,7 @@ async def play_m(client, message):
                   "dur": dur
                  }
         s_dict[raw_file_name] = f_info
-        return await message.edit(f"Added `{vid_title}` To Position `#{len(s)+1}`!")
+        return await u_s.edit(f"Added `{vid_title}` To Position `#{len(s)+1}`!")
     
 
       
@@ -292,6 +292,9 @@ async def set_vol(client, message):
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
     volume = get_text(message)
+    if not volume:
+        await edit_or_reply(message, "Volume Should Be Integer!")
+        return
     if not volume.isdigit():
         await edit_or_reply(message, "Volume Should Be Integer!")
         return
