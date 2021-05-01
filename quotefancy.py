@@ -1,3 +1,5 @@
+# (C) Copyright - <New-dev0@Github> & <Anonymous_Machinee@Telegram>
+
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply
 from quotefancy import get_quote
@@ -14,6 +16,10 @@ async def quotefancy(client, message):
     msg = await edit_or_reply(message, "`Please Wait !`")
     try:
         imglink = get_quote("image")
-        await message.reply_photo(imglink) # Dont Download
     except Exception as e:
-        await msg.edit(f"**Error** - {str(e)}")
+        return await msg.edit(f"**Error :** {str(e)}")
+    if message.reply_to_message:
+        await message.reply_to_message.reply_photo(imglink, quote=True)
+    else:
+        await message.reply_photo(imglink)
+    await msg.delete()
