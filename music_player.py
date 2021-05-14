@@ -105,7 +105,7 @@ async def ski_p(client, message):
         try:
             s.pop(no_t_s)
         except:
-            
+            return await m_.edit("`Invalid Key.`")
                             
     
 @friday_on_cmd(
