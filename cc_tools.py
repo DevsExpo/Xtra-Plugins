@@ -26,11 +26,15 @@ from main_startup.helper_func.basic_helpers import (
 )
 from main_startup.helper_func.logger_s import LogIt
 from plugins import devs_id
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.by import By
 
 GOOGLE_CHROME_BIN = Config.CHROME_BIN_PATH
 CHROME_DRIVER = Config.CHROME_DRIVER_PATH
 
-def namso_gen(bin, no_of_result=15):
+async def namso_gen(bin, no_of_result=15):
     url = "https://namso-gen.com/"
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -41,13 +45,22 @@ def namso_gen(bin, no_of_result=15):
     chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
     driver.get(url)
+    # Sleep Until Page is Fully Loaded
+    await asyncio.sleep(5)
+    w = WebDriverWait(driver, 20)
+    w.until(expected_conditions.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/main/div/div/div[3]/div[1]/form/div[1]/label/input")))
     elem = driver.find_element_by_xpath("/html/body/div[1]/div/div/main/div/div/div[3]/div[1]/form/div[1]/label/input")
     elem.send_keys(bin)
+    await asyncio.sleep(2)
     elem3 = driver.find_element_by_xpath("/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input")
     for i in range(2):
         elem3.send_keys(Keys.BACKSPACE)
+        await asyncio.sleep(1)
+    elem3 = driver.find_element_by_xpath("/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input")
     elem3.send_keys(no_of_result)
+    await asyncio.sleep(2)
     driver.find_element_by_xpath("/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[5]/button").click()
+    await asyncio.sleep(2)
     s = driver.find_elements_by_xpath('//*[@id="result"]')[0].get_attribute("value")
     driver.close()
     return s
@@ -71,7 +84,7 @@ async def ns_gen(client, message):
         no_of_results = input_[1] if input_[1].isdigit() else 15
     else:
         bin = input
-    s = namso_gen(bin, no_of_results)
+    s = await namso_gen(bin, no_of_results)
     if not s:
         return msg.edit("`Invalid Bin Or Input Given More Than 25`")
     t = f"""
