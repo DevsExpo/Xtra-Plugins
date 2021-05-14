@@ -27,7 +27,7 @@ from main_startup.helper_func.basic_helpers import (
 from main_startup.helper_func.logger_s import LogIt
 from plugins import devs_id
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 
@@ -48,18 +48,21 @@ async def namso_gen(bin, no_of_result=15):
     # Sleep Until Page is Fully Loaded
     await asyncio.sleep(5)
     w = WebDriverWait(driver, 20)
-    w.until(expected_conditions.presence_of_element_located((By.XPATH, "/html/body/div[1]/div/div/main/div/div/div[3]/div[1]/form/div[1]/label/input")))
-    elem = driver.find_element_by_xpath("/html/body/div[1]/div/div/main/div/div/div[3]/div[1]/form/div[1]/label/input")
+    bin_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[1]/label/input'
+    no_of_r_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input'
+    button_xpath = '/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[5]/button'
+    w.until(expected_conditions.presence_of_element_located((By.XPATH, bin_xpath)))
+    elem = driver.find_element_by_xpath(bin_xpath)
     elem.send_keys(bin)
     await asyncio.sleep(2)
-    elem3 = driver.find_element_by_xpath("/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input")
+    elem3 = driver.find_element_by_xpath(no_of_r_xpath)
     for i in range(2):
         elem3.send_keys(Keys.BACKSPACE)
         await asyncio.sleep(1)
-    elem3 = driver.find_element_by_xpath("/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input")
+    elem3 = driver.find_element_by_xpath(no_of_r_xpath)
     elem3.send_keys(no_of_result)
     await asyncio.sleep(2)
-    driver.find_element_by_xpath("/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[5]/button").click()
+    driver.find_element_by_xpath(button_xpath).click()
     await asyncio.sleep(2)
     s = driver.find_elements_by_xpath('//*[@id="result"]')[0].get_attribute("value")
     driver.close()
