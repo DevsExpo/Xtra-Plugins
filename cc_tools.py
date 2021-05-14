@@ -126,13 +126,10 @@ def stark_finder(to_find, from_find):
     return False
 
     
-async def cc_(cc, cvc, yes, mes):
+async def cc_(cc):
     url = "https://starkapis.herokuapp.com/ccn/"
     data_ = {
-        "cc": cc,
-        "yes": yes,
-        "mes": mes,
-        "cvc": cvc,
+        "cc": cc
     }
     async with aiohttp.ClientSession() as session:
       async with session.post(url, json=data_) as resp:
@@ -165,21 +162,7 @@ async def cc_check(client, message):
     cc = get_text(message)
     if not cc:
         return await msg.edit("`Give Me A CC Check.`")
-    try:
-        cc, mes, yes, cvc = cc.split("|", 4)
-    except:
-        return await msg.edit("`Invalid Input Given, Please Check Help Menu.`")
-    if not cc.isdigit():
-        return await msg.edit("`Invalid Input Given, Please Check Help Menu.`")
-    if not cvc.isdigit():
-        return await msg.edit("`Invalid Input Given, Please Check Help Menu.`")
-    if not yes.isdigit():
-        return await msg.edit("`Invalid Input Given, Please Check Help Menu.`")
-    if not mes.isdigit():
-        return await msg.edit("`Invalid Input Given, Please Check Help Menu.`")
-    if len(str(cvc)) != 3:
-        return await msg.edit("`Invalid Input Given, Please Check Help Menu.`")
-    r = await cc_(cc, cvc, yes, mes)
+    r = await cc_(cc)
     await msg.edit(r)
 
 @friday_on_cmd(
