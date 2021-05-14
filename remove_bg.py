@@ -73,7 +73,7 @@ async def rmbg(client, message):
     if "image" in contentType:
         with io.BytesIO(output_file_name.content) as remove_bg_image:
             remove_bg_image.name = "BG_less.png"
-            await client.send_photo(
+            await client.send_document(
                 message.chat.id,
                 remove_bg_image)
         end = datetime.now()

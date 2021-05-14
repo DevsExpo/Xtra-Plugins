@@ -24,7 +24,7 @@ async def spam(client, message):
     if not count:
         await pablo.edit("`Please Give Me A Valid Input. You Can Check Help Menu To Know More!`")
         return
-    if not count.isdigit():
+    if not count.isnumeric():
         await pablo.edit("`Give Digits Idiot!`")
         return
     if not message.reply_to_message:

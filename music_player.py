@@ -72,33 +72,46 @@ async def playout_ended_handler(group_call, filename):
     group_call.input_filename = holi
 
 @friday_on_cmd(
-    ["skipvc"],
+    ["skip_vc"],
     is_official=False,
-    cmd_help={"help": "Skip Song in Playlist.", "example": "{ch}skipvc (key_len)"}
+    cmd_help={"help": "Skip Song in Playlist.", "example": "{ch}skip_vc (key_len)"}
 )
 async def ski_p(client, message):
-    m_ = await edit_or_reply(message, "`Please Wait!`")
-    no_t_s = get_text(message)
-    if no_t_s:
-        return await m_.edit("`Give Me Valid List Key Len.`")
     group_call.client = client
     if not group_call.is_connected:
         await m_.edit("`Is Group Call Even Connected?`")
-        return        
-    if not s:
-        return m_.edit("`There is No Playlist.`")
-    if not no_t_s.isdigits():
-        return await m_.edit("`Input Should Be In Digits.`")
-    try:
-        s.pop(no_t_s)
-    except:
-        return await m_.edit("`This Playlist Key Doesn't Exits`")
+        return 
+    m_ = await edit_or_reply(message, "`Please Wait!`")
+    no_t_s = get_text(message)
+    if not no_t_s:
+        return await m_.edit("`Give Me Valid List Key Len.`")
+    if no_t_s == "current":
+        if not s:
+            return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
+        next_s = s[0]
+        s.pop(0)
+        name = str(holi).replace(".raw", "")
+        prev = group_call.input_filename
+        group_call.input_filename = next_s
+        return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
+    else:
+        if not s:
+            return await m_.edit("`There is No Playlist.`")
+        if not no_t_s.isdigits():
+            return await m_.edit("`Input Should Be In Digits.`")
+        if int(no_t_s) == 0:
+            return await m_.edit("`0? What?`")
+        no_t_s = int(no_t_s - 1)
+        try:
+            s.pop(no_t_s)
+        except:
+            
                             
     
 @friday_on_cmd(
-    ["play"],
+    ["play_vc"],
     is_official=False,
-    cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play (song query)"},
+    cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play_vc (song query)"},
 )
 async def play_m(client, message):
     global s
@@ -245,7 +258,7 @@ async def replay(client, message):
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
     group_call.restart_playout()
-    await edit_or_reply(message, "`Re-Playing!`")
+    await edit_or_reply(message, f"`Re-Playing : {group_call.input_filename}`")
 
 
 @friday_on_cmd(
