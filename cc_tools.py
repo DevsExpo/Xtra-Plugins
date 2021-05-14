@@ -152,10 +152,15 @@ async def cc_(cc):
           response_ = await resp.json()
     check_response = f"『 ✮ {response_['msg']} ✮ 』"
     time_taken = response_['time_taken']
+    approved = response_['approved']
+    mes = response_['exp_month']
+    yes = response_['exp_year']
+    cvc = response_['cvc']
     final_t = f"""
 <b><u>Result</b></u>
 
 <b>CC Number :</b> <code>{cc}</code>
+<b>Approved :</b> <code>{approved}</code>
 <b>CVC :</b> <code>{cvc}</code>
 <b>Expiry Month :</b> <code>{mes}</code>
 <b>Expiry Year :</b> <code>{yes}</code>
