@@ -148,7 +148,7 @@ async def cc_(cc):
         "cc": cc
     }
     async with aiohttp.ClientSession() as session:
-      async with session.post(url, json=data_) as resp:
+      async with session.get(url, json=data_) as resp:
           response_ = await resp.json()
     check_response = f"『 ✮ {response_['msg']} ✮ 』"
     time_taken = response_['time_taken']
