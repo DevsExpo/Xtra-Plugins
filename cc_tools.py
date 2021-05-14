@@ -76,10 +76,11 @@ async def ns_gen(client, message):
         return msg.edit("`Invalid Bin Or Input Given More Than 25`")
     t = f"""
 **Bin :** `{bin}`
+
 **Results - ({no_of_results}) :**
+
 `{s}`
 
-**Tip :** `Use .ccn <ccn> To Check The CC`
 
 **Powered By FridayUb**
 """
@@ -134,7 +135,7 @@ async def cc_(cc, cvc, yes, mes):
         "cvc": cvc,
     }
     async with aiohttp.ClientSession() as session:
-      async with session.get(url, json=data_) as resp:
+      async with session.post(url, json=data_) as resp:
           response_ = await resp.json()
     check_response = f"『 ✮ {response_['msg']} ✮ 』"
     time_taken = response_['time_taken']
