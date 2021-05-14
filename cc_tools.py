@@ -152,6 +152,7 @@ async def cc_(cc):
           response_ = await resp.json()
     check_response = f"『 ✮ {response_['msg']} ✮ 』"
     time_taken = response_['time_taken']
+    cc = response_['cc']
     approved = response_['approved']
     mes = response_['exp_month']
     yes = response_['exp_year']
