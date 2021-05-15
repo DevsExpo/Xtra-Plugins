@@ -85,28 +85,28 @@ async def wow_collage(client, message):
     hmm = get_text(message) or " "
     width = 800
     stark_h = 250
+    limit = 15
     img_ = 0
     final_input = hmm.split(" ")
+    chat = message.chat.id
     if hmm == " ":
-        chat = message.chat.id
+        limit = 15
     elif len(final_input) == 1:
-        chat = final_input[0]
+        limit = hmm
     elif len(final_input) == 2:
-        chat = final_input[0]
+        limit = final_input[0]
         width = int(final_input[1])
     elif len(final_input) >= 3:
-        chat = final_input[0]
+        limit = final_input[0]
         width = int(final_input[1])
         stark_h = int(final_input[2])
-    try:
-        chat = int(chat)
-    except ValueError:
-        chat = str(chat)
+    if not limit.isnumeric():
+        return await owo.edit("`Limit Should Be Digits.`")
     file_path = "./to_collage/"
     if os.path.exists(file_path):
         shutil.rmtree(file_path)
     os.mkdir(file_path)
-    async for msg in client.search_messages(chat, filter="photo"):
+    async for msg in client.search_messages(chat, filter="photo", limit=limit):
         img_ += 1
         try:
             await msg.download(file_path)
