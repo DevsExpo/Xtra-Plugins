@@ -100,13 +100,14 @@ async def wow_collage(client, message):
         limit = final_input[0]
         width = int(final_input[1])
         stark_h = int(final_input[2])
-    if not limit.isnumeric():
+    if not limit.isdigit():
         return await owo.edit("`Limit Should Be Digits.`")
+    limit_ = int(limit)
     file_path = "./to_collage/"
     if os.path.exists(file_path):
         shutil.rmtree(file_path)
     os.mkdir(file_path)
-    async for msg in client.search_messages(chat, filter="photo", limit=limit):
+    async for msg in client.search_messages(chat, filter="photo", limit=limit_):
         img_ += 1
         try:
             await msg.download(file_path)
