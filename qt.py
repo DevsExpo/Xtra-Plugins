@@ -6,6 +6,7 @@
 #
 # All rights reserved.
 
+import asyncio
 from main_startup.config_var import Config
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.core.startup_helpers import run_cmd
