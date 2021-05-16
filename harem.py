@@ -96,9 +96,9 @@ async def harem_event(f, client, message):
         return bool(False)
     if not message.photo:
         return bool(False)
-    if not message.photo.caption:
+    if not message.caption:
         return bool(False)
-    if "add" in message.photo.caption.lower():
+    if "add" in message.caption.lower():
             return bool(True)
     return bool(False)
 
