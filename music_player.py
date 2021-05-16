@@ -104,9 +104,11 @@ async def ski_p(client, message):
             return await m_.edit("`0? What?`")
         no_t_s = int(no_t_s - 1)
         try:
+            s_ = s[no_t_s]
             s.pop(no_t_s)
         except:
             return await m_.edit("`Invalid Key.`")
+        return await m_.edit(f"`Skipped : {s_} At Position #{no_t_s}`")
                             
     
 @friday_on_cmd(
