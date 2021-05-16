@@ -106,8 +106,6 @@ async def harem_event(f, client, message):
 harem_event = filters.create(func=harem_event, name="harem_event")
 is_harem_enabled = filters.create(func=is_harem_enabled, name="is_harem_enabled")
 
-
-
 @listen(filters.user([int(792028928)]) & ~filters.edited & is_harem_enabled & harem_event & filters.group)
 async def harem_catcher(client, message):
     img = await message.download()
@@ -123,8 +121,8 @@ async def harem_catcher(client, message):
     guessp = match["best_guess"]
     if not guessp:
        return logging.info("(Waifu Catch Failed.) \nERROR : 404: Waifu Not Found.")
-    guess = guessp.replace("Results for", "").replace(" ", "")
-    kek = await message.reply_text(message.chat.id, f"/protecc {guess}")
+    guess = guessp.replace("Results for", "")
+    kek = await message.reply_text(f"/protecc {guess}")
     await asyncio.sleep(5)
     await kek.delete()
     log = LogIt(message)
