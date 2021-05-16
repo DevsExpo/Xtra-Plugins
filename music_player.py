@@ -99,6 +99,7 @@ async def ski_p(client, message):
             return await m_.edit("`There is No Playlist.`")
         if not no_t_s.isdigit():
             return await m_.edit("`Input Should Be In Digits.`")
+        no_t_s = int(no_t_s)
         if int(no_t_s) == 0:
             return await m_.edit("`0? What?`")
         no_t_s = int(no_t_s - 1)
