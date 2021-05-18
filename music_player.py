@@ -90,7 +90,7 @@ async def ski_p(client, message):
             return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
         next_s = s[0]
         s.pop(0)
-        name = str(holi).replace(".raw", "")
+        name = str(next_s).replace(".raw", "")
         prev = group_call.input_filename
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
