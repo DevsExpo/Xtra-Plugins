@@ -370,7 +370,7 @@ m=None
 failed, success = 0, 0
 no_of_sms=0
 
-def bomber(p):
+async def bomber(p):
     global failed, success, no_of_sms,m
     if p is None or success > no_of_sms:
         return
