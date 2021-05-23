@@ -383,8 +383,8 @@ def bomber(p):
                 failed += 1
         except:
             failed += 1
-    k=f"Requests: {success+failed} | Success: {success} | Failed: {failed}"
-    m.edit(l+k)
+    k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
+    m.edit(l+"\n"+k)
 
 
 
@@ -403,7 +403,7 @@ async def geT_if(client, message):
     no_of_threads = 5
     no_of_sms = int(no_of_sms.strip())
     failed, success = 0, 0
-    l=f"Target: {target} | Threads: {no_of_threads} | SMS-Bombs: {no_of_sms}"
+    l="Target: "+target+" | Threads: "+str(no_of_threads)+" | SMS-Bombs: "+no_of_sms
     m.edit(l)
     start = time.time()
     providers = data["providers"]
