@@ -374,7 +374,7 @@ no_of_sms=0
 @friday_on_cmd(['bomb', 'sms_bomb'],
                cmd_help={
                 'help': 'atack with massive sms bombs',
-                'example': '{ch}bomb 9848411000 : 100'})
+                'example': '{ch}bomb <phone number> : <no of messages>'})
 async def geT_if(client, message):
     def bomber(p):
         global failed, success, no_of_sms,m
@@ -419,6 +419,6 @@ async def geT_if(client, message):
                 ),
             )
             k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
-            # Try to fix this to display k as live count
+            # Try to fix this to display k as it is a live count
             executor.submit(bomber, p)
-    await m.edit(l+"\nMessages sent Successfully...:)")
+    await m.edit("yahoo! Messages sent Successfully...:)")
