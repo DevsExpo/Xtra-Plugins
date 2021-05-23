@@ -384,7 +384,7 @@ def bomber(p):
         except:
             failed += 1
     k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
-    m.edit(l+"\n"+k)
+    await m.edit(l+"\n"+k)
 
 
 
@@ -404,7 +404,7 @@ async def geT_if(client, message):
     no_of_sms = int(no_of_sms.strip())
     failed, success = 0, 0
     l="Target: "+target+" | Threads: "+str(no_of_threads)+" | SMS-Bombs: "+str(no_of_sms)
-    m.edit(l)
+    await m.edit(l)
     start = time.time()
     providers = data["providers"]
     with ThreadPoolExecutor(max_workers=no_of_threads) as executor:
