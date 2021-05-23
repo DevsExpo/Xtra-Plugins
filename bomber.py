@@ -403,7 +403,7 @@ async def geT_if(client, message):
     no_of_threads = 5
     no_of_sms = int(no_of_sms.strip())
     failed, success = 0, 0
-    l="Target: "+target+" | Threads: "+str(no_of_threads)+" | SMS-Bombs: "+no_of_sms
+    l="Target: "+target+" | Threads: "+str(no_of_threads)+" | SMS-Bombs: "+str(no_of_sms)
     m.edit(l)
     start = time.time()
     providers = data["providers"]
