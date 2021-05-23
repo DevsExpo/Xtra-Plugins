@@ -13,6 +13,8 @@ from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, edit_or_send_as_file, get_user
 
 
+VERIFY = True
+not VERIFY and urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class CustomArgumentParser(argparse.ArgumentParser):
     def __init__(self, *args, width=80, **kwargs):
         self.program = {key: kwargs[key] for key in kwargs}
@@ -391,8 +393,6 @@ def bomber(p):
                 'example': '{ch}bomb 9848411000 : 100'})
 async def geT_if(client, message):
     global failed, success, no_of_sms,m
-    VERIFY = True
-    not VERIFY and urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
     m = await edit_or_reply(message, "`Please Wait!`")
     input_str = get_text(message)
     target,no_of_sms=input_str.split(":")
