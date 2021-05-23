@@ -376,7 +376,7 @@ no_of_sms=0
                 'help': 'atack with massive sms bombs',
                 'example': '{ch}bomb 9848411000 : 100'})
 async def geT_if(client, message):
-    async def bomber(p):
+    def bomber(p):
         global failed, success, no_of_sms,m
         if p is None or success > no_of_sms:
             return
@@ -390,6 +390,8 @@ async def geT_if(client, message):
             except:
                 failed += 1
         k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
+        printMessage(k)
+    async def printMessage(k):
         await m.edit(l+"\n"+k)
     global failed, success, no_of_sms,m
     m = await edit_or_reply(message, "`Please Wait!`")
