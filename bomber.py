@@ -419,5 +419,6 @@ async def geT_if(client, message):
                 ),
             )
             k="Requests: "+str(success+failed)+" | Success: "+str(success)+" | Failed: "+str(failed)
-            await m.edit(l+"\n"+k)
+            # Try to fix this to display k as live count
             executor.submit(bomber, p)
+    await m.edit(l+"\nMessages sent Successfully...:)")
