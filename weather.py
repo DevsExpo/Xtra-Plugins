@@ -6,10 +6,10 @@ from pyrogram import filters
 from main_startup.core.decorators import friday_on_cmd
 
 
-@friday_on_cmd(['weather1','climate','we','cl'],
+@friday_on_cmd(['weather','climate','we','cl'],
                cmd_help={
                 'help': 'Get Weather info of town or pincode',
-                'example': '{ch}weather1 hyderabad'})
+                'example': '{ch}we hyderabad'})
 async def geW_if(client, message):
     m_ = await edit_or_reply(message, "`Please Wait!`")
     city = get_text(message)
