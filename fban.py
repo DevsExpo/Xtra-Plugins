@@ -123,6 +123,47 @@ async def fban_s(client, message):
     good_f_msg = f"**FBANNED** \n**Affected Feds :** `{len(fed_s) - failed_n}` \n**Failed :** `{failed_n}` \n**Total Fed :** `{len(fed_s)}`"
     await uj.edit(good_f_msg)
 
+@friday_on_cmd(
+    ["unfban", "unfedban"],
+    is_official=False,
+    cmd_help={
+        "help": "Un-Fban a user!",
+        "example": "{ch}unfban (enter username or id)",
+    },
+)
+async def un_fban_s(client, message):
+    uj = await edit_or_reply(message, "`Fbanning!`")
+    failed_n = 0
+    ur = get_text(message)
+    if not ur:
+        await uj.edit("`Who Should I Un-Fban? You?`")
+        return
+    if not Config.FBAN_GROUP:
+        await uj.edit("`Please Setup Fban Group!`")
+        return
+    fed_s = await get_all_feds()
+    if len(fed_s) == 0:
+        await uj.edit("`You Need Atleast One Fed In Db To Use This Plugin!`")
+        return
+    await uj.edit(f"`Un-Fbanning In {len(fed_s)} Feds!`")
+    try:
+        await client.send_message(Config.FBAN_GROUP, "/start")
+    except BaseException:
+        await uj.edit(f"`Unable To Send Message To Fban Group! \nTraceBack : {e}`")
+        return
+    for i in fed_s:
+        await asyncio.sleep(2)
+        try:
+            await client.send_message(Config.FBAN_GROUP, f"/joinfed {i['fed_s']}")
+            await client.send_message(Config.FBAN_GROUP, f"/unfban {ur}")
+        except FloodWait as e:
+            await asyncio.sleep(e.x)
+        except BaseException as eb:
+            logging.error(eb)
+            failed_n += 1
+    good_f_msg = f"**UN-FBANNED** \n**Affected Feds :** `{len(fed_s) - failed_n}` \n**Failed :** `{failed_n}` \n**Total Fed :** `{len(fed_s)}`"
+    await uj.edit(good_f_msg)
+
 
 async def fetch_all_fed(client, message):
     fed_list = []

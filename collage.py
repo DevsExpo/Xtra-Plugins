@@ -100,9 +100,10 @@ async def wow_collage(client, message):
         limit = final_input[0]
         width = int(final_input[1])
         stark_h = int(final_input[2])
-    if not limit.isdigit():
-        return await owo.edit("`Limit Should Be Digits.`")
-    limit_ = int(limit)
+    try:
+        limit_ = int(limit)
+    except ValueError:
+        return await owo.edit("`Limit Should Be In Digits.`")
     file_path = "./to_collage/"
     if os.path.exists(file_path):
         shutil.rmtree(file_path)
@@ -112,7 +113,7 @@ async def wow_collage(client, message):
         try:
             await msg.download(file_path)
         except Exception as e:
-            logging.info(e)
+            logging.error(e)
     if img_ == 0:
         await owo.edit("`No Images Found.`")
         shutil.rmtree(file_path)

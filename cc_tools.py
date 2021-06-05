@@ -65,7 +65,7 @@ async def namso_gen(bin, no_of_result=15):
     driver.find_element_by_xpath(button_xpath).click()
     await asyncio.sleep(2)
     s = driver.find_elements_by_xpath('//*[@id="result"]')[0].get_attribute("value")
-    driver.close()
+    driver.quit()
     return s
 
 @friday_on_cmd(
@@ -89,7 +89,7 @@ async def ns_gen(client, message):
         bin = input
     s = await namso_gen(bin, no_of_results)
     if not s:
-        return msg.edit("`Invalid Bin Or Input Given More Than 25`")
+        return await msg.edit("`Invalid Bin Given Or Results Limit Reached.`")
     t = f"""
 **Bin :** `{bin}`
 
@@ -101,9 +101,12 @@ async def ns_gen(client, message):
 **Powered By FridayUb**
 """
     await msg.edit(t, parse_mode="md")
-
-
-
+    
+def stark_finder(to_find, from_find):
+    if re.search(r"( |^|[^\w])" + re.escape(to_find) + r"( |$|[^\w])", from_find, flags=re.IGNORECASE):
+        return True
+    return False
+    
 my_code = {
     400: "『! Invalid Key !』",
     200: "『 Valid Key 』",
@@ -136,57 +139,6 @@ async def check_stripe_key(key_: str):
     else:
         return 200
     
-def stark_finder(to_find, from_find):
-    if re.search(r"( |^|[^\w])" + re.escape(to_find) + r"( |$|[^\w])", from_find, flags=re.IGNORECASE):
-        return True
-    return False
-
-    
-async def cc_(cc):
-    url = "https://starkapis.herokuapp.com/ccn/"
-    data_ = {
-        "cc": cc
-    }
-    async with aiohttp.ClientSession() as session:
-      async with session.get(url, json=data_) as resp:
-          response_ = await resp.json()
-    check_response = f"『 ✮ {response_['msg']} ✮ 』"
-    time_taken = response_['time_taken']
-    cc = response_['cc']
-    approved = response_['approved']
-    mes = response_['exp_month']
-    yes = response_['exp_year']
-    cvc = response_['cvc']
-    final_t = f"""
-<b><u>Result</b></u>
-
-<b>CC Number :</b> <code>{cc}</code>
-<b>Approved :</b> <code>{approved}</code>
-<b>CVC :</b> <code>{cvc}</code>
-<b>Expiry Month :</b> <code>{mes}</code>
-<b>Expiry Year :</b> <code>{yes}</code>
-<b>Response :</b> <code>{check_response}</code>
-<b>Time Taken:</b> <code>{time_taken}</code>
-
-<b><u>Checked Using FridayUB</b></u>
-"""
-    return final_t
-    
-@friday_on_cmd(
-    ["ccn"],
-    cmd_help={
-        "help": "Check CC - CCN Based.",
-        "example": "{ch}ccn 5224252466461650|11|2022|858",
-    },
-)
-async def cc_check(client, message):
-    msg = await edit_or_reply(message, "`Please Wait`")
-    cc = get_text(message)
-    if not cc:
-        return await msg.edit("`Give Me A CC Check.`")
-    r = await cc_(cc)
-    await msg.edit(r)
-
 @friday_on_cmd(
     ["sk"],
     cmd_help={

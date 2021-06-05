@@ -11,3 +11,7 @@ quotefancy
 feedparser
 asyncurban
 validators>=0.18.2
+shazamio
+lxml
+pycryptodome
+fake_useragent
