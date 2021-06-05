@@ -10,8 +10,7 @@ emoji-country-flag
 quotefancy
 feedparser
 asyncurban
-validators>=0.18.2
+validators
 shazamio
 lxml
 pycryptodome
-fake_useragent
