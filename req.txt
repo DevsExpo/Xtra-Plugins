@@ -2,7 +2,7 @@ lxml
 wikipedia
 pytgcalls
 mal-api
-git+https://github.com/chsaiujwal/maigret
+git+https://github.com/StarkGang/maigret
 git+https://github.com/starkgang/shazamio
 git+https://github.com/gleitz/howdoi
 speedtest-cli
