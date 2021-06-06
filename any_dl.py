@@ -1,3 +1,11 @@
+# Copyright (C) 2020-2021 by DevsExpo@Github, < https://github.com/DevsExpo >.
+#
+# This file is part of < https://github.com/DevsExpo/FridayUserBot > project,
+# and is released under the "GNU v3.0 License Agreement".
+# Please see < https://github.com/DevsExpo/blob/master/LICENSE >
+#
+# All rights reserved.
+
 import time
 import aiohttp
 from main_startup.helper_func.basic_helpers import edit_or_reply, humanbytes, time_formatter
@@ -175,7 +183,7 @@ def file_list(path, lisT):
     return lisT
                     
 @friday_on_cmd(
-    ["udl"],
+    ["udl", "any_dl"],
     cmd_help={
         "help": "Download Files From Anonfiles, Mega, MediaFire. If Its Direct Link Make Sure To Give File Name",
         "example": "{ch}udl (file url as input) if url in supported sites else {ch}udl (file url|file name)",
@@ -215,6 +223,7 @@ async def download_(client, message):
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
+        file_size = humanbytes(file_size)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
@@ -247,4 +256,4 @@ async def download_(client, message):
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
-      
+     
