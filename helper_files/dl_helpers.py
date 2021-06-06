@@ -97,7 +97,4 @@ def find_between(self, start_string, end_string, to_find):
     if not result:
         return None
     return result.group(1)
-    
-loop = asyncio.get_event_loop()
-file_url = loop.run_until_complete(download_file("https://mega.nz/#!8soDySiQ!Z6I57NiZ-K5CeE8E95ZKZyL1aSpdoo3eoDA_tE0Dlsc"))
-print(file_url)
+   
