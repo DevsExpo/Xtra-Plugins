@@ -25,7 +25,7 @@ async def download_file(message, url, file_name):
                     f.write(await r.read())
                 else:
                     total_length = int(total_length)
-                    async for chunk in r.content.iter_chunked(2341):
+                    async for chunk in r.content.iter_chunked(max(int(total_length/1000), 1024*6)):
                         dl += len(chunk)
                         e_ = time.time()
                         diff = e_ - c_
