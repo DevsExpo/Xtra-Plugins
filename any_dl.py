@@ -25,7 +25,7 @@ async def download_file(message, url, file_name):
                     f.write(await r.read())
                 else:
                     total_length = int(total_length)
-                    async for chunk in r.content.iter_chunked(max(int(total_length/1000), 1024*6)):
+                    async for chunk in r.content.iter_chunked(max(int(total_length/500), (1024*1024)*2)):
                         dl += len(chunk)
                         e_ = time.time()
                         diff = e_ - c_
@@ -247,5 +247,4 @@ async def download_(client, message):
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
-        
-    
+      
