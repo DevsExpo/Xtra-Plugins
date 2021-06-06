@@ -233,7 +233,7 @@ async def download_(client, message):
         except IndexError:
             return await s.edit("`No Anon Files Link Found.`")
         try:
-            file_url, file_size, file_name = dl_client.anon_files_dl(link)
+            file_url, file_size, file_name = await dl_client.anon_files_dl(link)
         except BaseException as e:
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
         if file_url == None:
