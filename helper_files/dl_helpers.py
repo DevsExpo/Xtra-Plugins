@@ -91,7 +91,7 @@ async def api_request(data):
     json_resp = await response.json()
     return json_resp[0]
 
-def find_between(self, start_string, end_string, to_find):
+def find_between(start_string, end_string, to_find):
     _to_ = f"{start_string}(.*?){end_string}"
     result = re.search(_to_, to_find)
     if not result:
