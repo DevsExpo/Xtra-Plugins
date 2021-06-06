@@ -70,10 +70,9 @@ async def upload_file(client, reply_message, message, file_path, caption):
             if oof == "fs_manifest.csv":
                 return
             await send_file(client, reply_message, oof, caption, message)
-            return await message.delete()
     else:
         await send_file(client, reply_message, file_path, caption, message)
-        return await message.delete()
+    return await message.delete()
     
 async def send_file(client, r_msg, file, capt, e_msg):
     c_time = time.time()
@@ -199,7 +198,6 @@ async def download_(client, message):
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
-        await s.delete()
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code> \n<b>File Upload Date :</b> <code>{file_upload_date}</code> \n<b>File Scan Result :</b> <code>{scan_result}</code> \n<code>{caption_}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
@@ -217,7 +215,6 @@ async def download_(client, message):
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
-        await s.delete()
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
@@ -233,7 +230,6 @@ async def download_(client, message):
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
-        await s.delete()
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
