@@ -88,8 +88,7 @@ async def is_harem_enabled(f, client, message):
         return bool(True)
     if await is_chat_in_db(int(message.chat.id)):
         return bool(True)
-    else:
-        return bool(False)
+    return bool(False)
 
 async def harem_event(f, client, message):
     if not message:
@@ -99,7 +98,7 @@ async def harem_event(f, client, message):
     if not message.caption:
         return bool(False)
     if "add" in message.caption.lower():
-            return bool(True)
+        return bool(True)
     return bool(False)
 
 
