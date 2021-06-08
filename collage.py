@@ -108,12 +108,13 @@ async def wow_collage(client, message):
     if os.path.exists(file_path):
         shutil.rmtree(file_path)
     os.mkdir(file_path)
-    async for msg in client.search_messages(chat, filter="photo", limit=limit_):
-        img_ += 1
-        try:
-            await msg.download(file_path)
-        except Exception as e:
-            logging.error(e)
+    async for msg in client.iter_history(chat, limit=limit_):
+        if msg.photo:
+            img_ += 1
+            try:
+                await msg.download(file_path)
+            except Exception as e:
+                logging.error(e)
     if img_ == 0:
         await owo.edit("`No Images Found.`")
         shutil.rmtree(file_path)

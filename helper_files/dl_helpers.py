@@ -1,6 +1,6 @@
 """
 Generates Direct Link From Mega Public Url
-Kanged From mega.py
+Copied From mega.py And Modified To Fit My Purpose.
 """
 
 import json
