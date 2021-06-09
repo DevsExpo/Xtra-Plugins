@@ -49,7 +49,7 @@ async def pl(client, message):
         song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
         sno += 1
-        song += f"**{sno} ▶** `{i.replace('.raw', '')} | {s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
+        song += f"**{sno} ▶** `{i.replace('.raw', '')} | {[i]['singer']} | {[i]['dur']}` \n\n" 
     await play.edit(song)
     
 async def get_chat_(client, chat_):
@@ -61,8 +61,8 @@ async def get_chat_(client, chat_):
             return int(chat_.split("-100")[1])
         
 async def playout_ended_handler(group_call, filename):
-    chat_ = await get_chat_(client, f"-100{group_call.full_chat.id}")
     client_ = group_call.client
+    chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
     s = s_dict.get((chat_, client_))
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
@@ -72,7 +72,7 @@ async def playout_ended_handler(group_call, filename):
     name = s[0]['raw'].split(".raw")[0]
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
-    song_info = f"<b>🎵🎸 Now Playing </b> \n<b>Song :</b> <code>{name_}</code> \n<b>Singer :</b> <code>{singer_}</code> \n<b>Duration :</b> <code>{dur_}</code>"
+    song_info = f"<b>🎼 Now Playing 🎼</b> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code>"
     await client_.send_message(
         chat_, 
         song_info
