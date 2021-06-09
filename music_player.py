@@ -49,7 +49,7 @@ async def pl(client, message):
         song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
         sno += 1
-        song += f"**{sno} ▶** `{i.replace('.raw', '')} | {i['singer']} | {i['dur']}` \n\n" 
+        song += f"**{sno} ▶** `{str(i).replace('.raw', '')} | {i['singer']} | {i['dur']}` \n\n" 
     await play.edit(song)
     
 async def get_chat_(client, chat_):
