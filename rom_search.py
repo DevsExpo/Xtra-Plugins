@@ -117,7 +117,7 @@ async def m_(client, message):
     url, device_name, version, size, rs_date, type_, package_name = await get_url(query)
     if url == None:
         return await e_.edit("`No Results Matching You Query.`")
-    final_ = f"<b>MIUI Search</b> \n<b>Model :</b> <code>{device_name}</code> \n<b>Version :</b> <code>{version}</code> \n<b>Size :</b> <code>{size}</code> \n<b>Release Date :</b> <code>{rs_date}</code> \n<b>Type :</b> <code>{type_}</code> \nPackage Name :</b> <code>{package_name}</code> \n<b>Download :</b> <code>{ch_}udl {url}</code>"
+    final_ = f"<b>MIUI Search</b> \n<b>Model :</b> <code>{device_name}</code> \n<b>Version :</b> <code>{version}</code> \n<b>Size :</b> <code>{size}</code> \n<b>Release Date :</b> <code>{rs_date}</code> \n<b>Type :</b> <code>{type_}</code> \n<b>Package Name :</b> <code>{package_name}</code> \n<b>Download :</b> <code>{ch_}udl {url}</code>"
     await message.edit(final_)
     
 @friday_on_cmd(
