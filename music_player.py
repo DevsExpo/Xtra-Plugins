@@ -26,7 +26,6 @@ from youtubesearchpython import SearchVideos
 
 s = []
 s_dict = {}
-group_call = GroupCall(None, play_on_repeat=False)
 GPC = {}
 
 @friday_on_cmd(
@@ -124,7 +123,7 @@ async def ski_p(client, message):
 async def play_m(client, message):
     global s
     global s_dict
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
     u_s = await edit_or_reply(message, "`Processing..`")
     if message.reply_to_message:
          if message.reply_to_message.audio:
@@ -184,7 +183,16 @@ async def play_m(client, message):
     if not raw_file_name:
          return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid File.`")
     os.remove(audio_original)
-    if not group_call.is_connected:
+    if not group_call:
+        group_call = GroupCall(client, play_on_repeat=False)
+        GPC[(message.chat.id, client.me.id)] = group_call
+        try:
+            await group_call.start(message.chat.id)
+        except BaseException as e:
+            return await u_s.edit(f"**Error While Joining VC:** `{e}`")
+        group_call.input_filename = raw_file_name
+        return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
+    elif not group_call.is_connected:
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
@@ -205,7 +213,7 @@ async def play_m(client, message):
 async def convert_to_raw(audio_original, raw_file_name):
     try:
          ffmpeg.input(audio_original).output(
-              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k").overwrite_output().run()
+              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
     except:
          return None
     return raw_file_name
@@ -240,6 +248,7 @@ async def radio_s(client, message):
         acodec='pcm_s16le',
         ac=2,
         ar='48k'
+        loglevel='error'
     ).overwrite_output().run_async()
     FFMPEG_PROCESSES[(message.chat.id, client)] = process
     await s.edit(f"**📻 Playing :** `{radio_url}`")
