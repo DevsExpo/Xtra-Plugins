@@ -49,7 +49,7 @@ async def pl(client, message):
         song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
         sno += 1
-        song += f"**{sno} ▶** `{str(i).replace('.raw', '')} | {i['singer']} | {i['dur']}` \n\n" 
+        song += f"**{sno} ▶** `{i['song_name']} | {i['singer']} | {i['dur']}` \n\n" 
     await play.edit(song)
     
 async def get_chat_(client, chat_):
@@ -151,14 +151,11 @@ async def play_m(client, message):
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
     else:
-         if not input_str:
-             return await u_s.edit("`Give Me A Song Name. Like Why we lose or Alone.`")
          search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
          rt = search.result()
-         try:
-             result_s = rt["search_result"]
-         except:
-             return await u_s.edit(f"`Song Not Found With Name {input_str}, Please Try Giving Some Other Name.`")
+         result_s = rt.get("search_result")
+         if not result_s:
+            return await u_s.edit(f"`No Song Found Matching With Query - {input_str}, Please Try Giving Some Other Name.`")
          url = result_s[0]["link"]
          dur = result_s[0]["duration"]
          vid_title = result_s[0]["title"]
@@ -175,8 +172,7 @@ async def play_m(client, message):
              "postprocessors": [
                  {
                      "key": "FFmpegExtractAudio",
-                     "preferredcodec": "mp3",
-                     "preferredquality": "720",
+                     "preferredcodec": "mp3"
                  }
              ],
              "outtmpl": "%(id)s.mp3",
@@ -186,7 +182,7 @@ async def play_m(client, message):
          try:
              with YoutubeDL(opts) as ytdl:
                  ytdl_data = ytdl.extract_info(url, download=True)
-         except Exception as e:
+         except BaseException as e:
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
          raw_file_name = f"{vid_title}.raw"
@@ -198,11 +194,11 @@ async def play_m(client, message):
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
         GPC[(message.chat.id, client.me.id)] = group_call
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
+        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
@@ -227,7 +223,6 @@ async def play_m(client, message):
         s_d = s_dict.get((message.chat.id, client.me.id))
         return await u_s.edit(f"Added `{vid_title}` To Position `#{len(s_d)+1}`!")
     
-
       
 async def convert_to_raw(audio_original, raw_file_name):
     try:
@@ -248,6 +243,11 @@ FFMPEG_PROCESSES = {}
     cmd_help={"help": "Play Radio.", "example": "{ch}pradio (radio url)"},
 )
 async def radio_s(client, message):
+    g_s_ = GPC.get((message.chat.id, client.me.id))
+    if g_s_:
+        if g_s_.is_connected:
+            await group_call.stop()
+        return del GPC[(message.chat.id, client.me.id)]
     s = await edit_or_reply(message, "`Please Wait.`") 
     input_filename = f"radio-{message.chat.id}.raw"
     radio_url = get_text(message)
