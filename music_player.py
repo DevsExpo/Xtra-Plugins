@@ -37,7 +37,7 @@ async def pl(client, message):
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
     sno = 0
-    s = s_dict.get((chat_, client_))
+    s = s_dict.get((message.chat.id, client))
     if not group_call:
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
