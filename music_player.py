@@ -246,18 +246,18 @@ async def radio_s(client, message):
     g_s_ = GPC.get((message.chat.id, client.me.id))
     if g_s_:
         if g_s_.is_connected:
-            await group_call.stop()
+            await g_s_.stop()
         return del GPC[(message.chat.id, client.me.id)]
     s = await edit_or_reply(message, "`Please Wait.`") 
-    input_filename = f"radio-{message.chat.id}.raw"
+    input_filename = f"radio_{message.chat.id}.raw"
     radio_url = get_text(message)
     if not radio_url:
          return await s.edit("`Invalid Radio URL...`")
-    group_call = RD_.get((message.chat.id, client))
+    group_call = RD_.get((message.chat.id, client.me.id))
     if not group_call:
         group_call = GroupCall(client, input_filename, path_to_log_file='')
-        RD_[(message.chat.id, client)] = group_call
-    process = FFMPEG_PROCESSES.get((message.chat.id, client))
+        RD_[(message.chat.id, client.me.id)] = group_call
+    process = FFMPEG_PROCESSES.get((message.chat.id, client.me.id))
     if process:
         process.send_signal(signal.SIGTERM)
     await group_call.start(message.chat.id)
@@ -269,7 +269,7 @@ async def radio_s(client, message):
         ar='48k',
         loglevel='error'
     ).overwrite_output().run_async()
-    FFMPEG_PROCESSES[(message.chat.id, client)] = process
+    FFMPEG_PROCESSES[(message.chat.id, client.me.id)] = process
     await s.edit(f"**📻 Playing :** `{radio_url}`")
 
 @friday_on_cmd(
@@ -279,7 +279,7 @@ async def radio_s(client, message):
 )
 async def stop_radio(client, message):
     msg = await edit_or_reply(message, "`Please Wait.`")
-    group_call = RD_.get((message.chat.id, client))
+    group_call = RD_.get((message.chat.id, client.me.id))
     if group_call:
         if group_call.is_connected:
             await group_call.stop()
@@ -287,7 +287,7 @@ async def stop_radio(client, message):
             return await msg.edit("`Is Vc is Connected?`")
     else:
         return await msg.edit("`Is Vc is Connected?`")
-    process = FFMPEG_PROCESSES.get((message.chat.id, client))
+    process = FFMPEG_PROCESSES.get((message.chat.id, client.me.id))
     await msg.edit("`Radio Stopped : 📻`")
     if process:
         process.send_signal(signal.SIGTERM)
