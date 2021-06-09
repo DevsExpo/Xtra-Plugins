@@ -222,6 +222,7 @@ async def play_m(client, message):
             s_d.append(f_info)
         else:
             s_dict[(message.chat.id, client)] = [f_info]
+        s_d = s_dict.get((message.chat.id, client))
         return await u_s.edit(f"Added `{vid_title}` To Position `#{len(s_d)+1}`!")
     
 
