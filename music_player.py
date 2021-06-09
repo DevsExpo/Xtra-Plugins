@@ -213,15 +213,13 @@ FFMPEG_PROCESSES = {}
 
 
 @friday_on_cmd(
-    ["radio_vc"],
+    ["pradio"],
     is_official=False,
-    cmd_help={"help": "Play Radio.", "example": "{ch}radio_vc (radio url)"},
+    cmd_help={"help": "Play Radio.", "example": "{ch}pradio (radio url)"},
 )
 async def radio_s(client, message):
     s = await edit_or_reply(message, "`Please Wait.`") 
-    gmt = time.gmtime()
-    ts = calendar.timegm(gmt)
-    input_filename = f"{message.chat.id}_{ts}.raw"
+    input_filename = f"radio-{message.chat.id}.raw"
     radio_url = get_text(message)
     if not radio_url:
          return await s.edit("`Invalid Radio URL...`")
@@ -244,7 +242,7 @@ async def radio_s(client, message):
     await s.edit(f"**📻 Playing :** `{radio_url}`")
 
 @friday_on_cmd(
-    ["stop_radio"],
+    ["sradio"],
     is_official=False,
     cmd_help={"help": "Stop Radio.", "example": "{ch}stop_radio"},
 )
