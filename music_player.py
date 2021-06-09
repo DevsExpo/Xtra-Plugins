@@ -1,4 +1,4 @@
-# Copyright (C) 2020-2021 by DevsExpo@Github, < https://github.com/DevsExpo >.
+Of# Copyright (C) 2020-2021 by DevsExpo@Github, < https://github.com/DevsExpo >.
 #
 # This file is part of < https://github.com/DevsExpo/FridayUserBot > project,
 # and is released under the "GNU v3.0 License Agreement".
@@ -65,7 +65,7 @@ async def playout_ended_handler(group_call, filename):
     chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
     print(s_dict)
     s = s_dict.get((chat_, client_.me.id))
-    print(chat)
+    print(chat_)
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
