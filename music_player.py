@@ -259,7 +259,7 @@ async def radio_s(client, message):
     is_official=False,
     cmd_help={"help": "Stop Radio.", "example": "{ch}stop_radio"},
 )
-async def stop_radio(client, message: Message):
+async def stop_radio(client, message):
     msg = await edit_or_reply(message, "`Please Wait.`")
     group_call = RD_.get((message.chat.id, client))
     if group_call:
