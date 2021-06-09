@@ -37,6 +37,7 @@ async def pl(client, message):
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
     sno = 0
+    s = s_dict.get((chat_, client_))
     if not group_call:
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
@@ -131,7 +132,6 @@ async def ski_p(client, message):
     cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play_vc (song query)"},
 )
 async def play_m(client, message):
-    global s
     global s_dict
     group_call = GPC.get((message.chat.id, client.me.id))
     u_s = await edit_or_reply(message, "`Processing..`")
