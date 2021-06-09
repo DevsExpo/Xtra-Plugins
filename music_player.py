@@ -247,7 +247,7 @@ async def radio_s(client, message):
     if g_s_:
         if g_s_.is_connected:
             await g_s_.stop()
-        return del GPC[(message.chat.id, client.me.id)]
+        del GPC[(message.chat.id, client.me.id)]
     s = await edit_or_reply(message, "`Please Wait.`") 
     input_filename = f"radio_{message.chat.id}.raw"
     radio_url = get_text(message)
