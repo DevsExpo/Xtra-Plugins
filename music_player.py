@@ -27,7 +27,7 @@ from youtubesearchpython import SearchVideos
 s = []
 s_dict = {}
 group_call = GroupCall(None, play_on_repeat=False)
-
+GPC = {}
 
 @friday_on_cmd(
     ["playlist"],
@@ -35,16 +35,17 @@ group_call = GroupCall(None, play_on_repeat=False)
     cmd_help={"help": "Get Current Chat Playlist!", "example": "{ch}playlist"},
 )
 async def pl(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
     sno = 0
+    if not group_call:
+        return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
         if group_call.is_connected:
-            await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}`")
+            return await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}`")
         else:
-            await play.edit("`Playlist is Empty Sar And Nothing is Playing Also :(!`")
-            return
+            return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if group_call.is_connected:
         song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
@@ -55,7 +56,6 @@ async def pl(client, message):
 @group_call.on_playout_ended
 async def playout_ended_handler(group_call, filename):
     global s
-    client_ = group_call.client
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
@@ -79,12 +79,15 @@ async def playout_ended_handler(group_call, filename):
     cmd_help={"help": "Skip Song in Playlist.", "example": "{ch}skip_vc (key_len)"}
 )
 async def ski_p(client, message):
-    group_call.client = client
+    m_ = await edit_or_reply(message, "`Please Wait!`")
+    no_t_s = get_text(message)
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await m_.edit("`Is Group Call Even Connected?`")
+        return 
     if not group_call.is_connected:
         await m_.edit("`Is Group Call Even Connected?`")
         return 
-    m_ = await edit_or_reply(message, "`Please Wait!`")
-    no_t_s = get_text(message)
     if not no_t_s:
         return await m_.edit("`Give Me Valid List Key Len.`")
     if no_t_s == "current":
@@ -268,7 +271,10 @@ async def stop_radio(client, message: Message):
     cmd_help={"help": "Pause Currently Playing Song.", "example": "{ch}pause"},
 )
 async def no_song_play(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return    
@@ -282,7 +288,10 @@ async def no_song_play(client, message):
     cmd_help={"help": "Resume Paused Song.", "example": "{ch}resume"},
 )
 async def wow_dont_stop_songs(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return    
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return    
@@ -296,7 +305,10 @@ async def wow_dont_stop_songs(client, message):
     cmd_help={"help": "Stop VoiceChat!", "example": "{ch}stopvc"},
 )
 async def kill_vc_(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -312,7 +324,10 @@ async def kill_vc_(client, message):
     cmd_help={"help": "Replay Song In VC!", "example": "{ch}rvc"},
 )
 async def replay(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -326,7 +341,10 @@ async def replay(client, message):
     cmd_help={"help": "Rejoin Voice Chat!", "example": "{ch}rjvc"},
 )
 async def rejoinvcpls(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -340,7 +358,10 @@ async def rejoinvcpls(client, message):
     cmd_help={"help": "Leave Voice Call!", "example": "{ch}leavevc"},
 )
 async def leave_vc_test(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
@@ -359,7 +380,10 @@ async def leave_vc_test(client, message):
     },
 )
 async def set_vol(client, message):
-    group_call.client = client
+    group_call = GPC.get((message.chat.id, client.me.id))
+    if not group_call:
+        await edit_or_reply(message, "`Is Group Call Even Connected?`")
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
