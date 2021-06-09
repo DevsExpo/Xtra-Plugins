@@ -62,14 +62,13 @@ async def get_chat_(client, chat_):
         
 async def playout_ended_handler(group_call, filename):
     client_ = group_call.client
-    chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
-    print(s_dict)
+    chat_ = ('-' + str(await get_chat_(client_, f"-100{group_call.full_chat.id}")))
+    chat_ = int(chat_)
     s = s_dict.get((chat_, client_.me.id))
     print(chat_)
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
-        print('no')
         await group_call.stop()
         return
     name_ = s[0]['song_name']
