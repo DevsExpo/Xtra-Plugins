@@ -51,8 +51,7 @@ async def pl(client, message):
         sno += 1
         song += f"**{sno} ▶** `{i.replace('.raw', '')} | {s_dict[i]['singer']} | {s_dict[i]['dur']}` \n\n" 
     await play.edit(song)
-
-@group_call.on_playout_ended
+    
 async def playout_ended_handler(group_call, filename):
     global s
     if os.path.exists(group_call.input_filename):
@@ -186,6 +185,7 @@ async def play_m(client, message):
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
         GPC[(message.chat.id, client.me.id)] = group_call
+        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
@@ -197,6 +197,7 @@ async def play_m(client, message):
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
+        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
