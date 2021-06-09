@@ -13,7 +13,7 @@ from main_startup import Friday
 import time
 import calendar
 from main_startup.core.decorators import friday_on_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes
 from pytgcalls import GroupCall, GroupCallAction
 import signal
 import asyncio
@@ -72,12 +72,13 @@ async def playout_ended_handler(group_call, filename):
     name = s[0]['raw'].split(".raw")[0]
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
-    song_info = f"<b>🎼 Now Playing 🎼</b> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code>"
+    holi = s[0]['raw']
+    file_size = humanbytes(os.stat(holi).st_size)
+    song_info = f"<b>🎼 Now Playing 🎼</b> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
     await client_.send_message(
         chat_, 
         song_info
     )
-    holi = s[0]['raw']
     s.pop(0)
     logging.debug(song_info)
     group_call.input_filename = holi
