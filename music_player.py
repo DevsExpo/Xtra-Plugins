@@ -37,7 +37,7 @@ async def pl(client, message):
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
     sno = 0
-    s = s_dict.get((message.chat.id, client))
+    s = s_dict.get((message.chat.id, client.me.id))
     if not group_call:
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
@@ -63,13 +63,13 @@ async def get_chat_(client, chat_):
 async def playout_ended_handler(group_call, filename):
     client_ = group_call.client
     chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
-    s = s_dict.get((chat_, client_))
+    s = s_dict.get((chat_, client_.me.id))
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
         await group_call.stop()
         return
-    name = s[0]['raw'].split(".raw")[0]
+    name_ = s[0]['song_name']
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
     holi = s[0]['raw']
@@ -92,7 +92,7 @@ async def ski_p(client, message):
     m_ = await edit_or_reply(message, "`Please Wait!`")
     no_t_s = get_text(message)
     group_call = GPC.get((message.chat.id, client.me.id))
-    s = s_dict.get((chat_, client_))
+    s = s_dict.get((message.chat.id, client.me.id))
     if not group_call:
         await m_.edit("`Is Group Call Even Connected?`")
         return 
@@ -106,7 +106,7 @@ async def ski_p(client, message):
             return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
         next_s = s[0]['raw']
         s.pop(0)
-        name = str(next_s['raw']).split(".raw")[0]
+        name = str(next_s['song_name'])
         prev = group_call.input_filename
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
@@ -120,7 +120,7 @@ async def ski_p(client, message):
             return await m_.edit("`0? What?`")
         no_t_s = int(no_t_s - 1)
         try:
-            s_ = s[no_t_s]['raw']
+            s_ = s[no_t_s]['song_name']
             s.pop(no_t_s)
         except:
             return await m_.edit("`Invalid Key.`")
@@ -133,10 +133,12 @@ async def ski_p(client, message):
     cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play_vc (song query)"},
 )
 async def play_m(client, message):
-    global s_dict
     group_call = GPC.get((message.chat.id, client.me.id))
     u_s = await edit_or_reply(message, "`Processing..`")
-    if message.reply_to_message:
+    input_str = get_text(message)
+    if not input_str:
+         if not message.reply_to_message:
+             return await u_s.edit_text("`Reply To A File To PLay It.`")
          if message.reply_to_message.audio:
              await u_s.edit_text("`Please Wait, Let Me Download This File!`")
              audio = message.reply_to_message.audio
@@ -149,7 +151,6 @@ async def play_m(client, message):
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
     else:
-         input_str = get_text(message)
          if not input_str:
              return await u_s.edit("`Give Me A Song Name. Like Why we lose or Alone.`")
          search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
@@ -186,14 +187,14 @@ async def play_m(client, message):
              with YoutubeDL(opts) as ytdl:
                  ytdl_data = ytdl.extract_info(url, download=True)
          except Exception as e:
-             await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
-             return
+             return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
          raw_file_name = f"{vid_title}.raw"
     raw_file_name = await convert_to_raw(audio_original, raw_file_name)
-    if not raw_file_name:
-         return await u_s.edit("`FFmpeg Failed To Convert Song To raw Format. Please Give Valid File.`")
-    os.remove(audio_original)
+    if not os.path.exists(raw_file_name):
+        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
+    if os.path.exists(audio_original):
+        os.remove(audio_original)
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
         GPC[(message.chat.id, client.me.id)] = group_call
@@ -213,8 +214,8 @@ async def play_m(client, message):
         group_call.input_filename = raw_file_name
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
-        s_d = s_dict.get((message.chat.id, client))
-        f_info = {"song name": vid_title,
+        s_d = s_dict.get((message.chat.id, client.me.id))
+        f_info = {"song_name": vid_title,
                   "raw": raw_file_name,
                   "singer": uploade_r,
                   "dur": dur
@@ -222,8 +223,8 @@ async def play_m(client, message):
         if s_d:
             s_d.append(f_info)
         else:
-            s_dict[(message.chat.id, client)] = [f_info]
-        s_d = s_dict.get((message.chat.id, client))
+            s_dict[(message.chat.id, client.me.id)] = [f_info]
+        s_d = s_dict.get((message.chat.id, client.me.id))
         return await u_s.edit(f"Added `{vid_title}` To Position `#{len(s_d)+1}`!")
     
 
@@ -232,8 +233,8 @@ async def convert_to_raw(audio_original, raw_file_name):
     try:
          ffmpeg.input(audio_original).output(
               raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
-    except:
-         return None
+    except BaseException as e:
+         return str(e)
     return raw_file_name
 
 
