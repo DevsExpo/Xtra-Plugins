@@ -248,7 +248,7 @@ async def radio_s(client, message):
 )
 async def stop_radio(client, message: Message):
     msg = await edit_or_reply(message, "`Please Wait.`")
-    group_call = GROUP_CALLS.get((message.chat.id, client))
+    group_call = RD_.get((message.chat.id, client))
     if group_call:
         if group_call.is_connected:
             await group_call.stop()
