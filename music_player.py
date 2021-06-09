@@ -247,7 +247,7 @@ async def radio_s(client, message):
         format='s16le',
         acodec='pcm_s16le',
         ac=2,
-        ar='48k'
+        ar='48k',
         loglevel='error'
     ).overwrite_output().run_async()
     FFMPEG_PROCESSES[(message.chat.id, client)] = process
@@ -269,9 +269,9 @@ async def stop_radio(client, message: Message):
     else:
         return await msg.edit("`Is Vc is Connected?`")
     process = FFMPEG_PROCESSES.get((message.chat.id, client))
+    await msg.edit("`Radio Stopped : 📻`")
     if process:
         process.send_signal(signal.SIGTERM)
-    await msg.edit("`Radio Stopped : 📻`")
 
  
 @friday_on_cmd(
