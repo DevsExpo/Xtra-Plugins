@@ -58,7 +58,9 @@ async def get_chat_(client, chat_):
         try:
             return (await client.get_chat(int(chat_))).id
         except ValueError:
-            return int(chat_.split("-100")[1])
+            _i = "-" + str(chat_.split("-100")[1])
+            _i = (await client.get_chat(int(_i))).id
+            return int(_i)
         
 async def playout_ended_handler(group_call, filename):
     client_ = group_call.client
@@ -76,7 +78,7 @@ async def playout_ended_handler(group_call, filename):
     dur_ = s[0]['dur']
     holi = s[0]['raw']
     file_size = humanbytes(os.stat(holi).st_size)
-    song_info = f"<b>🎼 Now Playing 🎼</b> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
+    song_info = f"<b><u>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
     await client_.send_message(
         chat_, 
         song_info
@@ -149,7 +151,7 @@ async def play_m(client, message):
              uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
              dura_ = message.reply_to_message.audio.duration
              dur = datetime.timedelta(seconds=dura_)
-             raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
+             #raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
     else:
@@ -187,7 +189,10 @@ async def play_m(client, message):
          except BaseException as e:
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
-         raw_file_name = f"{vid_title}.raw"
+         #raw_file_name = f"{vid_title}.raw"
+    import uuid
+    id = uuid.uuid1()
+    raw_file_name = f"{id.node}.raw"
     raw_file_name = await convert_to_raw(audio_original, raw_file_name)
     if not os.path.exists(raw_file_name):
         return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
