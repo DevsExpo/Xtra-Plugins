@@ -206,7 +206,6 @@ async def play_m(client, message):
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
         group_call.input_filename = raw_file
         group_call.song_name = vid_title
-        os.remove(audio_original)
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
         try:
@@ -215,11 +214,9 @@ async def play_m(client, message):
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
         group_call.input_filename = raw_file
         group_call.song_name = vid_title
-        os.remove(audio_original)
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif group_call.is_connected:
         s_d = s_dict.get((message.chat.id, client.me.id))
-        os.remove(audio_original)
         f_info = {"song_name": vid_title,
                   "raw": raw_file,
                   "singer": uploade_r,
@@ -238,7 +235,6 @@ async def convert_to_raw(audio_original, raw_file_name):
               raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run_async()
     return raw_file_name
 
-
 RD_ = {}
 FFMPEG_PROCESSES = {}
 
@@ -249,11 +245,6 @@ FFMPEG_PROCESSES = {}
     cmd_help={"help": "Play Radio.", "example": "{ch}pradio (radio url)"},
 )
 async def radio_s(client, message):
-    g_s_ = GPC.get((message.chat.id, client.me.id))
-    if g_s_:
-        if g_s_.is_connected:
-            await g_s_.stop()
-        del GPC[(message.chat.id, client.me.id)]
     s = await edit_or_reply(message, "`Please Wait.`") 
     input_filename = f"radio_{message.chat.id}.raw"
     radio_url = get_text(message)
