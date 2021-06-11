@@ -209,7 +209,6 @@ async def play_m(client, message):
         os.remove(audio_original)
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
@@ -218,8 +217,7 @@ async def play_m(client, message):
         group_call.song_name = vid_title
         os.remove(audio_original)
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
-    else:
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
+    elif group_call.is_connected:
         s_d = s_dict.get((message.chat.id, client.me.id))
         os.remove(audio_original)
         f_info = {"song_name": vid_title,
