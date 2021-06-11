@@ -193,11 +193,9 @@ async def play_m(client, message):
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
     try:
-        raw_file_name = await convert_to_raw(audio_original, raw_file_name)
+        raw_file = await convert_to_raw(audio_original, raw_file_name)
     except BaseException as e:
         return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{e}`")
-    if os.path.exists(audio_original):
-        os.remove(audio_original)
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
         GPC[(message.chat.id, client.me.id)] = group_call
@@ -206,8 +204,9 @@ async def play_m(client, message):
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.input_filename = raw_file_name
+        group_call.input_filename = raw_file
         group_call.song_name = vid_title
+        os.remove(audio_original)
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
         group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
@@ -215,13 +214,16 @@ async def play_m(client, message):
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.input_filename = raw_file_name
+        group_call.input_filename = raw_file
         group_call.song_name = vid_title
+        os.remove(audio_original)
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
+        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         s_d = s_dict.get((message.chat.id, client.me.id))
+        os.remove(audio_original)
         f_info = {"song_name": vid_title,
-                  "raw": raw_file_name,
+                  "raw": raw_file,
                   "singer": uploade_r,
                   "dur": dur
                  }
