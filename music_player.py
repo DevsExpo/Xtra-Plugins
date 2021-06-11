@@ -16,6 +16,8 @@ from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes
 from pytgcalls import GroupCall, GroupCallAction
 import signal
+import random
+import string
 import asyncio
 import os
 import time
@@ -67,7 +69,6 @@ async def playout_ended_handler(group_call, filename):
     chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
     chat_ = int(chat_)
     s = s_dict.get((chat_, client_.me.id))
-    print(chat_)
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
@@ -77,8 +78,9 @@ async def playout_ended_handler(group_call, filename):
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
     holi = s[0]['raw']
+    link = s[0]['url']
     file_size = humanbytes(os.stat(holi).st_size)
-    song_info = f"<b>🎼 Now Playing 🎼</b> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
+    song_info = f"<u><b>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <a href="{link}">{name_}</a> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
     await client_.send_message(
         chat_, 
         song_info
@@ -110,7 +112,7 @@ async def ski_p(client, message):
             return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
         next_s = s[0]['raw']
         s.pop(0)
-        name = str(next_s['song_name'])
+        name = str(s[0]['song_name'])
         prev = group_call.input_filename
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
@@ -151,7 +153,9 @@ async def play_m(client, message):
              uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
              dura_ = message.reply_to_message.audio.duration
              dur = datetime.timedelta(seconds=dura_)
-             raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
+             raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
+             #raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
+             url = message.reply_to_message.link
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
     else:
@@ -189,7 +193,8 @@ async def play_m(client, message):
          except BaseException as e:
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
-         raw_file_name = f"{vid_title}.raw"
+         raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
+         #raw_file_name = f"{vid_title}.raw"
     raw_file_name = await convert_to_raw(audio_original, raw_file_name)
     if not os.path.exists(raw_file_name):
         return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
@@ -218,7 +223,8 @@ async def play_m(client, message):
         f_info = {"song_name": vid_title,
                   "raw": raw_file_name,
                   "singer": uploade_r,
-                  "dur": dur
+                  "dur": dur,
+                  "url": url
                  }
         if s_d:
             s_d.append(f_info)
