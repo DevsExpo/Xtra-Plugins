@@ -46,7 +46,7 @@ async def pl(client, message):
         else:
             return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if group_call.is_connected:
-        song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
+        song += f"**Currently Playing :** `{group_call.song_name}` \n\n"
     for i in s:
         sno += 1
         song += f"**{sno} ▶** `{i['song_name']} | {i['singer']} | {i['dur']}` \n\n" 
@@ -190,7 +190,6 @@ async def play_m(client, message):
          except BaseException as e:
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
-         #raw_file_name = f"{vid_title}.raw"
     import uuid
     id = uuid.uuid1()
     raw_file_name = f"{id.node}.raw"
@@ -202,20 +201,20 @@ async def play_m(client, message):
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
         GPC[(message.chat.id, client.me.id)] = group_call
+        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
         group_call.song_name = vid_title
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
+        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
         group_call.song_name = vid_title
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
