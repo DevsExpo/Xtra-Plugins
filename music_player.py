@@ -68,7 +68,6 @@ async def playout_ended_handler(group_call, filename):
     chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
     chat_ = int(chat_)
     s = s_dict.get((chat_, client_.me.id))
-    print(chat_)
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
@@ -78,6 +77,7 @@ async def playout_ended_handler(group_call, filename):
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
     holi = s[0]['raw']
+    s.pop(0)
     file_size = humanbytes(os.stat(holi).st_size)
     song_info = f"<b><u>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
     await client_.send_message(
@@ -86,7 +86,6 @@ async def playout_ended_handler(group_call, filename):
     )
     logging.debug(song_info)
     group_call.input_filename = holi
-    s.pop(0)
 
 @friday_on_cmd(
     ["skip_vc"],
@@ -207,7 +206,7 @@ async def play_m(client, message):
         group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         GPC[(message.chat.id, client.me.id)] = group_call
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
-    elif group_call.is_connected:
+    else:
         s_d = s_dict.get((message.chat.id, client.me.id))
         f_info = {"song_name": vid_title,
                   "raw": raw_file,
