@@ -207,14 +207,6 @@ async def play_m(client, message):
         group_call.song_name = vid_title
         GPC[(message.chat.id, client.me.id)] = group_call
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
-    elif not group_call.is_connected:
-        try:
-            await group_call.start(message.chat.id)
-        except BaseException as e:
-            return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.input_filename = raw_file
-        group_call.song_name = vid_title
-        return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif group_call.is_connected:
         s_d = s_dict.get((message.chat.id, client.me.id))
         f_info = {"song_name": vid_title,
