@@ -17,6 +17,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, huma
 from pytgcalls import GroupCall, GroupCallAction
 import signal
 import asyncio
+import uuid
 import os
 import time
 import requests
@@ -83,9 +84,9 @@ async def playout_ended_handler(group_call, filename):
         chat_, 
         song_info
     )
-    s.pop(0)
     logging.debug(song_info)
     group_call.input_filename = holi
+    s.pop(0)
 
 @friday_on_cmd(
     ["skip_vc"],
@@ -138,6 +139,8 @@ async def ski_p(client, message):
     cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play_vc (song query)"},
 )
 async def play_m(client, message):
+    r_id = uuid.uuid1()
+    raw_file_name = f"{r_id.node}.raw"
     group_call = GPC.get((message.chat.id, client.me.id))
     u_s = await edit_or_reply(message, "`Processing..`")
     input_str = get_text(message)
@@ -152,7 +155,6 @@ async def play_m(client, message):
              uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
              dura_ = message.reply_to_message.audio.duration
              dur = datetime.timedelta(seconds=dura_)
-             #raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
     else:
@@ -190,12 +192,10 @@ async def play_m(client, message):
          except BaseException as e:
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
-    import uuid
-    id = uuid.uuid1()
-    raw_file_name = f"{id.node}.raw"
-    raw_file_name = await convert_to_raw(audio_original, raw_file_name)
-    if not os.path.exists(raw_file_name):
-        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
+    try:
+        raw_file_name = await convert_to_raw(audio_original, raw_file_name)
+    except BaseException as e:
+        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{e}`")
     if os.path.exists(audio_original):
         os.remove(audio_original)
     if not group_call:
@@ -234,11 +234,8 @@ async def play_m(client, message):
     
       
 async def convert_to_raw(audio_original, raw_file_name):
-    try:
-         ffmpeg.input(audio_original).output(
-              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
-    except BaseException as e:
-         return str(e)
+    ffmpeg.input(audio_original).output(
+              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run_async()
     return raw_file_name
 
 
