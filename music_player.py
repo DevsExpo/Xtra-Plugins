@@ -42,7 +42,7 @@ async def pl(client, message):
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
         if group_call.is_connected:
-            return await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}`")
+            return await play.edit(f"**Currently Playing :** `{group_call.song_name}`")
         else:
             return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if group_call.is_connected:
@@ -110,8 +110,9 @@ async def ski_p(client, message):
             return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
         next_s = s[0]['raw']
         s.pop(0)
-        name = str(next_s['song_name'])
+        name = str(s[0]['song_name'])
         prev = group_call.input_filename
+        group_call.song_name = name
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
     else:
@@ -207,6 +208,7 @@ async def play_m(client, message):
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
         group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
+        group_call.song_name = vid_title
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
         try:
@@ -215,6 +217,7 @@ async def play_m(client, message):
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
         group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
+        group_call.song_name = vid_title
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
         s_d = s_dict.get((message.chat.id, client.me.id))
