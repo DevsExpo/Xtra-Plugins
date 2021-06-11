@@ -198,8 +198,8 @@ async def play_m(client, message):
         return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{e}`")
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
-        GPC[(message.chat.id, client.me.id)] = group_call
         group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
+        GPC[(message.chat.id, client.me.id)] = group_call
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
