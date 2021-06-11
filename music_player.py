@@ -64,7 +64,7 @@ async def get_chat_(client, chat_):
         
 async def playout_ended_handler(group_call, filename):
     client_ = group_call.client
-    chat_ = ('-' + str(await get_chat_(client_, f"-100{group_call.full_chat.id}")))
+    chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
     chat_ = int(chat_)
     s = s_dict.get((chat_, client_.me.id))
     print(chat_)
