@@ -17,7 +17,6 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, huma
 from pytgcalls import GroupCall, GroupCallAction
 import signal
 import asyncio
-import uuid
 import os
 import time
 import requests
@@ -43,11 +42,11 @@ async def pl(client, message):
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
         if group_call.is_connected:
-            return await play.edit(f"**Currently Playing :** `{group_call.song_name}`")
+            return await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}`")
         else:
             return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if group_call.is_connected:
-        song += f"**Currently Playing :** `{group_call.song_name}` \n\n"
+        song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
     for i in s:
         sno += 1
         song += f"**{sno} ▶** `{i['song_name']} | {i['singer']} | {i['dur']}` \n\n" 
@@ -59,15 +58,16 @@ async def get_chat_(client, chat_):
         try:
             return (await client.get_chat(int(chat_))).id
         except ValueError:
-            _i = "-" + str(chat_.split("-100")[1])
-            _i = (await client.get_chat(int(_i))).id
-            return int(_i)
+            chat_ = chat_.split("-100")[1]
+            chat_ = '-' + str(chat_)
+            return int(chat_)
         
 async def playout_ended_handler(group_call, filename):
     client_ = group_call.client
     chat_ = await get_chat_(client_, f"-100{group_call.full_chat.id}")
     chat_ = int(chat_)
     s = s_dict.get((chat_, client_.me.id))
+    print(chat_)
     if os.path.exists(group_call.input_filename):
         os.remove(group_call.input_filename)
     if not s:
@@ -77,13 +77,13 @@ async def playout_ended_handler(group_call, filename):
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
     holi = s[0]['raw']
-    s.pop(0)
     file_size = humanbytes(os.stat(holi).st_size)
-    song_info = f"<b><u>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
+    song_info = f"<b>🎼 Now Playing 🎼</b> \n<b>🎵 Song :</b> <code>{name_}</code> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>"
     await client_.send_message(
         chat_, 
         song_info
     )
+    s.pop(0)
     logging.debug(song_info)
     group_call.input_filename = holi
 
@@ -110,9 +110,8 @@ async def ski_p(client, message):
             return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
         next_s = s[0]['raw']
         s.pop(0)
-        name = str(s[0]['song_name'])
+        name = str(next_s['song_name'])
         prev = group_call.input_filename
-        group_call.song_name = name
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
     else:
@@ -138,8 +137,6 @@ async def ski_p(client, message):
     cmd_help={"help": "Play The Song In VC Directly From Youtube Or Telegram!", "example": "{ch}play_vc (song query)"},
 )
 async def play_m(client, message):
-    r_id = uuid.uuid1()
-    raw_file_name = f"{r_id.node}.raw"
     group_call = GPC.get((message.chat.id, client.me.id))
     u_s = await edit_or_reply(message, "`Processing..`")
     input_str = get_text(message)
@@ -154,6 +151,7 @@ async def play_m(client, message):
              uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
              dura_ = message.reply_to_message.audio.duration
              dur = datetime.timedelta(seconds=dura_)
+             raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
     else:
@@ -191,10 +189,12 @@ async def play_m(client, message):
          except BaseException as e:
              return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          audio_original = f"{ytdl_data['id']}.mp3"
-    try:
-        raw_file_name = await convert_to_raw(audio_original, raw_file_name)
-    except BaseException as e:
-        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{e}`")
+         raw_file_name = f"{vid_title}.raw"
+    raw_file_name = await convert_to_raw(audio_original, raw_file_name)
+    if not os.path.exists(raw_file_name):
+        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
+    if os.path.exists(audio_original):
+        os.remove(audio_original)
     if not group_call:
         group_call = GroupCall(client, play_on_repeat=False)
         GPC[(message.chat.id, client.me.id)] = group_call
@@ -229,9 +229,13 @@ async def play_m(client, message):
     
       
 async def convert_to_raw(audio_original, raw_file_name):
-    ffmpeg.input(audio_original).output(
-              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run_async()
+    try:
+         ffmpeg.input(audio_original).output(
+              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
+    except BaseException as e:
+         return str(e)
     return raw_file_name
+
 
 RD_ = {}
 FFMPEG_PROCESSES = {}
@@ -243,6 +247,11 @@ FFMPEG_PROCESSES = {}
     cmd_help={"help": "Play Radio.", "example": "{ch}pradio (radio url)"},
 )
 async def radio_s(client, message):
+    g_s_ = GPC.get((message.chat.id, client.me.id))
+    if g_s_:
+        if g_s_.is_connected:
+            await g_s_.stop()
+        del GPC[(message.chat.id, client.me.id)]
     s = await edit_or_reply(message, "`Please Wait.`") 
     input_filename = f"radio_{message.chat.id}.raw"
     radio_url = get_text(message)
