@@ -173,7 +173,7 @@ async def play_m(client, message):
              url = message.reply_to_message.link
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
-    elif "you" :
+    else:
          search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
          rt = search.result()
          result_s = rt.get("search_result")
