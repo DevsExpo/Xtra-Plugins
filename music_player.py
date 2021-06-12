@@ -17,7 +17,7 @@ import multiprocessing
 import time
 import calendar
 from main_startup.core.decorators import friday_on_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes, time_formatter
 from pytgcalls import GroupCall, GroupCallAction
 import signal
 import random
@@ -243,13 +243,12 @@ def edit_msg(client, message, to_edit):
     
 def download_progress_hook(d, message, client):
     if d['status'] == 'downloading':
-        done = humanbytes(d.get("downloaded_bytes"))
+        done = humanbytes(int(d.get("downloaded_bytes")))
         total = d.get("total_bytes") or d.get("total_bytes_estimate")
-        total = humanbytes(total)
-        filesize = humanbytes(total)
-        eta = d.get("eta")
+        filesize = humanbytes(int(total))
+        eta = time_formatter(int(d.get("eta")))
         speed = d.get("_speed_str")
-        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{filesize}</code> \n<b>Speed :</b> </code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Downloaded {done} Out Of {total}</i>"
+        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{filesize}</code> \n<b>Speed :</b> </code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Downloaded {done} Out Of {filesize}</i>"
         threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
 @run_in_exc
@@ -275,7 +274,7 @@ def yt_dl(url, client, message):
          }
     with YoutubeDL(opts) as ytdl:
         ytdl_data = ytdl.extract_info(url, download=True)
-    file_name = ytdl_data['id'] + ".mp3"
+    file_name = str(ytdl_data['id']) + ".mp3"
     return file_name
 
 RD_ = {}
