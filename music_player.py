@@ -255,16 +255,16 @@ def edit_msg(client, message, to_edit):
 def download_progress_hook(d, message, client, start):
     elapsed = d.get("elapsed")
     if d['status'] == 'downloading':
-        current = d.get("_downloaded_bytes_str", "Unknown")
-        total = d.get("_total_bytes_str", "Unknown")
+        current = d.get("_downloaded_bytes_str") or humanbytes(d.get("downloaded_bytes", 1))
+        total = d.get("_total_bytes_str") or d.get("_total_bytes_estimate_str")
         file_name = d.get("filename")
         eta = d.get('_eta_str', "N/A")
         percent = d.get("_percent_str", "N/A")
         speed = d.get("_speed_str", "N/A")
-        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{total}</code> \n<b>Speed :</b> <code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Download {current} out of {total}</i> (`{percent}`)"
+        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{total}</code> \n<b>Speed :</b> <code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Download {current} out of {total}</i> (__{percent}__)"
         threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
     elif d['status'] == 'finished':
-        to_edit = f"[Download Complete]"
+        to_edit = f"`[Download Completed]` in (__{elapsed}__)."
         threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
 @run_in_exc
