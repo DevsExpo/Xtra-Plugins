@@ -84,7 +84,7 @@ async def playout_ended_handler(group_call, filename):
     dur_ = s[0]['dur']
     raw_file = s[0]['raw']
     link = s[0]['url']
-    file_size = humanbytes(os.stat(holi).st_size)
+    file_size = humanbytes(os.stat(raw_file).st_size)
     song_info = f'<u><b>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <a href="{link}">{name_}</a> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>'
     await client_.send_message(
         chat_, 
