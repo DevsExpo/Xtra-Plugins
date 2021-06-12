@@ -10,6 +10,10 @@ import os
 import logging
 import ffmpeg
 from main_startup import Friday
+import functools
+import threading
+from concurrent.futures import ThreadPoolExecutor
+import multiprocessing
 import time
 import calendar
 from main_startup.core.decorators import friday_on_cmd
@@ -44,14 +48,14 @@ async def pl(client, message):
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if not s:
         if group_call.is_connected:
-            return await play.edit(f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}`")
+            return await play.edit(f"**Currently Playing :** `{group_call.song_name}`")
         else:
             return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if group_call.is_connected:
-        song += f"**Currently Playing :** `{str(group_call.input_filename).replace('.raw', '')}` \n\n"
+        song += f"**Currently Playing :** `{group_call.song_name}` \n\n"
     for i in s:
         sno += 1
-        song += f"**{sno} ▶** `{i['song_name']} | {i['singer']} | {i['dur']}` \n\n" 
+        song += f"**{sno} ▶** [{i['song_name']}]({i['url']}) `| {i['singer']} | {i['dur']}` \n\n" 
     await play.edit(song)
     
 async def get_chat_(client, chat_):
@@ -73,21 +77,23 @@ async def playout_ended_handler(group_call, filename):
         os.remove(group_call.input_filename)
     if not s:
         await group_call.stop()
+        del GPC[(message.chat.id, client.me.id)]
         return
     name_ = s[0]['song_name']
     singer_ = s[0]['singer']
     dur_ = s[0]['dur']
-    holi = s[0]['raw']
+    raw_file = s[0]['raw']
     link = s[0]['url']
     file_size = humanbytes(os.stat(holi).st_size)
     song_info = f'<u><b>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <a href="{link}">{name_}</a> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>'
     await client_.send_message(
         chat_, 
+        disable_web_page_preview=True,
         song_info
     )
     s.pop(0)
     logging.debug(song_info)
-    group_call.input_filename = holi
+    group_call.input_filename = raw_file
 
 @friday_on_cmd(
     ["skip_vc"],
@@ -113,7 +119,7 @@ async def ski_p(client, message):
         next_s = s[0]['raw']
         s.pop(0)
         name = str(s[0]['song_name'])
-        prev = group_call.input_filename
+        prev = group_call.song_name
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
     else:
@@ -131,7 +137,17 @@ async def ski_p(client, message):
         except:
             return await m_.edit("`Invalid Key.`")
         return await m_.edit(f"`Skipped : {s_} At Position #{no_t_s}`")
-                            
+    
+max_workers = multiprocessing.cpu_count() * 5
+exc_ = ThreadPoolExecutor(max_workers=max_workers)
+    
+def run_in_exc(f):
+    @functools.wraps(f)
+    async def wrapper(*args, **kwargs):
+        loop = asyncio.get_running_loop()
+        return await loop.run_in_executor(exc_, lambda: f(*args, **kwargs))
+    return wrapper
+                 
     
 @friday_on_cmd(
     ["play_vc"],
@@ -154,11 +170,10 @@ async def play_m(client, message):
              dura_ = message.reply_to_message.audio.duration
              dur = datetime.timedelta(seconds=dura_)
              raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
-             #raw_file_name = f"{audio.file_name}.raw" if audio.file_name else f"{audio.title}.raw"
              url = message.reply_to_message.link
          else:
              return await u_s.edit("`Reply To A File To PLay It.`")
-    else:
+    elif "you" :
          search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
          rt = search.result()
          result_s = rt.get("search_result")
@@ -169,32 +184,11 @@ async def play_m(client, message):
          vid_title = result_s[0]["title"]
          yt_id = result_s[0]["id"]
          uploade_r = result_s[0]["channel"]
-         opts = {
-             "format": "bestaudio",
-             "addmetadata": True,
-             "key": "FFmpegMetadata",
-             "writethumbnail": True,
-             "prefer_ffmpeg": True,
-             "geo_bypass": True,
-             "nocheckcertificate": True,
-             "postprocessors": [
-                 {
-                     "key": "FFmpegExtractAudio",
-                     "preferredcodec": "mp3"
-                 }
-             ],
-             "outtmpl": "%(id)s.mp3",
-             "quiet": True,
-             "logtostderr": False,
-         }
          try:
-             with YoutubeDL(opts) as ytdl:
-                 ytdl_data = ytdl.extract_info(url, download=True)
+            audio_original = await yt_dl(url, client, message)
          except BaseException as e:
-             return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
-         audio_original = f"{ytdl_data['id']}.mp3"
+            return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
-         #raw_file_name = f"{vid_title}.raw"
     raw_file_name = await convert_to_raw(audio_original, raw_file_name)
     if not os.path.exists(raw_file_name):
         return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
@@ -233,15 +227,56 @@ async def play_m(client, message):
         s_d = s_dict.get((message.chat.id, client.me.id))
         return await u_s.edit(f"Added `{vid_title}` To Position `#{len(s_d)+1}`!")
     
-      
-async def convert_to_raw(audio_original, raw_file_name):
+@run_in_exc      
+def convert_to_raw(audio_original, raw_file_name):
     try:
-         ffmpeg.input(audio_original).output(
-              raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
+         ffmpeg.input(audio_original).output(raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
     except BaseException as e:
          return str(e)
     return raw_file_name
 
+def edit_msg(client, message, to_edit):
+    try:
+        client.loop.create_task(message.edit(to_edit))
+    except MessageNotModified:
+        pass
+    
+def download_progress_hook(d, message, client):
+    if d['status'] == 'downloading':
+        done = humanbytes(d.get("downloaded_bytes"))
+        total = d.get("total_bytes") or d.get("total_bytes_estimate")
+        total = humanbytes(total)
+        filesize = humanbytes(total)
+        eta = d.get("eta")
+        speed = d.get("_speed_str")
+        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{filesize}</code> \n<b>Speed :</b> </code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Downloaded {done} Out Of {total}</i>"
+        threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
+
+@run_in_exc
+def yt_dl(url, client, message):
+    opts = {
+             "format": "bestaudio",
+             "addmetadata": True,
+             "key": "FFmpegMetadata",
+             "writethumbnail": True,
+             "prefer_ffmpeg": True,
+             "geo_bypass": True,
+             "progress_hooks": [lambda d: progress_hook(message, client)],
+             "nocheckcertificate": True,
+             "postprocessors": [
+                 {
+                     "key": "FFmpegExtractAudio",
+                     "preferredcodec": "mp3"
+                 }
+             ],
+             "outtmpl": "%(id)s.mp3",
+             "quiet": True,
+             "logtostderr": False,
+         }
+    with YoutubeDL(opts) as ytdl:
+        ytdl_data = ytdl.extract_info(url, download=True)
+    file_name = ytdl_data['id'] + ".mp3"
+    return file_name
 
 RD_ = {}
 FFMPEG_PROCESSES = {}
