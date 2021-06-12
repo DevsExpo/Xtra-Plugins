@@ -7,12 +7,18 @@
 # All rights reserved.
 
 import os
+import math
+import os
+import shlex
+import time
+from math import ceil
 import logging
 import ffmpeg
 from main_startup import Friday
 import functools
 import threading
 from concurrent.futures import ThreadPoolExecutor
+from pyrogram.errors import FloodWait, MessageNotModified
 import multiprocessing
 import time
 import calendar
@@ -241,6 +247,8 @@ def edit_msg(client, message, to_edit):
         client.loop.create_task(message.edit(to_edit))
     except MessageNotModified:
         pass
+    except FloodWait as e:
+        await asyncio.sleep(e.x)
     
 def download_progress_hook(d, message, client, start):
     now = time.time()
