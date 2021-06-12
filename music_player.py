@@ -243,8 +243,8 @@ def edit_msg(client, message, to_edit):
         pass
     
 def download_progress_hook(d, message, client, start):
-    diff = now - start
     now = time.time()
+    diff = now - start
     if d['status'] == 'downloading':
         done = d.get("downloaded_bytes")
         total = d.get("total_bytes") or d.get("total_bytes_estimate")
