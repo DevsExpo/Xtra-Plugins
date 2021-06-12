@@ -249,29 +249,23 @@ def edit_msg(client, message, to_edit):
         pass
     except FloodWait as e:
         client.loop.create_task(asyncio.sleep(e.x))
+    except TypeError:
+        pass
     
 def download_progress_hook(d, message, client, start):
-    now = time.time()
-    diff = now - start
+    elapsed = d.get("elapsed")
     if d['status'] == 'downloading':
-        current = d.get("downloaded_bytes")
-        total = d.get("total_bytes") or d.get("total_bytes_estimate")
-        if round(diff % 10.00) == 0 or current == total:
-            file_name = d.get("filename")
-            percentage = current * 100 / total
-            speed = current / diff
-            elapsed_time = round(diff) * 1000
-            if elapsed_time == 0:
-                return
-            time_to_completion = round((total - current) / speed) * 1000
-            eta = elapsed_time + time_to_completion
-            progress_str = "{0}{1} {2}%\n".format(
-            "".join(["▰" for i in range(math.floor(percentage / 10))]),
-            "".join(["▱" for i in range(10 - math.floor(percentage / 10))]),
-            round(percentage, 2),
-        )
-            to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{humanbytes(total)}</code> \n<b>Speed :</b> </code>{time_formatter(speed)}</code> \n<b>ETA :</b> <code>{time_formatter(eta)}</code> \n`{progress_str}`"
-            threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
+        current = d.get("_downloaded_bytes_str", "Unknown")
+        total = d.get("_total_bytes_str", "Unknown")
+        file_name = d.get("filename")
+        eta = d.get('_eta_str', "N/A")
+        percent = d.get("_percent_str", "N/A")
+        speed = d.get("_speed_str", "N/A")
+        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{total}</code> \n<b>Speed :</b> <code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Download {current} out of {total}</i> (`{percent}`)"
+        threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
+    elif d['status'] == 'finished':
+        to_edit = f"[Download Complete]"
+        threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
 @run_in_exc
 def yt_dl(url, client, message, start):
