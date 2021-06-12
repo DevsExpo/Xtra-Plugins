@@ -184,8 +184,9 @@ async def play_m(client, message):
          vid_title = result_s[0]["title"]
          yt_id = result_s[0]["id"]
          uploade_r = result_s[0]["channel"]
+         start = time.time()
          try:
-            audio_original = await yt_dl(url, client, message)
+            audio_original = await yt_dl(url, client, message, start)
          except BaseException as e:
             return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
@@ -241,18 +242,23 @@ def edit_msg(client, message, to_edit):
     except MessageNotModified:
         pass
     
-def download_progress_hook(d, message, client):
+def download_progress_hook(d, message, client, start):
+    diff = now - start
+    now = time.time()
     if d['status'] == 'downloading':
-        done = humanbytes(int(d.get("downloaded_bytes", 1)))
-        total = d.get("total_bytes") or d.get("total_bytes_estimate", 1)
-        filesize = humanbytes(int(total))
-        eta = time_formatter(int(d.get("eta", 1)))
-        speed = d.get("_speed_str", "N/A")
-        to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{filesize}</code> \n<b>Speed :</b> </code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Downloaded {done} Out Of {filesize}</i>"
-        threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
+        done = d.get("downloaded_bytes")
+        total = d.get("total_bytes") or d.get("total_bytes_estimate")
+        if round(diff % 10.00) == 0 or done == total::
+            done = humanbytes(int(d.get("downloaded_bytes", 1)))
+            total = d.get("total_bytes") or d.get("total_bytes_estimate") or 1
+            filesize = humanbytes(int(total))
+            eta = time_formatter(int(d.get("eta", 1)))
+            speed = d.get("_speed_str", "N/A")
+            to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{filesize}</code> \n<b>Speed :</b> </code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Downloaded {done} Out Of {filesize}</i>"
+            threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
 @run_in_exc
-def yt_dl(url, client, message):
+def yt_dl(url, client, message, start):
     opts = {
              "format": "bestaudio",
              "addmetadata": True,
@@ -260,7 +266,7 @@ def yt_dl(url, client, message):
              "writethumbnail": True,
              "prefer_ffmpeg": True,
              "geo_bypass": True,
-             "progress_hooks": [lambda d: download_progress_hook(d, message, client)],
+             "progress_hooks": [lambda d: download_progress_hook(d, message, client, start)],
              "nocheckcertificate": True,
              "postprocessors": [
                  {
