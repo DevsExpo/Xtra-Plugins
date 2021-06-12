@@ -88,8 +88,8 @@ async def playout_ended_handler(group_call, filename):
     song_info = f'<u><b>🎼 Now Playing 🎼</b></u> \n<b>🎵 Song :</b> <a href="{link}">{name_}</a> \n<b>🎸 Singer :</b> <code>{singer_}</code> \n<b>⏲️ Duration :</b> <code>{dur_}</code> \n<b>📂 Size :</b> <code>{file_size}</code>'
     await client_.send_message(
         chat_, 
+        song_info,
         disable_web_page_preview=True,
-        song_info
     )
     s.pop(0)
     logging.debug(song_info)
@@ -261,7 +261,7 @@ def yt_dl(url, client, message):
              "writethumbnail": True,
              "prefer_ffmpeg": True,
              "geo_bypass": True,
-             "progress_hooks": [lambda d: progress_hook(message, client)],
+             "progress_hooks": [lambda d: download_progress_hook(d, message, client)],
              "nocheckcertificate": True,
              "postprocessors": [
                  {
