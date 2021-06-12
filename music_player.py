@@ -243,11 +243,11 @@ def edit_msg(client, message, to_edit):
     
 def download_progress_hook(d, message, client):
     if d['status'] == 'downloading':
-        done = humanbytes(int(d.get("downloaded_bytes")))
-        total = d.get("total_bytes") or d.get("total_bytes_estimate")
+        done = humanbytes(int(d.get("downloaded_bytes", 1)))
+        total = d.get("total_bytes") or d.get("total_bytes_estimate", 1)
         filesize = humanbytes(int(total))
-        eta = time_formatter(int(d.get("eta")))
-        speed = d.get("_speed_str")
+        eta = time_formatter(int(d.get("eta", 1)))
+        speed = d.get("_speed_str", "N/A")
         to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{filesize}</code> \n<b>Speed :</b> </code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Downloaded {done} Out Of {filesize}</i>"
         threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
