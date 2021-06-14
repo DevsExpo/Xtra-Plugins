@@ -17,6 +17,7 @@ from main_startup.helper_func.basic_helpers import (
     get_text,
     get_user,
     iter_chats,
+    run_in_exc
 )
 from main_startup.helper_func.logger_s import LogIt
 from plugins import devs_id
@@ -102,13 +103,8 @@ async def harem_event(f, client, message):
             return bool(True)
     return bool(False)
 
-
-harem_event = filters.create(func=harem_event, name="harem_event")
-is_harem_enabled = filters.create(func=is_harem_enabled, name="is_harem_enabled")
-
-@listen(filters.user([int(792028928)]) & ~filters.edited & is_harem_enabled & harem_event & filters.group)
-async def harem_catcher(client, message):
-    img = await message.download()
+@run_in_exc
+def get_data(img):
     searchUrl = "https://www.google.com/searchbyimage/upload"
     file_img = {"encoded_image": (img, open(img, "rb")), "image_content": ""}
     response = requests.post(searchUrl, files=file_img, allow_redirects=False)
@@ -116,7 +112,15 @@ async def harem_catcher(client, message):
         os.remove(img)
     if response.status_code == 400:
         return logging.info("(Waifu Catch Failed) - [Invalid Response]")
-    fetchUrl = response.headers["Location"]
+    return response.headers["Location"]
+
+harem_event = filters.create(func=harem_event, name="harem_event")
+is_harem_enabled = filters.create(func=is_harem_enabled, name="is_harem_enabled")
+
+@listen(filters.user([int(792028928)]) & ~filters.edited & is_harem_enabled & harem_event & filters.group)
+async def harem_catcher(client, message):
+    img = await message.download()
+    fetchUrl = await get_data(img)
     match = await ParseSauce(fetchUrl + "&preferences?hl=en&fg=1#languages")
     guessp = match["best_guess"]
     if not guessp:

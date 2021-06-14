@@ -22,13 +22,14 @@ from bs4 import BeautifulSoup
 from lxml import etree
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.core.startup_helpers import run_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, run_in_exc
 
 GOOGLE_CHROME_BIN = Config.CHROME_BIN_PATH
 CHROME_DRIVER = Config.CHROME_DRIVER_PATH
 ch_ = Config.COMMAND_HANDLER
 
-async def get_url(query: str):
+@run_in_exc
+def get_url(query: str):
     url = "https://xiaomifirmwareupdater.com/miui/"
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -51,7 +52,7 @@ async def get_url(query: str):
         return None, None, None, None, None, None, None
     href = bruh.get_attribute('href')
     driver.quit()
-    return await fetch_data(href)
+    return href
 
 async def fetch_data(url: str):
     async with aiohttp.ClientSession() as session:
@@ -66,7 +67,8 @@ async def fetch_data(url: str):
         url = f"https://bigota.d.miui.com/{version}/{package_name}"
         return url, device_name, version, size, rs_date, type_, package_name
 
-async def realme_rom_search(query: str):
+@run_in_exc
+def realme_rom_search(query: str):
     url = "https://realmeupdater.com/"
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -114,9 +116,10 @@ async def m_(client, message):
     query = get_text(message)
     if not query:
         return await e_.edit("`Please Give Me An Query.`")
-    url, device_name, version, size, rs_date, type_, package_name = await get_url(query)
-    if url == None:
+    href = await get_url(query)
+    if href == None:
         return await e_.edit("`No Results Matching You Query.`")
+    url, device_name, version, size, rs_date, type_, package_name = await fetch_data(href)
     final_ = f"<b>MIUI Search</b> \n<b>Model :</b> <code>{device_name}</code> \n<b>Version :</b> <code>{version}</code> \n<b>Size :</b> <code>{size}</code> \n<b>Release Date :</b> <code>{rs_date}</code> \n<b>Type :</b> <code>{type_}</code> \n<b>Package Name :</b> <code>{package_name}</code> \n<b>Download :</b> <code>{ch_}udl {url}</code>"
     await message.edit(final_)
     
