@@ -23,18 +23,20 @@ from main_startup.helper_func.basic_helpers import (
     get_text,
     get_user,
     iter_chats,
+    run_in_exc
 )
 from main_startup.helper_func.logger_s import LogIt
 from plugins import devs_id
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 
 GOOGLE_CHROME_BIN = Config.CHROME_BIN_PATH
 CHROME_DRIVER = Config.CHROME_DRIVER_PATH
 
-async def namso_gen(bin, no_of_result=15):
+@run_in_exc
+def namso_gen(bin, no_of_result=15):
     url = "https://namso-gen.com/"
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -45,26 +47,18 @@ async def namso_gen(bin, no_of_result=15):
     chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
     driver.get(url)
-    # Sleep Until Page is Fully Loaded
-    await asyncio.sleep(5)
     w = WebDriverWait(driver, 20)
     bin_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[1]/label/input'
     no_of_r_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input'
     button_xpath = '/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[5]/button'
-    w.until(expected_conditions.presence_of_element_located((By.XPATH, bin_xpath)))
-    elem = driver.find_element_by_xpath(bin_xpath)
-    elem.send_keys(bin)
-    await asyncio.sleep(2)
-    elem3 = driver.find_element_by_xpath(no_of_r_xpath)
+    w.until(EC.visibility_of_element_located((By.XPATH, bin_xpath))).send_keys(bin)
+    elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     for i in range(2):
         elem3.send_keys(Keys.BACKSPACE)
-        await asyncio.sleep(1)
-    elem3 = driver.find_element_by_xpath(no_of_r_xpath)
+    elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     elem3.send_keys(no_of_result)
-    await asyncio.sleep(2)
-    driver.find_element_by_xpath(button_xpath).click()
-    await asyncio.sleep(2)
-    s = driver.find_elements_by_xpath('//*[@id="result"]')[0].get_attribute("value")
+    w.until(EC.visibility_of_element_located((By.XPATH, button_xpath))).click()
+    s = w.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="result"]')))[0].get_attribute("value")
     driver.quit()
     return s
 

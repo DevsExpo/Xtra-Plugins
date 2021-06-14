@@ -7,7 +7,7 @@
 # All rights reserved.
 
 
-import urllib.request
+import aiohttp
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from bs4 import BeautifulSoup
 from pyrogram import filters
@@ -23,7 +23,9 @@ from main_startup.core.decorators import friday_on_cmd
 )
 async def _(client, message):
     score_page = "http://static.cricinfo.com/rss/livescores.xml"
-    page = urllib.request.urlopen(score_page)
+    async with aiohttp.ClientSession() as session:
+      async with session.get(score_page) as resp:
+          page = await resp.text()
     soup = BeautifulSoup(page, "html.parser")
     result = soup.find_all("description")
     Sed = ""
@@ -31,7 +33,7 @@ async def _(client, message):
         Sed += match.get_text() + "\n\n"
     await edit_or_reply(
         message,
-        f"<b><u>Match information gathered successful</b></u>\n\n\n<code>{Sed}</code>",
+        f"<b><u>Match information Gathered Successfully</b></u>\n\n\n<code>{Sed}</code>",
         parse_mode="html",
     )
 

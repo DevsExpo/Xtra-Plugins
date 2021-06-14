@@ -19,13 +19,14 @@ import random
 import os
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.core.startup_helpers import run_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, run_in_exc
 
 
 GOOGLE_CHROME_BIN = Config.CHROME_BIN_PATH
 CHROME_DRIVER = Config.CHROME_DRIVER_PATH
 
-async def make_carbon(code, driver, lang="auto"):
+@run_in_exc
+def make_carbon(code, driver, lang="auto"):
     url = f'https://carbon.now.sh/?l={lang}&code={code}'
     driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
     params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': './'}}
@@ -45,10 +46,9 @@ async def make_carbon(code, driver, lang="auto"):
     wait.until(EC.visibility_of_element_located((By.XPATH, four_x_path))).click()
     wait.until(EC.visibility_of_element_located((By.XPATH, png_xpath))).click()
     file_ = "./carbon.png"
-    while not os.path.exists(file_):
-        await asyncio.sleep(1)
     color_used = wait.until(EC.visibility_of_element_located((By.XPATH, color_used_xpath))).get_attribute("value")
     return file_, color_used
+
 
 @friday_on_cmd(
     ["carbon", "karb"],
@@ -83,5 +83,6 @@ async def karb(client, message):
         await e_.edit(f"[Selenium] - [Chrome - Driver] - [Carbon] >> {e}")
         return driver.quit()
     driver.quit()
+    await asyncio.sleep(5)
     await reply_.send_photo(carbon_file, caption=f"<b>Code Carbonized Using Friday</b> \n<b>Style Used :</b> <code>{value_}</code>")
     await e_.delete()
