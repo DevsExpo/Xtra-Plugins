@@ -41,7 +41,6 @@ def get_url(query: str):
     driver.get(url)
     wait = WebDriverWait(driver, 20)
     wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "#miui_filter > label > input"))).send_keys(query)
-    await asyncio.sleep(5)
     try:
         bruh = driver.find_element_by_css_selector("#miui > tbody > tr:nth-child(1) > td:nth-child(8) > a")
     except NoSuchElementException:
@@ -78,7 +77,6 @@ def realme_rom_search(query: str):
     chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
     driver.get(url)
-    await asyncio.sleep(5)
     driver.maximize_window()
     wait = WebDriverWait(driver, 30)
     driver.get("https://realmeupdater.com/")
