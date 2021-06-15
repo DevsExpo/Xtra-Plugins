@@ -79,10 +79,10 @@ async def karb(client, message):
     driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
     try:
         carbon_file, value_ = await make_carbon(code, driver)
+        await asyncio.sleep(5)
     except BaseException as e:
         await e_.edit(f"[Selenium] - [Chrome - Driver] - [Carbon] >> {e}")
         return driver.quit()
     driver.quit()
-    await asyncio.sleep(5)
     await reply_.reply_photo(carbon_file, caption=f"<b>Code Carbonized Using Friday</b> \n<b>Style Used :</b> <code>{value_}</code>")
     await e_.delete()
