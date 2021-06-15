@@ -23,7 +23,7 @@ import multiprocessing
 import time
 import calendar
 from main_startup.core.decorators import friday_on_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes, time_formatter
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes, time_formatter, run_in_exc
 from pytgcalls import GroupCall, GroupCallAction
 import signal
 import random
@@ -143,18 +143,8 @@ async def ski_p(client, message):
         except:
             return await m_.edit("`Invalid Key.`")
         return await m_.edit(f"`Skipped : {s_} At Position #{no_t_s}`")
-    
-max_workers = multiprocessing.cpu_count() * 5
-exc_ = ThreadPoolExecutor(max_workers=max_workers)
-    
-def run_in_exc(f):
-    @functools.wraps(f)
-    async def wrapper(*args, **kwargs):
-        loop = asyncio.get_running_loop()
-        return await loop.run_in_executor(exc_, lambda: f(*args, **kwargs))
-    return wrapper
-                 
-    
+   
+                
 @friday_on_cmd(
     ["play_vc"],
     is_official=False,
@@ -196,9 +186,10 @@ async def play_m(client, message):
          except BaseException as e:
             return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
          raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
-    raw_file_name = await convert_to_raw(audio_original, raw_file_name)
-    if not os.path.exists(raw_file_name):
-        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{raw_file_name}`")
+    try:
+        raw_file_name = await convert_to_raw(audio_original, raw_file_name)
+    except BaseException as e:
+        return await u_s.edit(f"`FFmpeg Failed To Convert Song To raw Format.` \n**Error :** `{e}`")
     if os.path.exists(audio_original):
         os.remove(audio_original)
     if not group_call:
@@ -236,10 +227,7 @@ async def play_m(client, message):
     
 @run_in_exc      
 def convert_to_raw(audio_original, raw_file_name):
-    try:
-         ffmpeg.input(audio_original).output(raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
-    except BaseException as e:
-         return str(e)
+    ffmpeg.input(audio_original).output(raw_file_name, format="s16le", acodec="pcm_s16le", ac=2, ar="48k", loglevel="error").overwrite_output().run()
     return raw_file_name
 
 def edit_msg(client, message, to_edit):
@@ -253,7 +241,6 @@ def edit_msg(client, message, to_edit):
         pass
     
 def download_progress_hook(d, message, client, start):
-    elapsed = d.get("elapsed")
     if d['status'] == 'downloading':
         current = d.get("_downloaded_bytes_str") or humanbytes(d.get("downloaded_bytes", 1))
         total = d.get("_total_bytes_str") or d.get("_total_bytes_estimate_str")
@@ -263,9 +250,6 @@ def download_progress_hook(d, message, client, start):
         speed = d.get("_speed_str", "N/A")
         to_edit = f"<b><u>Downloading File</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{total}</code> \n<b>Speed :</b> <code>{speed}</code> \n<b>ETA :</b> <code>{eta}</code> \n<i>Download {current} out of {total}</i> (__{percent}__)"
         threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
-    elif d['status'] == 'finished':
-        to_edit = f"`[Download Completed]` in (__{elapsed}__)."
-        threading.Thread(target=edit_msg, args=(client, message, to_edit)).start()
 
 @run_in_exc
 def yt_dl(url, client, message, start):
@@ -273,7 +257,6 @@ def yt_dl(url, client, message, start):
              "format": "bestaudio",
              "addmetadata": True,
              "key": "FFmpegMetadata",
-             "writethumbnail": True,
              "prefer_ffmpeg": True,
              "geo_bypass": True,
              "progress_hooks": [lambda d: download_progress_hook(d, message, client, start)],
