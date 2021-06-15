@@ -84,5 +84,5 @@ async def karb(client, message):
         return driver.quit()
     driver.quit()
     await asyncio.sleep(5)
-    await reply_.send_photo(carbon_file, caption=f"<b>Code Carbonized Using Friday</b> \n<b>Style Used :</b> <code>{value_}</code>")
+    await reply_.reply_photo(carbon_file, caption=f"<b>Code Carbonized Using Friday</b> \n<b>Style Used :</b> <code>{value_}</code>")
     await e_.delete()
