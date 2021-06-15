@@ -1,6 +1,7 @@
 lxml
 wikipedia
 pytgcalls
+six==1.16.0
 mal-api
 git+https://github.com/StarkGang/maigret
 git+https://github.com/starkgang/shazamio
