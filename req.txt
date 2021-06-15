@@ -1,6 +1,7 @@
 wikipedia
 pytgcalls
 mal-api
+six==1.16.0
 git+https://github.com/chsaiujwal/maigret
 git+https://github.com/gleitz/howdoi
 speedtest-cli
