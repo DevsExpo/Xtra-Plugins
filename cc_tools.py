@@ -58,7 +58,7 @@ def namso_gen(bin, no_of_result=15):
     elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     elem3.send_keys(no_of_result)
     w.until(EC.visibility_of_element_located((By.XPATH, button_xpath))).click()
-    s = w.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="result"]')))[0].get_attribute("value")
+    s = w.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="result"]'))).get_attribute("value")
     driver.quit()
     return s
 
