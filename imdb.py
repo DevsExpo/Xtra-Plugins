@@ -33,7 +33,7 @@ async def _(client,message):
     if not query:
         await msg.edit("`Please Give Me An Input.`")
         return
-    url = "https://www.imdb.com/find?q=" + query + "&s=tt&exact=true&ref_=fn_al_tt_ex"
+    url = "https://www.imdb.com/find?ref_=nv_sr_fn&q=" + query + "&s=all"
     r = await get_content(url)
     soup = BeautifulSoup(r, "lxml")
     o_ = soup.find("td", {"class": "result_text"})
