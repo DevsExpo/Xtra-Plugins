@@ -46,4 +46,4 @@ async def git(client, message):
             txt += f'<b>Created At :</b> <code>{qw.get("created_at")}</code>'
         if qw.get("archived") == True:
             txt += f"<b>This Project is Archived</b>"
-        await pablo.edit(txt, disabled_web_preview=True)
+        await pablo.edit(txt, disable_web_preview=True)
