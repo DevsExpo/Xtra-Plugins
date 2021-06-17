@@ -25,7 +25,7 @@ async def git(client, message):
         await pablo.edit(engine.get_string("F_404"))
         return
     else:
-         lol = lool.get("items")
+        lol = lool.get("items")
         qw = lol[0]
         txt = f"""
 Name: {qw.get("name")}
