@@ -24,20 +24,6 @@ async def git(client, message):
     if lool.get("total_count")==0:
         await pablo.edit(engine.get_string("F_404"))
         return
-    elif lool.get("total_count")==1:
-        lol = lool.get("items")
-        qw = lol[0]
-        txt = f"""
-Name: {qw.get("name")}
-Full Name: {qw.get("full_name")}
-Link: {qw.get("html_url")}
-Description: {qw.get("description")}
-Language: {qw.get("language")}
-Fork Count: {qw.get("forks_count")}
-Open Issues: {qw.get("open_issues")}
-"""
-        await pablo.edit(txt)
-        return
     else:
          lol = lool.get("items")
         qw = lol[0]
@@ -50,14 +36,4 @@ Language: {qw.get("language")}
 Fork Count: {qw.get("forks_count")}
 Open Issues: {qw.get("open_issues")}
 """
-        qw = lol[1]
-        txt += f"""
-Name: {qw.get("name")}
-Full Name: {qw.get("full_name")}
-Link: {qw.get("html_url")}
-Description: {qw.get("description")}
-Language: {qw.get("language")}
-Fork Count: {qw.get("forks_count")}
-Open Issues: {qw.get("open_issues")}
-"""
-        await pablo.edit(qw)
+        await pablo.edit(txt)
