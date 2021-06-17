@@ -6,7 +6,7 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 
 
 @friday_on_cmd(
-    ["git", "github"],
+    ["git"],
     cmd_help={
         "help": "Search In GitHub",
         "example": "{ch}git <text>",
@@ -19,5 +19,45 @@ async def git(client, message):
     if not args:
         await pablo.edit(engine.get_string("INPUT_REQ").format("Search Text"))
         return
-    
-
+    r = requests.get("https://api.github.com/search/repositories", params= f"q={args}")
+    lool = r.json()
+    if lool.get("total_count")==0:
+        await pablo.edit(engine.get_string("F_404"))
+        return
+    elif lool.get("total_count")==1:
+        lol = lool.get("items")
+        qw = lol[0]
+        txt = f"""
+Name: {qw.get("name")}
+Full Name: {qw.get("full_name")}
+Link: {qw.get("html_url")}
+Description: {qw.get("description")}
+Language: {qw.get("language")}
+Fork Count: {qw.get("forks_count")}
+Open Issues: {qw.get("open_issues")}
+"""
+        await pablo.edit(txt)
+        return
+    else:
+         lol = lool.get("items")
+        qw = lol[0]
+        txt = f"""
+Name: {qw.get("name")}
+Full Name: {qw.get("full_name")}
+Link: {qw.get("html_url")}
+Description: {qw.get("description")}
+Language: {qw.get("language")}
+Fork Count: {qw.get("forks_count")}
+Open Issues: {qw.get("open_issues")}
+"""
+        qw = lol[1]
+        txt += f"""
+Name: {qw.get("name")}
+Full Name: {qw.get("full_name")}
+Link: {qw.get("html_url")}
+Description: {qw.get("description")}
+Language: {qw.get("language")}
+Fork Count: {qw.get("forks_count")}
+Open Issues: {qw.get("open_issues")}
+"""
+        await pablo.edit(qw)
