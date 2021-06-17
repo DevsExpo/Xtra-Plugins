@@ -8,14 +8,55 @@
 
 import re
 import aiohttp
+import base64
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 from lxml import etree
+from main_startup.helper_func.basic_helpers import run_in_exc
 from xtraplugins.helper_files.dl_helpers import api_request, find_between, base64_url_decode, decrypt_attr, base64_to_a32, parse_url 
 
 class AnyDL:
     def __init__(self):
         self.dl_path = "./main_startup/downloads"
+       
+    @run_in_exc
+    def one_dl(self, url):
+        data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))
+        dbs_ = data_bytes64.decode('utf-8').replace('/','_').replace('+','-').rstrip("=")
+        fina_url = f"https://api.onedrive.com/v1.0/shares/u!{dbs_}/root/content"
+        return fina_url
+    
+    @run_in_exc
+    def dropbox_dl(self, url):
+        url = "https://dl.dropboxusercontent.com" + url.split("https://www.dropbox.com")[1]
+        return url
+                        
+    @run_in_exc
+    def gdrive(self, url):
+        drive = 'https://drive.google.com'
+        file_id = ''
+        if url.find('view') != -1:
+            file_id = url.split('/')[-2]
+        elif url.find('open?id=') != -1:
+            file_id = url.split('open?id=')[1].strip()
+        elif url.find('uc?id=') != -1:
+            file_id = url.split('uc?id=')[1].strip()
+        if file_id == '':
+            return None
+        url = f'{drive}/uc?export=download&id={file_id}'
+        download = requests.get(url, stream=True, allow_redirects=False)
+        cookies = download.cookies
+        dl_url = download.headers.get("location")
+        if not dl_url:
+            page = BeautifulSoup(download.content, 'lxml')
+            export = drive + page.find('a', {'id': 'uc-download-url'}).get('href')
+            name = page.find('span', {'class': 'uc-name-size'}).text
+            response = requests.get(export, stream=True, allow_redirects=False, cookies=cookies)
+            dl_url = response.headers['location']
+        if 'accounts.google.com' in dl_url:
+            return None
+        return dl_url
+    
     
     async def mega_dl(self, url):
         path = parse_url(url).split('!')
@@ -47,7 +88,7 @@ class AnyDL:
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(media_fire_url) as resp:
                 if resp.status != 200:
-                    return resp.status
+                    return None
                 b_ = BeautifulSoup(await resp.read(), 'html.parser')
                 dom = etree.HTML(str(b_))
                 file_url = dom.xpath('//*[@id="downloadButton"]')[0].get("href")
@@ -65,7 +106,7 @@ class AnyDL:
         async with aiohttp.ClientSession(headers=headers) as session:
             async with session.get(anon_url) as resp:
                 if resp.status != 200:
-                    return resp.status
+                    return None
                 b_ = BeautifulSoup(await resp.read(), 'lxml')
                 file_url = b_.find("a", {"id": "download-url"}).get("href")
                 file_name = b_.find("h1", {"class": "text-center text-wordwrap"}).text
