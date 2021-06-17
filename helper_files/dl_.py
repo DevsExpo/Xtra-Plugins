@@ -10,6 +10,7 @@ import re
 import aiohttp
 import base64
 from fake_useragent import UserAgent
+import requests
 from bs4 import BeautifulSoup
 from lxml import etree
 from main_startup.helper_func.basic_helpers import run_in_exc
@@ -24,6 +25,9 @@ class AnyDL:
         data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))
         dbs_ = data_bytes64.decode('utf-8').replace('/','_').replace('+','-').rstrip("=")
         fina_url = f"https://api.onedrive.com/v1.0/shares/u!{dbs_}/root/content"
+        r_ = requests.head(fina_url).status_code
+        if r_ != 200:
+            return None
         return fina_url
     
     @run_in_exc
@@ -41,12 +45,12 @@ class AnyDL:
             file_id = url.split('open?id=')[1].strip()
         elif url.find('uc?id=') != -1:
             file_id = url.split('uc?id=')[1].strip()
-        if file_id == '':
-            return None
         url = f'{drive}/uc?export=download&id={file_id}'
         download = requests.get(url, stream=True, allow_redirects=False)
         cookies = download.cookies
-        dl_url = download.headers.get("location")
+        dl_url = None
+        if download.headers:
+            dl_url = download.headers.get("location")
         if not dl_url:
             page = BeautifulSoup(download.content, 'lxml')
             export = drive + page.find('a', {'id': 'uc-download-url'}).get('href')
@@ -55,7 +59,7 @@ class AnyDL:
             dl_url = response.headers['location']
         if 'accounts.google.com' in dl_url:
             return None
-        return dl_url
+        return dl_url, name
     
     
     async def mega_dl(self, url):
