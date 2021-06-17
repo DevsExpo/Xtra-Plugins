@@ -19,21 +19,31 @@ async def git(client, message):
     if not args:
         await pablo.edit(engine.get_string("INPUT_REQ").format("Search Text"))
         return
-    r = requests.get("https://api.github.com/search/repositories", params= f"q={args}")
+    r = requests.get("https://api.github.com/search/repositories", params={"q": args})
     lool = r.json()
-    if lool.get("total_count")==0:
+    if lool.get("total_count") == 0:
         await pablo.edit(engine.get_string("F_404"))
         return
     else:
         lol = lool.get("items")
         qw = lol[0]
         txt = f"""
-Name: {qw.get("name")}
-Full Name: {qw.get("full_name")}
-Link: {qw.get("html_url")}
-Description: {qw.get("description")}
-Language: {qw.get("language")}
-Fork Count: {qw.get("forks_count")}
-Open Issues: {qw.get("open_issues")}
+<b>Name :</b> <i>{qw.get("name")}</i>
+<b>Full Name :</b> <i>{qw.get("full_name")}</i>
+<b>Link :</b> {qw.get("html_url")}
+<b>Fork Count :</b> <i>{qw.get("forks_count")}</i>
+<b>Open Issues :</b> <i>{qw.get("open_issues")}</i>
 """
+        if qw.get("description"):
+            txt += f'<b>Description :</b> <code>{qw.get("description")}</code>'
+        if qw.get("language"):
+            txt += f'<b>Language :</b> <code>{qw.get("language")}</code>'
+        if qw.get("size"):
+            txt += f'<b>Size :</b> <code>{qw.get("size")}</code>'
+        if qw.get("score"):
+            txt += f'<b>Score :</b> <code>{qw.get("score")}</code>'
+        if qw.get("created_at"):
+            txt += f'<b>Created At :</b> <code>{qw.get("created_at")}</code>'
+        ìf qw.get("archived") == True:
+            txt += f'<b>This Project is Archived</b>"
         await pablo.edit(txt)
