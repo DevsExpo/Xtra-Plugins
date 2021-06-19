@@ -41,7 +41,7 @@ async def anime(client, message):
     try:
         search = Twist.search(lol)
     except BaseException:
-        await ommhg.edit("Please Try Different Site. Given Site Is Down.")
+        await pablo.edit("Please Try Different Site. Given Site Is Down.")
 
     title1 = search[0].title
     url1 = search[0].url
