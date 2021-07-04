@@ -200,7 +200,7 @@ async def download_(client, message):
         except IndexError:
             return await s.edit("`No Drive Url Links Found!`")
         try:
-            file_url, file_name = await dl_client.media_fire_dl(url)
+            file_url, file_name = await dl_client.gdrive(url)
         except BaseException as e:
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
         if file_url == None:
