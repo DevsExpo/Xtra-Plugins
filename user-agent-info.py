@@ -1,3 +1,11 @@
+# Copyright (C) 2020-2021 by DevsExpo@Github, < https://github.com/DevsExpo >.
+#
+# This file is part of < https://github.com/DevsExpo/FridayUserBot > project,
+# and is released under the "GNU v3.0 License Agreement".
+# Please see < https://github.com/DevsExpo/blob/master/LICENSE >
+#
+# All rights reserved.
+
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 import requests
@@ -15,7 +23,7 @@ async def useragenti(client, message):
     pablo = await edit_or_reply(message, engine.get_string("PROCESSING"))
     tex_t = get_text(message)
     if not tex_t:
-        await stark.edit(engine.get_string("INPUT_REQ").format("User Agent"))
+        await pablo.edit(engine.get_string("INPUT_REQ").format("User Agent"))
         return
     ue = tex_t
     data = {"ua" : ue}
@@ -24,8 +32,8 @@ async def useragenti(client, message):
     await pablo.edit(f"""
 Browser: {Lol["client"]["name"]}
 Browser Version: {Lol["client"]["version"]}
-device Brand: {Lol["device"]["brand"]}
-device Model: {Lol["device"]["model"]}
+Device Brand: {Lol["device"]["brand"]}
+Device Model: {Lol["device"]["model"]}
 OS: {Lol["os"]["name"]}
 OS version: {Lol["os"]["version"]}
 """)
