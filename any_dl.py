@@ -194,6 +194,21 @@ async def download_(client, message):
     dl_client = AnyDL()
     url = get_text(message)
     msg = message.reply_to_message or message
+    if 'drive.google.com' in url:
+        try:
+            link = re.findall(r'\bhttps?://drive\.google\.com\S+', url)[0]
+        except IndexError:
+            return await s.edit("`No Drive Url Links Found!`")
+        try:
+            file_url, file_name = await dl_client.media_fire_dl(url)
+        except BaseException as e:
+            return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
+        if file_url == None:
+            return await s.edit(f"**Failed To GET Direct Link**")
+        file = await download_file(s, file_url, file_name)
+        caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code>"
+        await upload_file(client, msg, s, file, caption)
+        return os.remove(file)
     if "mediafire.com" in url:
         try:
             link = re.findall(r'\bhttps?://.*mediafire\.com\S+', url)[0]
