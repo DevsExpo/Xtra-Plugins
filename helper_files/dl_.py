@@ -19,21 +19,6 @@ from xtraplugins.helper_files.dl_helpers import api_request, find_between, base6
 class AnyDL:
     def __init__(self):
         self.dl_path = "./main_startup/downloads"
-       
-    @run_in_exc
-    def one_dl(self, url):
-        data_bytes64 = base64.b64encode(bytes(onedrive_link, 'utf-8'))
-        dbs_ = data_bytes64.decode('utf-8').replace('/','_').replace('+','-').rstrip("=")
-        fina_url = f"https://api.onedrive.com/v1.0/shares/u!{dbs_}/root/content"
-        r_ = requests.head(fina_url).status_code
-        if r_ != 200:
-            return None
-        return fina_url
-    
-    @run_in_exc
-    def dropbox_dl(self, url):
-        url = "https://dl.dropboxusercontent.com" + url.split("https://www.dropbox.com")[1]
-        return url
                         
     @run_in_exc
     def gdrive(self, url):
@@ -60,7 +45,6 @@ class AnyDL:
         if 'accounts.google.com' in dl_url:
             return None
         return dl_url, name
-    
     
     async def mega_dl(self, url):
         path = parse_url(url).split('!')
