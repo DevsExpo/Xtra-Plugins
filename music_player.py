@@ -24,7 +24,7 @@ import time
 import calendar
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, humanbytes, time_formatter, run_in_exc
-from pytgcalls import GroupCall, GroupCallAction
+from pytgcalls import GroupCallFactory, GroupCallFileAction
 import signal
 import random
 import string
@@ -193,13 +193,13 @@ async def play_m(client, message):
     if os.path.exists(audio_original):
         os.remove(audio_original)
     if not group_call:
-        group_call = GroupCall(client, play_on_repeat=False)
+        group_call = GroupCallFactory(client).get_file_group_call()
         GPC[(message.chat.id, client.me.id)] = group_call
         try:
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
+        group_call.add_handler(playout_ended_handler, GroupCallFileAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     elif not group_call.is_connected:
@@ -207,7 +207,7 @@ async def play_m(client, message):
             await group_call.start(message.chat.id)
         except BaseException as e:
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
-        group_call.add_handler(playout_ended_handler, GroupCallAction.PLAYOUT_ENDED)
+        group_call.add_handler(playout_ended_handler, GroupCallFileAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
