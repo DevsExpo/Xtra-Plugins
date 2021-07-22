@@ -23,18 +23,20 @@ from main_startup.helper_func.basic_helpers import (
     get_text,
     get_user,
     iter_chats,
+    run_in_exc
 )
 from main_startup.helper_func.logger_s import LogIt
 from plugins import devs_id
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 
 GOOGLE_CHROME_BIN = Config.CHROME_BIN_PATH
 CHROME_DRIVER = Config.CHROME_DRIVER_PATH
 
-async def namso_gen(bin, no_of_result=15):
+@run_in_exc
+def namso_gen(bin, no_of_result=15):
     url = "https://namso-gen.com/"
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -45,27 +47,19 @@ async def namso_gen(bin, no_of_result=15):
     chrome_options.add_argument("--disable-gpu")
     driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
     driver.get(url)
-    # Sleep Until Page is Fully Loaded
-    await asyncio.sleep(5)
     w = WebDriverWait(driver, 20)
     bin_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[1]/label/input'
     no_of_r_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input'
     button_xpath = '/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[5]/button'
-    w.until(expected_conditions.presence_of_element_located((By.XPATH, bin_xpath)))
-    elem = driver.find_element_by_xpath(bin_xpath)
-    elem.send_keys(bin)
-    await asyncio.sleep(2)
-    elem3 = driver.find_element_by_xpath(no_of_r_xpath)
+    w.until(EC.visibility_of_element_located((By.XPATH, bin_xpath))).send_keys(bin)
+    elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     for i in range(2):
         elem3.send_keys(Keys.BACKSPACE)
-        await asyncio.sleep(1)
-    elem3 = driver.find_element_by_xpath(no_of_r_xpath)
+    elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     elem3.send_keys(no_of_result)
-    await asyncio.sleep(2)
-    driver.find_element_by_xpath(button_xpath).click()
-    await asyncio.sleep(2)
-    s = driver.find_elements_by_xpath('//*[@id="result"]')[0].get_attribute("value")
-    driver.close()
+    w.until(EC.visibility_of_element_located((By.XPATH, button_xpath))).click()
+    s = w.until(EC.visibility_of_element_located((By.XPATH, '//*[@id="result"]'))).get_attribute("value")
+    driver.quit()
     return s
 
 @friday_on_cmd(
@@ -89,7 +83,7 @@ async def ns_gen(client, message):
         bin = input
     s = await namso_gen(bin, no_of_results)
     if not s:
-        return msg.edit("`Invalid Bin Or Input Given More Than 25`")
+        return await msg.edit("`Invalid Bin Given Or Results Limit Reached.`")
     t = f"""
 **Bin :** `{bin}`
 
@@ -101,9 +95,12 @@ async def ns_gen(client, message):
 **Powered By FridayUb**
 """
     await msg.edit(t, parse_mode="md")
-
-
-
+    
+def stark_finder(to_find, from_find):
+    if re.search(r"( |^|[^\w])" + re.escape(to_find) + r"( |$|[^\w])", from_find, flags=re.IGNORECASE):
+        return True
+    return False
+    
 my_code = {
     400: "『! Invalid Key !』",
     200: "『 Valid Key 』",
@@ -136,57 +133,6 @@ async def check_stripe_key(key_: str):
     else:
         return 200
     
-def stark_finder(to_find, from_find):
-    if re.search(r"( |^|[^\w])" + re.escape(to_find) + r"( |$|[^\w])", from_find, flags=re.IGNORECASE):
-        return True
-    return False
-
-    
-async def cc_(cc):
-    url = "https://starkapis.herokuapp.com/ccn/"
-    data_ = {
-        "cc": cc
-    }
-    async with aiohttp.ClientSession() as session:
-      async with session.get(url, json=data_) as resp:
-          response_ = await resp.json()
-    check_response = f"『 ✮ {response_['msg']} ✮ 』"
-    time_taken = response_['time_taken']
-    cc = response_['cc']
-    approved = response_['approved']
-    mes = response_['exp_month']
-    yes = response_['exp_year']
-    cvc = response_['cvc']
-    final_t = f"""
-<b><u>Result</b></u>
-
-<b>CC Number :</b> <code>{cc}</code>
-<b>Approved :</b> <code>{approved}</code>
-<b>CVC :</b> <code>{cvc}</code>
-<b>Expiry Month :</b> <code>{mes}</code>
-<b>Expiry Year :</b> <code>{yes}</code>
-<b>Response :</b> <code>{check_response}</code>
-<b>Time Taken:</b> <code>{time_taken}</code>
-
-<b><u>Checked Using FridayUB</b></u>
-"""
-    return final_t
-    
-@friday_on_cmd(
-    ["ccn"],
-    cmd_help={
-        "help": "Check CC - CCN Based.",
-        "example": "{ch}ccn 5224252466461650|11|2022|858",
-    },
-)
-async def cc_check(client, message):
-    msg = await edit_or_reply(message, "`Please Wait`")
-    cc = get_text(message)
-    if not cc:
-        return await msg.edit("`Give Me A CC Check.`")
-    r = await cc_(cc)
-    await msg.edit(r)
-
 @friday_on_cmd(
     ["sk"],
     cmd_help={

@@ -1,7 +1,9 @@
+lxml
 wikipedia
-pytgcalls
+pytgcalls[pyrogram]
 mal-api
-git+https://github.com/chsaiujwal/maigret
+git+https://github.com/StarkGang/maigret
+git+https://github.com/starkgang/shazamio
 git+https://github.com/gleitz/howdoi
 speedtest-cli
 tswift
@@ -10,4 +12,5 @@ emoji-country-flag
 quotefancy
 feedparser
 asyncurban
-validators>=0.18.2
+validators
+pycryptodome

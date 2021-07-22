@@ -6,9 +6,11 @@
 #
 # All rights reserved.
 
-import requests
+import aiohttp
 from main_startup.core.decorators import friday_on_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
+
+
 
 
 @friday_on_cmd(
@@ -26,7 +28,12 @@ async def _am_search_by_lackhac(client,message):
         await msg_.edit("`Please, Give Input!`")
         return
     product = ""
-    r = requests.get(f"https://amznsearch.vercel.app/api/?query={query}").json()
+    url = f"https://amznsearch.vercel.app/api/?query={query}"
+    async with aiohttp.ClientSession() as session:
+        resp = await session.get(url)
+        r = await resp.json()
+    if not r:
+        return await msg_.edit("`No Results Found!`")
     for products in r:
         link = products['productLink']
         name = products['productName']
