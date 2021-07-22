@@ -1,6 +1,6 @@
 lxml
 wikipedia
-pytgcalls
+pytgcalls[pyrogram]
 mal-api
 git+https://github.com/StarkGang/maigret
 git+https://github.com/starkgang/shazamio
