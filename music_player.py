@@ -83,7 +83,7 @@ async def playout_ended_handler(group_call, filename):
         os.remove(group_call.input_filename)
     if not s:
         await group_call.stop()
-        del GPC[(message.chat.id, client.me.id)]
+        del GPC[(chat_, client.me.id)]
         return
     name_ = s[0]['song_name']
     singer_ = s[0]['singer']
