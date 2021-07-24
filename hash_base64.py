@@ -31,8 +31,6 @@ def hasher(string_to_hash: str):
     return stark_md5, stark_sha1, stark_sha256, stark_sha512
 
 
-
-
 @friday_on_cmd(
     cmd=["hash_text"],
     cmd_help={"help": "Hash Message", "example": '{ch}hash_text (input)'},
@@ -75,7 +73,7 @@ async def _base(client, message):
     s = message.reply_to_message.text
     if input_ in en:
         en_ = base64.b64encode(s.encode())
-        await msg.edit(f"**Encoded :** `{en_}`")
+        await msg.edit(f"**Encoded :** `{en_.decode('utf-8')}`")
     else:
         de_ = base64.b64decode(s.encode())
-        await msg.edit(f"**Decoded :** `{de_}`")
+        await msg.edit(f"**Decoded :** `{de_.decode('utf-8')}`")

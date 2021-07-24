@@ -298,7 +298,7 @@ async def radio_s(client, message):
          return await s.edit("`Invalid Radio URL...`")
     group_call = RD_.get((message.chat.id, client.me.id))
     if not group_call:
-        group_call = GroupCall(client, input_filename, path_to_log_file='')
+        group_call = GroupCallFactory(client, input_filename, path_to_log_file='').get_file_group_call()
         RD_[(message.chat.id, client.me.id)] = group_call
     process = FFMPEG_PROCESSES.get((message.chat.id, client.me.id))
     if process:

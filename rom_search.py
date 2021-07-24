@@ -66,41 +66,6 @@ async def fetch_data(url: str):
         url = f"https://bigota.d.miui.com/{version}/{package_name}"
         return url, device_name, version, size, rs_date, type_, package_name
 
-@run_in_exc
-def realme_rom_search(query: str):
-    url = "https://realmeupdater.com/"
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.binary_location = GOOGLE_CHROME_BIN
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-gpu")
-    driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
-    driver.get(url)
-    driver.maximize_window()
-    wait = WebDriverWait(driver, 30)
-    driver.get("https://realmeupdater.com/")
-    driver.execute_script("var scrollingElement = (document.scrollingElement || document.body);scrollingElement.scrollTop = scrollingElement.scrollHeight;")
-    wait.until(EC.visibility_of_element_located((By.ID, "select2-device-container"))).click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/span/span/span[1]/input"))).send_keys(query)
-    try:
-        all_options = driver.find_elements(By.CSS_SELECTOR, "#select2-device-results li")
-    except NoSuchElementException:
-        driver.quit()
-        return None, None, None, None, None
-    if not all_options:
-        driver.quit()
-        return None, None, None, None, None
-    all_options[0].click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[5]/div[1]/div[2]/div/div/div[2]/div/div[1]/form/div/div[3]/button"))).click()
-    device = wait.until(EC.visibility_of_element_located((By.XPATH, "//h5[./b[text()='Device: ']]"))).text.split(maxsplit=1)[1]
-    system = wait.until(EC.visibility_of_element_located((By.XPATH, "//h5[./b[text()='System: ']]"))).text.split(maxsplit=1)[1]
-    size = wait.until(EC.visibility_of_element_located((By.XPATH, "//h5[./b[text()='Size: ']]"))).text.split(maxsplit=1)[1]
-    rdate = wait.until(EC.visibility_of_element_located((By.XPATH, "//h5[./b[text()='Release Date: ']]"))).text.split(": ", maxsplit=1)[1]
-    file_name = wait.until(EC.visibility_of_element_located((By.ID, "filename"))).text
-    file_url = f"https://download.c.realme.com/osupdate/{file_name}"
-    driver.quit()
-    return file_url, rdate, size, system, device
     
 @friday_on_cmd(
     ["mrs"],
@@ -119,22 +84,4 @@ async def m_(client, message):
         return await e_.edit("`No Results Matching You Query.`")
     url, device_name, version, size, rs_date, type_, package_name = await fetch_data(href)
     final_ = f"<b>MIUI Search</b> \n<b>Model :</b> <code>{device_name}</code> \n<b>Version :</b> <code>{version}</code> \n<b>Size :</b> <code>{size}</code> \n<b>Release Date :</b> <code>{rs_date}</code> \n<b>Type :</b> <code>{type_}</code> \n<b>Package Name :</b> <code>{package_name}</code> \n<b>Download :</b> <code>{ch_}udl {url}</code>"
-    await message.edit(final_)
-    
-@friday_on_cmd(
-    ["rms"],
-    cmd_help={
-        "help": "`Search Realme Roms :)`",
-        "example": "{ch}rms pro",
-    },
-)
-async def rm_s(client, message):
-    e_ = await edit_or_reply(message, "`Please Wait..`")
-    query = get_text(message)
-    if not query:
-        return await e_.edit("`Please Give Me An Query.`")
-    file_url, r_date, size, system, device = await realme_rom_search(query)
-    if file_url == None:
-        return await e_.edit("`No Results Matching You Query.`")
-    final_ = f"<b>RealMeRom Search</b> \n<b>Device :</b> <code>{device}</code> \n<b>System :</b> <code>{system}</code> \n<b>Size :</b> <code>{size}</code> \n<b>Release Date :</b> <code>{r_date}</code> \n<b>Download :</b> <code>{ch_}udl {file_url}</code>"
     await message.edit(final_)

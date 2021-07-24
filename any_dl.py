@@ -264,7 +264,7 @@ async def download_(client, message):
         url = url_[0]
         file_name = url_[1]
         try:
-            file = await download_file(s, url_, file_name)    
+            file = await download_file(s, url, file_name)    
         except BaseException as e:
             return await s.edit(f"**Failed To Download ::** `{e}`")
         file_size = humanbytes(os.stat(file).st_size)

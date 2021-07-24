@@ -50,7 +50,7 @@ def namso_gen(bin, no_of_result=15):
     w = WebDriverWait(driver, 20)
     bin_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[1]/label/input'
     no_of_r_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[3]/div[3]/label/input'
-    button_xpath = '/html/body/div/div/div/main/div/div/div[3]/div[1]/form/div[5]/button'
+    button_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[5]/button'
     w.until(EC.visibility_of_element_located((By.XPATH, bin_xpath))).send_keys(bin)
     elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     for i in range(2):
