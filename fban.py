@@ -31,7 +31,6 @@ from xtraplugins.dB.fban_db import (
     },
 )
 async def free_fbans(client, message):
-    e = 0
     uj = await edit_or_reply(message, "`Adding Fed To Database!`")
     f_id = get_text(message)
     if not f_id:
@@ -42,6 +41,7 @@ async def free_fbans(client, message):
         if not fed_l:
             await uj.edit("`Either My Logic Broke Or You Are Not Admin in Any Fed!`")
             return
+        e = 0
         for ujwal in fed_l:
             if not await is_fed_in_db(ujwal):
                 await add_fed(ujwal)
@@ -179,30 +179,31 @@ async def fetch_all_fed(client, message):
             pass
         await asyncio.sleep(7)
         sed = (await client.get_history("@MissRose_bot", 1))[0]
-        if sed.media:
-            fed_file = await sed.download()
-            file = open(fed_file, "r")
-            lines = file.readlines()
-            for line in lines:
-                try:
-                    fed_list.append(line[:36])
-                except BaseException:
-                    pass
-            os.remove(fed_file)
-        else:
+        if not sed.media:
             return None
+        fed_file = await sed.download()
+        file = open(fed_file, "r")
+        lines = file.readlines()
+        for line in lines:
+            try:
+                fed_list.append(line[:36])
+            except BaseException:
+                pass
+        os.remove(fed_file)
     else:
         X = ok.text
         lol = X.splitlines()
         if "you are the owner" in X.lower():
             for lo in lol:
-                if "you are the owner" not in lo.lower():
-                    if "you are admin" not in lo.lower():
-                        if lo[:36] != "":
-                            if not lo.startswith("-"):
-                                fed_list.append(lo[:36])
-                            else:
-                                fed_list.append(lo[2:38])
+                if (
+                    "you are the owner" not in lo.lower()
+                    and "you are admin" not in lo.lower()
+                    and lo[:36] != ""
+                ):
+                    if not lo.startswith("-"):
+                        fed_list.append(lo[:36])
+                    else:
+                        fed_list.append(lo[2:38])
         else:
             Y = X[44:].splitlines()
             for lol in Y:

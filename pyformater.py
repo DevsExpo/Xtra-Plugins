@@ -56,10 +56,9 @@ async def create_html_or_img(file, force_html=False):
     if force_html:
         file_name = "code.html"
         await run_cmd(f"pygmentize -f html -O full -o {file_name} {file}")
-        return file_name
     else:
         file_name = "code.jpg"
         f_jpg = open(file_name, 'wb')
         lexer = guess_lexer(file_z)
         f_jpg.write(highlight(file_z, lexer, JpgImageFormatter()))
-        return file_name
+    return file_name

@@ -28,9 +28,7 @@ async def _(client, message):
           page = await resp.text()
     soup = BeautifulSoup(page, "html.parser")
     result = soup.find_all("description")
-    Sed = ""
-    for match in result:
-        Sed += match.get_text() + "\n\n"
+    Sed = "".join(match.get_text() + "\n\n" for match in result)
     await edit_or_reply(
         message,
         f"<b><u>Match information Gathered Successfully</b></u>\n\n\n<code>{Sed}</code>",

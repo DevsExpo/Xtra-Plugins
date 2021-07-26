@@ -25,7 +25,6 @@ async def get_content(url):
         "example": "{ch}imdb joker",
     }
 )
-
 async def _(client,message):
     query = get_text(message)
     msg = await edit_or_reply(message, "`Searching For Movie..`")
@@ -47,21 +46,17 @@ async def _(client,message):
     if r_json.get("@type"):
         res_str += f"\n<b>Type :</b> <code>{r_json['@type']}</code> \n"
     if r_json.get("name"):
-        res_str += f"<b>Name :</b> {r_json['name']} \n" 
+        res_str += f"<b>Name :</b> {r_json['name']} \n"
     if r_json.get("contentRating"):
         res_str += f"<b>Content Rating :</b> <code>{r_json['contentRating']}</code> \n"
     if r_json.get("genre"):
         all_genre = r_json['genre']
-        genre = ""
-        for i in all_genre:
-            genre += f"{i}, "
+        genre = "".join(f"{i}, " for i in all_genre)
         genre = genre[:-2]
         res_str += f"<b>Genre :</b> <code>{genre}</code> \n"
     if r_json.get("actor"):
         all_actors = r_json['actor']
-        actors = ""
-        for i in all_actors:
-            actors += f"{i['name']}, "
+        actors = "".join(f"{i['name']}, " for i in all_actors)
         actors = actors[:-2]
         res_str += f"<b>Actors :</b> <code>{actors}</code> \n"
     if r_json.get("trailer"):
@@ -81,8 +76,8 @@ async def _(client,message):
         res_str += f"<b>Date Published :</b> <code>{r_json['datePublished']}</code> \n"
     if r_json.get("aggregateRating"):
         res_str += f"<b>Rating Count :</b> <code>{r_json['aggregateRating']['ratingCount']}</code> \n<b>Rating Value :</b> <code>{r_json['aggregateRating']['ratingValue']}</code> \n"
-    res_str += f"<b>URL :</b> {url}"    
-    thumb = r_json.get('image')    
+    res_str += f"<b>URL :</b> {url}"
+    thumb = r_json.get('image')
     if thumb:
         await msg.delete()
         return await reply.reply_photo(thumb, caption=res_str)

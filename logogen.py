@@ -22,9 +22,9 @@ from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 
 
 def download_images(images): 
-    count = 0
-    print(f"Total {len(images)} Image Found!") 
+    print(f"Total {len(images)} Image Found!")
     if len(images) != 0:
+        count = 0
         for i, image in enumerate(images):
             try:
                 image_link = image["data-srcset"] 
