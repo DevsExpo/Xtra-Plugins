@@ -41,7 +41,8 @@ async def anime(client, message):
     try:
         search = Twist.search(lol)
     except BaseException:
-        await ommhg.edit("Please Try Different Site. Given Site Is Down.")
+        
+    await pablo.edit("Please Try Different Site. Given Site Is Down.")
 
     title1 = search[0].title
     url1 = search[0].url
@@ -115,9 +116,9 @@ async def manga(client, message):
     search = MangaSearch(anime)
     ID = search.results[0].mal_id
     manga = Manga(ID)
-    jp = ""
+    jpg = ""
     for x in manga.genres:
-        jp += x + ";  "
+        jpg += x + ";  "
     link = manga.image_url
     if link is None:
         link = search.results[0].image_url
@@ -130,7 +131,7 @@ volumes:- {search.results[0].volumes}
 Score:- {search.results[0].score}
 Synopsis:- {search.results[0].synopsis}
 Status:- {manga.status}
-Genres:- {jp}
+Genres:- {jpg}
 Chapters:- {manga.chapters}
 Popularity:- {manga.popularity}
 Rank:- {manga.rank}
