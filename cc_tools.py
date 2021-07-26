@@ -53,7 +53,7 @@ def namso_gen(bin, no_of_result=15):
     button_xpath = '//*[@id="main"]/div/div/div[3]/div[1]/form/div[5]/button'
     w.until(EC.visibility_of_element_located((By.XPATH, bin_xpath))).send_keys(bin)
     elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
-    for i in range(2):
+    for _ in range(2):
         elem3.send_keys(Keys.BACKSPACE)
     elem3 = w.until(EC.visibility_of_element_located((By.XPATH, no_of_r_xpath)))
     elem3.send_keys(no_of_result)
@@ -97,9 +97,13 @@ async def ns_gen(client, message):
     await msg.edit(t, parse_mode="md")
     
 def stark_finder(to_find, from_find):
-    if re.search(r"( |^|[^\w])" + re.escape(to_find) + r"( |$|[^\w])", from_find, flags=re.IGNORECASE):
-        return True
-    return False
+    return bool(
+        re.search(
+            r"( |^|[^\w])" + re.escape(to_find) + r"( |$|[^\w])",
+            from_find,
+            flags=re.IGNORECASE,
+        )
+    )
     
 my_code = {
     400: "『! Invalid Key !』",

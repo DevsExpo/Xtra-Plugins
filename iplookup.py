@@ -36,8 +36,4 @@ async def cool_ip(client, message):
 
 
 def bool_to_emoji(bool_: bool):
-  if bool_:
-    emoji = "✅"
-  else:
-    emoji = "❌"
-  return emoji
+    return "✅" if bool_ else "❌"

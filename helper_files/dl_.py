@@ -48,7 +48,7 @@ class AnyDL:
     
     async def mega_dl(self, url):
         path = parse_url(url).split('!')
-        if path == None:
+        if path is None:
             return None, None, None
         file_handle = path[0]
         file_key = path[1]

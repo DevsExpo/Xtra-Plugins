@@ -31,11 +31,8 @@ async def _(client,message):
         return
     song = None
     song = Song.find_song(query)
-    if song:
-        if song.lyrics:
-            reply = song.format()
-        else:
-            reply = "`Lyrics Not Found! Please Work On Your English!`"
+    if song and song.lyrics:
+        reply = song.format()
     else:
         reply = "`Lyrics Not Found! Please Work On Your English!`"
     await edit_or_send_as_file(reply, lel, client, f"Result For {query}", query)

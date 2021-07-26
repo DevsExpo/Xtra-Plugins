@@ -19,17 +19,14 @@ import requests
 from main_startup.helper_func.plugin_helpers import convert_to_image
 
 
-if Config.REM_BG_API_KEY:
-    key = Config.REM_BG_API_KEY
-else:
-    key = None
+key = Config.REM_BG_API_KEY or None
 
 def _check_rmbg(func):
     @wraps(func)
     async def check_rmbg(client, message):
         if not key:
             await edit_or_reply(message, "`Is Your RMBG Api Key Valid Or You Didn't Add It??`")
-        elif key:
+        else:
             await func(client, message)
     return check_rmbg
 

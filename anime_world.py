@@ -74,9 +74,7 @@ async def animeinfo(client, message):
     search = AnimeSearch(anime)
     ID = search.results[0].mal_id
     anime = Anime(ID)
-    jp = ""
-    for x in anime.genres:
-        jp += x + ";  "
+    jp = "".join(x + ";  " for x in anime.genres)
     link = anime.image_url
     if link is None:
         link = search.results[0].image_url
@@ -115,9 +113,7 @@ async def manga(client, message):
     search = MangaSearch(anime)
     ID = search.results[0].mal_id
     manga = Manga(ID)
-    jp = ""
-    for x in manga.genres:
-        jp += x + ";  "
+    jp = "".join(x + ";  " for x in manga.genres)
     link = manga.image_url
     if link is None:
         link = search.results[0].image_url

@@ -33,11 +33,9 @@ async def search_sub(query):
     headings = second_soup.find_all("h3")
     third_soup = bs(str(headings), "lxml")
     search_links = third_soup.find_all("a")
-    i = 0
-    for a in search_links:
-        i += 1
+    for i, a in enumerate(search_links, start=1):
         index.append(i)
-        title.append(a.text)        
+        title.append(a.text)
         key = a.get("href").split("/")
         keywords.append(key[1])
     return index, title, keywords
@@ -83,11 +81,9 @@ async def get_s(client, message):
     if not keywords:
         return await msg.edit("`No Results Found.`")
     index, language, link = await get_lang(keywords[0])
-    if not os.path.exists("./subs/"):
-        os.mkdir("./subs/")
-    else:
+    if os.path.exists("./subs/"):
         os.rmdir("./subs/")
-        os.mkdir("./subs/")
+    os.mkdir("./subs/")
     for (x ,y) in zip(language, link):
         r = requests.get(y)
         place = f"./subs/{x}_{keywords[0]}"

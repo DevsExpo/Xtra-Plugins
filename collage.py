@@ -45,10 +45,12 @@ async def create_s_collage(file_path, filename, width, stark_h):
             stark_h -= 10
         else:
             break
-    out_lol_h = 0
-    for meisnub, sedlife in ujwal_liness:
-        if sedlife:
-            out_lol_h += int(stark_h / meisnub) + margin_size
+    out_lol_h = sum(
+        int(stark_h / meisnub) + margin_size
+        for meisnub, sedlife in ujwal_liness
+        if sedlife
+    )
+
     if not out_lol_h:
         return None
     final_image = Image.new('RGB', (width, int(out_lol_h)), (35, 35, 35))
