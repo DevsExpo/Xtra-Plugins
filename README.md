@@ -1,7 +1,7 @@
 # Xtra-Plugins - FridayUB ✨
 > A Repo That Contains Many X-Tra Plugins From FridayDevs And Third Parties.
 
-# Example 👊
+# Example 👊 
 
 ### Plugins 🔧
 
@@ -39,4 +39,4 @@ async def mentioned_(client, message):
 * Make Sure Your Plugin Doesn't Already Exists In Repo.
 * Please Don't Make Duplicate Pull Requests.
   
-> Thats All, Happy Contributing!
+> Thats All, Happy Contributing! 
