@@ -22,14 +22,19 @@ from main_startup.core.decorators import friday_on_cmd
 from main_startup.core.startup_helpers import run_cmd
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, progress
 
-async def download_file(message, url, file_name):
+async def download_file(message, url, file_name, show_progress=True):
     c_ = time.time()
     with open(file_name, mode='wb') as f:
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as r:
                 total_length = r.headers.get('content-length') or r.headers.get("Content-Length")
                 dl = 0
+                if not show_progress:
+                    await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{humanbytes(total_length)}</code>")
+                    f.write(await r.read())
+                    return file_name
                 if total_length is None: 
+                    await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>Unknown</code>")
                     f.write(await r.read())
                 else:
                     total_length = int(total_length)
@@ -194,6 +199,7 @@ async def download_(client, message):
     dl_client = AnyDL()
     url = get_text(message)
     msg = message.reply_to_message or message
+    show_progress = True if url.endswith("--np") else False
     if 'drive.google.com' in url:
         try:
             link = re.findall(r'\bhttps?://drive\.google\.com\S+', url)[0]
@@ -205,7 +211,7 @@ async def download_(client, message):
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
-        file = await download_file(s, file_url, file_name)
+        file = await download_file(s, file_url, file_name, show_progress)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
@@ -220,7 +226,7 @@ async def download_(client, message):
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
-        file = await download_file(s, file_url, file_name)
+        file = await download_file(s, file_url, file_name, show_progress)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code> \n<b>File Upload Date :</b> <code>{file_upload_date}</code> \n<b>File Scan Result :</b> <code>{scan_result}</code> \n<code>{caption_}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
@@ -237,7 +243,7 @@ async def download_(client, message):
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
-        file = await download_file(s, file_url, file_name)
+        file = await download_file(s, file_url, file_name, show_progress)
         file_size = humanbytes(file_size)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
@@ -253,22 +259,22 @@ async def download_(client, message):
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
         if file_url == None:
             return await s.edit(f"**Failed To GET Direct Link**")
-        file = await download_file(s, file_url, file_name)
+        file = await download_file(s, file_url, file_name, show_progress)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
     else:
         url_ = url.split('|')
-        if len(url_) != 2:
+        if len(url_) not in [2, 3]:
             return await s.edit("`You Have To Give Me File Name & Url. Please Check Help Menu.`")
         url = url_[0]
         file_name = url_[1]
         try:
-            file = await download_file(s, url, file_name)    
+            file = await download_file(s, url, file_name, show_progress)    
         except BaseException as e:
             return await s.edit(f"**Failed To Download ::** `{e}`")
         file_size = humanbytes(os.stat(file).st_size)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
         await upload_file(client, msg, s, file, caption)
         return os.remove(file)
-     
+    
