@@ -20,13 +20,9 @@ async def rm_chat(chat_id):
 
 
 async def get_all_harem_heck_chats():
-    lol = [kek async for kek in harem_heck.find({})]
-    return lol
+    return [kek async for kek in harem_heck.find({})]
 
 
 async def is_chat_in_db(chat_id):
     k = await harem_heck.find_one({"chat_id": chat_id})
-    if k:
-        return True
-    else:
-        return False
+    return bool(k)

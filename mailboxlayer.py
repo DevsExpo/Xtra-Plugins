@@ -52,8 +52,4 @@ async def get_info_by_email(client, message):
     await m_.edit(final_text, parse_mode='html')
     
 async def bool_to_emoji(bool_: bool):
-  if bool_:
-    emoji = "✅"
-  else:
-    emoji = "❌"
-  return emoji
+  return "✅" if bool_ else "❌"

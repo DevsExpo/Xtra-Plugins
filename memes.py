@@ -108,8 +108,7 @@ def gen_random_slap(user1, user2):
     item = random.choice(ITEMS)
     hit = random.choice(HIT)
     throw = random.choice(THROW)
-    wow = temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
-    return wow
+    return temp.format(user1=user1, user2=user2, item=item, hits=hit, throws=throw)
 
 
 @friday_on_cmd(

@@ -20,21 +20,18 @@ import validators
 
 async def check_if_url_is_valid(url):
     valid = validators.url(url)
-    if valid:
-        return True
-    return False
+    return bool(valid)
 
 async def screen_shot_(url_s: str):
-  """Use AioHttp For Faster Session."""
-  async with aiohttp.ClientSession() as session:
-      async with session.get('https://screenshotlayer.com') as resp:
-          text_ = await resp.text()
-  soup = BeautifulSoup(text_, features="html.parser")
-  scl_secret = soup.findAll('input')[1]['value']
-  print(scl_secret)
-  key = md5((str(url_s) + scl_secret).encode()).hexdigest()
-  url = f'https://screenshotlayer.com/php_helper_scripts/scl_api.php?secret_key={key}&url={url_s}'
-  return url
+    """Use AioHttp For Faster Session."""
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://screenshotlayer.com') as resp:
+            text_ = await resp.text()
+    soup = BeautifulSoup(text_, features="html.parser")
+    scl_secret = soup.findAll('input')[1]['value']
+    print(scl_secret)
+    key = md5((str(url_s) + scl_secret).encode()).hexdigest()
+    return f'https://screenshotlayer.com/php_helper_scripts/scl_api.php?secret_key={key}&url={url_s}'
 
 
 async def download_img(url):

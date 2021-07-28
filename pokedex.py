@@ -37,10 +37,7 @@ Error:   {pokemon.get("error")}"""
     number = str(pokemon.get("number"))
     species = str(pokemon.get("species"))
     typo = pokemon.get("types")
-    types = ""
-    for tu in typo:
-        types += str(tu) + ",  "
-
+    types = "".join(str(tu) + ",  " for tu in typo)
     lol = pokemon.get("abilities")
     lmao = lol.get("normal")
     ok = ""
@@ -48,66 +45,29 @@ Error:   {pokemon.get("error")}"""
         ok = str(ty) + ",  "
 
     kk = lol.get("hidden")
-    hm = ""
-    for pq in kk:
-        hm += str(pq) + ",  "
+    hm = "".join(str(pq) + ",  " for pq in kk)
     hell = pokemon.get("eggGroups")
-    uio = ""
-    for x in hell:
-        uio += str(x) + ",  "
-
+    uio = "".join(str(x) + ",  " for x in hell)
     height = pokemon.get("height")
     weight = pokemon.get("weight")
     yes = pokemon.get("family")
     Id = str(yes.get("id"))
     evo = str(yes.get("evolutionStage"))
     pol = yes.get("evolutionLine")
-    xy = ""
-    for p in pol:
-        xy += str(p) + ",  "
-
+    xy = "".join(str(p) + ",  " for p in pol)
     start = pokemon.get("starter")
-    if not start:
-        start = "No"
-    elif start:
-        start = "True"
-    else:
-        pass
-
+    start = "No" if not start else "True"
     leg = pokemon.get("legendary")
 
-    if not leg:
-        leg = "No"
-    elif leg:
-        leg = "True"
-    else:
-        pass
-
+    leg = "No" if not leg else "True"
     myt = pokemon.get("mythical")
-    if not myt:
-        myt = "No"
-    elif myt:
-        myt = "True"
-    else:
-        pass
+    myt = "No" if not myt else "True"
     ultra = pokemon.get("ultraBeast")
 
-    if not ultra:
-        ultra = "No"
-    elif ultra:
-        ultra = "True"
-    else:
-        pass
-
+    ultra = "No" if not ultra else "True"
     megA = pokemon.get("mega")
 
-    if not megA:
-        megA = "No"
-    elif megA:
-        megA = "True"
-    else:
-        pass
-
+    megA = "No" if not megA else "True"
     gEn = pokemon.get("gen")
     link = pokemon.get("sprite")
     des = pokemon.get("description")

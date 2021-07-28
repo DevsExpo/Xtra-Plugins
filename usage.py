@@ -33,7 +33,7 @@ def _check_heroku(func):
     async def heroku_cli(client, message):
         if not heroku_client:
             await edit_or_reply(message, "`Please Add Heroku API Key For This To Function To Work!`")
-        elif heroku_client:
+        else:
             await func(client, message, heroku_client)
     return heroku_cli
     

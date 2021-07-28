@@ -35,8 +35,8 @@ async def get_mail_id():
 
 async def delete_mail_id():
     midhun = await mail.find_one({"_id": "MAIL_DETAILS"})
-    if midhun:
-        await mail.delete_one({"_id": "MAIL_DETAILS"})
-        return True
-    else:
+    if not midhun:
         return False
+
+    await mail.delete_one({"_id": "MAIL_DETAILS"})
+    return True
