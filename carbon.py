@@ -6,85 +6,72 @@
 #
 # All rights reserved.
 
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-import asyncio
-import logging
-from selenium.common.exceptions import NoSuchElementException
-from main_startup import Config
-import random
-import os
-from urllib.parse import urlencode, quote_plus
+#Credits to @WilliamButcherBot
+
+
+from io import BytesIO
+from aiohttp import ClientSession
 from main_startup.core.decorators import friday_on_cmd
-from main_startup.core.startup_helpers import run_cmd
-from main_startup.helper_func.basic_helpers import edit_or_reply, get_text, run_in_exc
+from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 
 
-GOOGLE_CHROME_BIN = Config.CHROME_BIN_PATH
-CHROME_DRIVER = Config.CHROME_DRIVER_PATH
+aiosession = ClientSession()
 
-@run_in_exc
-def make_carbon(code, driver, lang="auto"):
-    code = urlencode(code, quote_via=quote_plus)
-    url = f'https://carbon.now.sh/?l={lang}&code={code}'
-    driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
-    params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': './'}}
-    command_result = driver.execute("send_command", params)
-    driver.get(url)
-    type_ = '//*[@id="__next"]/main/div[2]/div[2]/div[1]/div[1]/div/span[2]'
-    em = "export-menu"
-    png_xpath = '//*[@id="export-png"]'
-    four_x_path = '//*[@id="__next"]/main/div[2]/div[2]/div[1]/div[3]/div[4]/div[3]/div[2]/div[3]/div/button[3]' 
-    color_used_xpath = '/html/body/div[1]/main/div[2]/div[2]/div[1]/div[1]/div/span[2]/input'
-    random_int = random.randint(1, 29)
-    value_ = "downshift-0-item-" + str(random_int)
-    wait = WebDriverWait(driver, 20)
-    wait.until(EC.visibility_of_element_located((By.XPATH, type_))).click()
-    wait.until(EC.visibility_of_element_located((By.ID, value_))).click()
-    wait.until(EC.visibility_of_element_located((By.ID, em))).click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, four_x_path))).click()
-    wait.until(EC.visibility_of_element_located((By.XPATH, png_xpath))).click()
-    file_ = "./carbon.png"
-    color_used = wait.until(EC.visibility_of_element_located((By.XPATH, color_used_xpath))).get_attribute("value")
-    return file_, color_used
+async def make_carbon(code):
+    url = "https://carbonara.vercel.app/api/cook"
+    async with aiosession.post(url, json={"code": code}) as resp:
+        image = BytesIO(await resp.read())
+    image.name = "Friday_Carbon.png"
+    return image
 
 
-@friday_on_cmd(
-    ["carbon", "karb"],
+async def image_carbon(code):
+    url = "https://carbonara.vercel.app/api/cook"
+    async with aiosession.post(url, json={"code": code}) as resp:
+        image = BytesIO(await resp.read())
+    image.name = "Friday_Carbon.jpg"
+    return image
+
+
+@friday_on_cmd(['carbon'],
     cmd_help={
-        "help": "`Carbonize Codes In A Cool Way.`",
-        "example": "{ch}carbon (input or reply_message will be taken)",
-    },
-)
-async def karb(client, message):
-    e_ = await edit_or_reply(message, "`Carbonzing Code...`")
+    "help": "Carbonize Codes In A Cool Way.",
+    "example": "{ch}karbon <text or replied message will be taken>",
+    })
+async def carb(client, message):
+    ok = await edit_or_reply(message, "`Making Karbon...`")
     code = get_text(message)
     if not code:
         if not message.reply_to_message:
-           return await message.edit("`Nothing To Carbonize..`")
+           return await ok.edit("`Nothing To Karbonize..`")
         if not message.reply_to_message.text:
-           return await message.edit("`Nothing To Carbonize...`")
+           return await ok.edit("`Nothing To Karbonize...`")
     code = code or message.reply_to_message.text
-    reply_ = message.reply_to_message or message
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.binary_location = GOOGLE_CHROME_BIN
-    chrome_options.add_argument("--window-size=1920x1080")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-gpu")
-    prefs = {'download.default_directory' : './'}
-    chrome_options.add_experimental_option('prefs', prefs)
-    driver = webdriver.Chrome(executable_path=CHROME_DRIVER, options=chrome_options)
-    try:
-        carbon_file, value_ = await make_carbon(code, driver)
-        await asyncio.sleep(5)
-    except BaseException as e:
-        await e_.edit(f"[Selenium] - [Chrome - Driver] - [Carbon] >> {e}")
-        return driver.quit()
-    driver.quit()
-    await reply_.reply_photo(carbon_file, caption=f"<b>Code Carbonized Using Friday</b> \n<b>Style Used :</b> <code>{value_}</code>")
-    await e_.delete()
+    
+    carbon = await make_carbon(code)
+    cap = f"__Carbonized By {message.from_user.mention}__\n\n__**By @FridayUB**"
+    await client.send_document(message.chat.id, carbon, caption=cap)
+    carbon.close()
+    await ok.delete()
+
+
+@friday_on_cmd(['icarbon'],
+    cmd_help={
+    "help": "Carbonize Codes In A Cool Way In Image format.",
+    "example": "{ch}ikarbon <text or replied message will be taken>",
+    })
+async def image_karb(client, message):
+    ok = await edit_or_reply(message, "`Making Karbon...`")
+    code = get_text(message)
+    if not code:
+        if not message.reply_to_message:
+           return await ok.edit("`Nothing To Karbonize..`")
+        if not message.reply_to_message.text:
+           return await ok.edit("`Nothing To Karbonize...`")
+    code = code or message.reply_to_message.text
+    
+    carbon = await image_carbon(code)
+    cap = f"__Carbonized By {message.from_user.mention}__\n\n__**By @FridayUB**"
+    await client.send_photo(message.chat.id, carbon, caption=cap)
+    carbon.close()
+    await ok.delete()
