@@ -7,6 +7,7 @@
 # All rights reserved.
 
 from main_startup.core.decorators import friday_on_cmd
+import logging
 from main_startup import bot, Friday, Config
 from main_startup.helper_func.basic_helpers import edit_or_reply, get_text
 from xtraplugins.dB.nightmodedb import is_night_chat_in_db, get_all_night_chats, rm_night_chat, add_night_chat
@@ -77,7 +78,8 @@ async def job_close():
             try:
                 await Friday.send_message(Config.LOG_GRP, f"[NIGHT MODE]\n\nFailed To Close The Group {ido}.\nError : {e}")
             except:
-                pass
+                logging.info(e)
+
 
 async def job_open():
     lol = await get_all_night_chats()
@@ -104,7 +106,7 @@ async def job_open():
             try:
                 await Friday.send_message(Config.LOG_GRP, f"[NIGHT MODE]\n\nFailed To Open The Group {ido}.\nError : {e}")
             except:
-                pass
+                logging.info(e)
             
 
 scheduler = AsyncIOScheduler()

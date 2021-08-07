@@ -28,7 +28,6 @@ CHROME_DRIVER = Config.CHROME_DRIVER_PATH
 
 @run_in_exc
 def make_carbon(code, driver, lang="auto"):
-    code = urlencode(code)
     url = f'https://carbon.now.sh/?l={lang}&code={code}'
     driver.command_executor._commands["send_command"] = ("POST", '/session/$sessionId/chromium/send_command')
     params = {'cmd': 'Page.setDownloadBehavior', 'params': {'behavior': 'allow', 'downloadPath': './'}}

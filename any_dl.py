@@ -33,11 +33,11 @@ async def download_file(message, url, file_name, show_progress=True):
                     await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>Unknown</code>")
                     f.write(await r.read())
                 else:
+                    total_length = int(total_length)
                     if not show_progress:
                         await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{humanbytes(total_length)}</code>")
                         f.write(await r.read())
                         return file_name
-                    total_length = int(total_length)
                     async for chunk in r.content.iter_chunked(max(int(total_length/500), (1024*1024)*2)):
                         dl += len(chunk)
                         e_ = time.time()

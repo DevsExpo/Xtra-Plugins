@@ -60,7 +60,7 @@ async def pl(client, message):
         song += f"**Currently Playing :** `{group_call.song_name}` \n\n"
     for sno, i in enumerate(s, start=1):
         song += f"**{sno} ▶** [{i['song_name']}]({i['url']}) `| {i['singer']} | {i['dur']}` \n\n"
-    await play.edit(song)
+    await play.edit(song, disable_web_page_preview=True)
     
 async def get_chat_(client, chat_):
     chat_ = str(chat_)
@@ -122,8 +122,8 @@ async def ski_p(client, message):
         if not s:
             return await m_.edit("`No Song in List. So Stopping Song is A Smarter Way.`")
         next_s = s[0]['raw']
-        s.pop(0)
         name = str(s[0]['song_name'])
+        s.pop(0)
         prev = group_call.song_name
         group_call.input_filename = next_s
         return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
