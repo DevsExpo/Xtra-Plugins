@@ -79,11 +79,6 @@ async def job_close():
             except:
                 pass
 
-
-scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_close, trigger="cron", hour=23, minute=55)
-scheduler.start()
-
 async def job_open():
     lol = await get_all_night_chats()
     if len(lol) == 0:
@@ -112,6 +107,7 @@ async def job_open():
                 pass
             
 
-scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
-scheduler.add_job(job_open, trigger="cron", hour=6, minute=10)
+scheduler = AsyncIOScheduler()
+scheduler.add_job(job_open, trigger="cron", hour=6)
+scheduler.add_job(job_close, trigger="cron", hour=23, minute=55)
 scheduler.start()

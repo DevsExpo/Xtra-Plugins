@@ -97,6 +97,7 @@ async def playout_ended_handler(group_call, filename):
     )
     s.pop(0)
     logging.debug(song_info)
+    group_call.song_name = name_
     group_call.input_filename = raw_file
 
 @friday_on_cmd(
@@ -199,6 +200,7 @@ async def play_m(client, message):
         os.remove(audio_original)
     if not group_call:
         group_call = GroupCallFactory(client).get_file_group_call()
+        group_call.song_name = vid_title
         GPC[(message.chat.id, client.me.id)] = group_call
         try:
             await group_call.start(message.chat.id)
@@ -214,6 +216,7 @@ async def play_m(client, message):
             return await u_s.edit(f"**Error While Joining VC:** `{e}`")
         group_call.add_handler(playout_ended_handler, GroupCallFileAction.PLAYOUT_ENDED)
         group_call.input_filename = raw_file_name
+        group_call.song_name = vid_title
         return await u_s.edit(f"Playing `{vid_title}` in `{message.chat.title}`!")
     else:
         s_d = s_dict.get((message.chat.id, client.me.id))

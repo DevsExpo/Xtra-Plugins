@@ -94,4 +94,4 @@ wikipedia:- {wiki}</b>
 <u><b>
 Information Gathered By FridayUB.
 """
-    await msg_.edit(caption, parse_mode="html")
+    await msg_.edit(caption, parse_mode="html", disable_web_page_preview=True)

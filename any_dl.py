@@ -29,14 +29,14 @@ async def download_file(message, url, file_name, show_progress=True):
             async with session.get(url) as r:
                 total_length = r.headers.get('content-length') or r.headers.get("Content-Length")
                 dl = 0
-                if not show_progress:
-                    await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{humanbytes(total_length)}</code>")
-                    f.write(await r.read())
-                    return file_name
-                if total_length is None: 
+                if total_length is None:
                     await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>Unknown</code>")
                     f.write(await r.read())
                 else:
+                    if not show_progress:
+                        await message.edit(f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{humanbytes(total_length)}</code>")
+                        f.write(await r.read())
+                        return file_name
                     total_length = int(total_length)
                     async for chunk in r.content.iter_chunked(max(int(total_length/500), (1024*1024)*2)):
                         dl += len(chunk)
@@ -63,6 +63,7 @@ image_ext = tuple([".jpg", ".png", ".jpeg"])
 vid_ext = tuple([".mp4", ".mkv"])
 sticker_ext = tuple([".wepb", ".tgs"])
 song_ext = tuple([".mp3", ".wav", ".m4a"])
+
 
 async def upload_file(client, reply_message, message, file_path, caption):
     rndm = uuid.uuid4().hex
