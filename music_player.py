@@ -48,7 +48,6 @@ async def pl(client, message):
     group_call = GPC.get((message.chat.id, client.me.id))
     play = await edit_or_reply(message, "`Please Wait!`")
     song = f"**PlayList in {message.chat.title}** \n"
-    sno = 0
     s = s_dict.get((message.chat.id, client.me.id))
     if not group_call:
         return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
@@ -59,9 +58,8 @@ async def pl(client, message):
             return await play.edit("`Voice Chat Not Connected. So How Am i Supposed To Give You Playlist?`")
     if group_call.is_connected:
         song += f"**Currently Playing :** `{group_call.song_name}` \n\n"
-    for i in s:
-        sno += 1
-        song += f"**{sno} ▶** [{i['song_name']}]({i['url']}) `| {i['singer']} | {i['dur']}` \n\n" 
+    for sno, i in enumerate(s, start=1):
+        song += f"**{sno} ▶** [{i['song_name']}]({i['url']}) `| {i['singer']} | {i['dur']}` \n\n"
     await play.edit(song)
     
 async def get_chat_(client, chat_):
@@ -71,7 +69,7 @@ async def get_chat_(client, chat_):
             return (await client.get_chat(int(chat_))).id
         except ValueError:
             chat_ = chat_.split("-100")[1]
-            chat_ = '-' + str(chat_)
+            chat_ = f'-{str(chat_)}'
             return int(chat_)
         
 async def playout_ended_handler(group_call, filename):
@@ -113,10 +111,10 @@ async def ski_p(client, message):
     s = s_dict.get((message.chat.id, client.me.id))
     if not group_call:
         await m_.edit("`Is Group Call Even Connected?`")
-        return 
+        return
     if not group_call.is_connected:
         await m_.edit("`Is Group Call Even Connected?`")
-        return 
+        return
     if not no_t_s:
         return await m_.edit("`Give Me Valid List Key Len.`")
     if no_t_s == "current":
@@ -127,14 +125,14 @@ async def ski_p(client, message):
         name = str(s[0]['song_name'])
         prev = group_call.song_name
         group_call.input_filename = next_s
-        return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")       
+        return await m_.edit(f"`Skipped {prev}. Now Playing {name}!`")
     else:
         if not s:
             return await m_.edit("`There is No Playlist!`")
         if not no_t_s.isdigit():
             return await m_.edit("`Input Should Be In Digits.`")
         no_t_s = int(no_t_s)
-        if int(no_t_s) == 0:
+        if no_t_s == 0:
             return await m_.edit("`0? What?`")
         no_t_s = int(no_t_s - 1)
         try:
@@ -153,39 +151,45 @@ async def ski_p(client, message):
 async def play_m(client, message):
     group_call = GPC.get((message.chat.id, client.me.id))
     u_s = await edit_or_reply(message, "`Processing..`")
-    input_str = get_text(message)
-    if not input_str:
-         if not message.reply_to_message:
-             return await u_s.edit_text("`Reply To A File To PLay It.`")
-         if message.reply_to_message.audio:
-             await u_s.edit_text("`Please Wait, Let Me Download This File!`")
-             audio = message.reply_to_message.audio
-             audio_original = await message.reply_to_message.download()
-             vid_title = audio.title or audio.file_name
-             uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
-             dura_ = message.reply_to_message.audio.duration
-             dur = datetime.timedelta(seconds=dura_)
-             raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
-             url = message.reply_to_message.link
-         else:
-             return await u_s.edit("`Reply To A File To PLay It.`")
+    if input_str := get_text(message):
+        search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
+        rt = search.result()
+        result_s = rt.get("search_result")
+        if not result_s:
+           return await u_s.edit(f"`No Song Found Matching With Query - {input_str}, Please Try Giving Some Other Name.`")
+        url = result_s[0]["link"]
+        dur = result_s[0]["duration"]
+        vid_title = result_s[0]["title"]
+        yt_id = result_s[0]["id"]
+        uploade_r = result_s[0]["channel"]
+        start = time.time()
+        try:
+           audio_original = await yt_dl(url, client, message, start)
+        except BaseException as e:
+           return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
+        raw_file_name = (
+            ''.join([random.choice(string.ascii_lowercase) for _ in range(5)])
+            + ".raw"
+        )
+
     else:
-         search = SearchVideos(str(input_str), offset=1, mode="dict", max_results=1)
-         rt = search.result()
-         result_s = rt.get("search_result")
-         if not result_s:
-            return await u_s.edit(f"`No Song Found Matching With Query - {input_str}, Please Try Giving Some Other Name.`")
-         url = result_s[0]["link"]
-         dur = result_s[0]["duration"]
-         vid_title = result_s[0]["title"]
-         yt_id = result_s[0]["id"]
-         uploade_r = result_s[0]["channel"]
-         start = time.time()
-         try:
-            audio_original = await yt_dl(url, client, message, start)
-         except BaseException as e:
-            return await u_s.edit(f"**Failed To Download** \n**Error :** `{str(e)}`")
-         raw_file_name = ''.join([random.choice(string.ascii_lowercase) for i in range(5)]) + ".raw"
+        if not message.reply_to_message:
+            return await u_s.edit_text("`Reply To A File To PLay It.`")
+        if not message.reply_to_message.audio:
+            return await u_s.edit("`Reply To A File To PLay It.`")
+        await u_s.edit_text("`Please Wait, Let Me Download This File!`")
+        audio = message.reply_to_message.audio
+        audio_original = await message.reply_to_message.download()
+        vid_title = audio.title or audio.file_name
+        uploade_r = message.reply_to_message.audio.performer or "Unknown Artist."
+        dura_ = message.reply_to_message.audio.duration
+        dur = datetime.timedelta(seconds=dura_)
+        raw_file_name = (
+            ''.join([random.choice(string.ascii_lowercase) for _ in range(5)])
+            + ".raw"
+        )
+
+        url = message.reply_to_message.link
     try:
         raw_file_name = await convert_to_raw(audio_original, raw_file_name)
     except BaseException as e:
@@ -273,8 +277,7 @@ def yt_dl(url, client, message, start):
          }
     with YoutubeDL(opts) as ytdl:
         ytdl_data = ytdl.extract_info(url, download=True)
-    file_name = str(ytdl_data['id']) + ".mp3"
-    return file_name
+    return str(ytdl_data['id']) + ".mp3"
 
 RD_ = {}
 FFMPEG_PROCESSES = {}
@@ -286,12 +289,11 @@ FFMPEG_PROCESSES = {}
     cmd_help={"help": "Play Radio.", "example": "{ch}pradio (radio url)"},
 )
 async def radio_s(client, message):
-    g_s_ = GPC.get((message.chat.id, client.me.id))
-    if g_s_:
+    if g_s_ := GPC.get((message.chat.id, client.me.id)):
         if g_s_.is_connected:
             await g_s_.stop()
         del GPC[(message.chat.id, client.me.id)]
-    s = await edit_or_reply(message, "`Please Wait.`") 
+    s = await edit_or_reply(message, "`Please Wait.`")
     input_filename = f"radio_{message.chat.id}.raw"
     radio_url = get_text(message)
     if not radio_url:
@@ -322,12 +324,10 @@ async def radio_s(client, message):
 )
 async def stop_radio(client, message):
     msg = await edit_or_reply(message, "`Please Wait.`")
-    group_call = RD_.get((message.chat.id, client.me.id))
-    if group_call:
-        if group_call.is_connected:
-            await group_call.stop()
-        else:
-            return await msg.edit("`Is Vc is Connected?`")
+    if not (group_call := RD_.get((message.chat.id, client.me.id))):
+        return await msg.edit("`Is Vc is Connected?`")
+    if group_call.is_connected:
+        await group_call.stop()
     else:
         return await msg.edit("`Is Vc is Connected?`")
     process = FFMPEG_PROCESSES.get((message.chat.id, client.me.id))
@@ -362,12 +362,12 @@ async def wow_dont_stop_songs(client, message):
     group_call = GPC.get((message.chat.id, client.me.id))
     if not group_call:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
-        return    
+        return
     if not group_call.is_connected:
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
-        return    
+        return
     group_call.resume_playout()
-    await edit_or_reply(message, f"`▶️ Resumed.`")
+    await edit_or_reply(message, "`▶️ Resumed.`")
         
         
 @friday_on_cmd(
@@ -421,7 +421,7 @@ async def rejoinvcpls(client, message):
         await edit_or_reply(message, "`Is Group Call Even Connected?`")
         return
     await group_call.reconnect()
-    await edit_or_reply(message, f"`Rejoined! - Vc`")
+    await edit_or_reply(message, "`Rejoined! - Vc`")
 
 
 @friday_on_cmd(

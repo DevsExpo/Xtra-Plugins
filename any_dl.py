@@ -28,12 +28,12 @@ async def download_file(message, url, file_name):
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as r:
                 total_length = r.headers.get('content-length') or r.headers.get("Content-Length")
-                dl = 0
                 if total_length is None: 
                     f.write(await r.read())
                 else:
                     total_length = int(total_length)
-                    async for chunk in r.content.iter_chunked(max(int(total_length/500), (1024*1024)*2)):
+                    dl = 0
+                    async for chunk in r.content.iter_chunked(max(total_length // 500, (1024*1024)*2)):
                         dl += len(chunk)
                         e_ = time.time()
                         diff = e_ - c_
@@ -44,9 +44,23 @@ async def download_file(message, url, file_name):
                         estimated_total_time = elapsed_time + time_to_completion
                         f.write(chunk)
                         progress_str = "{0}{1} {2}%\n".format(
-            "".join(["▰" for i in range(math.floor(percentage / 10))]),
-            "".join(["▱" for i in range(10 - math.floor(percentage / 10))]),
-            round(percentage, 2))
+                            "".join(
+                                [
+                                    "▰"
+                                    for _ in range(math.floor(percentage / 10))
+                                ]
+                            ),
+                            "".join(
+                                [
+                                    "▱"
+                                    for _ in range(
+                                        10 - math.floor(percentage / 10)
+                                    )
+                                ]
+                            ),
+                            round(percentage, 2),
+                        )
+
                         r_ = f"<b><u>Downloading This File</b></u> \n<b>File :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{humanbytes(total_length)}</code> \n<b>Downloaded :</b> <code>{humanbytes(dl)}</code> \n{progress_str} \n\n<b>Speed :</b> <code>{humanbytes(round(speed))}/ps</code> \n<b>ETA :</b> <code>{time_formatter(estimated_total_time)}</code>"
                         try:
                             await message.edit(r_)
@@ -85,9 +99,7 @@ async def upload_file(client, reply_message, message, file_path, caption):
 async def send_file(client, r_msg, file, capt, e_msg):
     c_time = time.time()
     file_name = os.path.basename(file)
-    send_as_thumb = False
-    if os.path.exists("./main_startup/Cache/thumb.jpg"):
-        send_as_thumb = True
+    send_as_thumb = bool(os.path.exists("./main_startup/Cache/thumb.jpg"))
     if file.endswith(image_ext):
         await r_msg.reply_video(
             file,
@@ -157,24 +169,23 @@ async def send_file(client, r_msg, file, capt, e_msg):
             progress=progress,
             progress_args=(e_msg, c_time, f"`Uploading {file_name}!`", file_name),
         )
+    elif send_as_thumb:
+        await r_msg.reply_document(
+            file,
+            quote=True,
+            thumb="./main_startup/Cache/thumb.jpg",
+            caption=capt,
+            progress=progress,
+            progress_args=(e_msg, c_time, f"`Uploading {file_name}!`", file_name),
+        )
     else:
-        if send_as_thumb:
-            await r_msg.reply_document(
-                file,
-                quote=True,
-                thumb="./main_startup/Cache/thumb.jpg",
-                caption=capt,
-                progress=progress,
-                progress_args=(e_msg, c_time, f"`Uploading {file_name}!`", file_name),
-            )
-        else:
-            await r_msg.reply_document(
-                file,
-                quote=True,
-                caption=capt,
-                progress=progress,
-                progress_args=(e_msg, c_time, f"`Uploading {file_name}!`", file_name),
-            )
+        await r_msg.reply_document(
+            file,
+            quote=True,
+            caption=capt,
+            progress=progress,
+            progress_args=(e_msg, c_time, f"`Uploading {file_name}!`", file_name),
+        )
     
 def file_list(path, lisT):
     pathlib.Path(path)
@@ -203,8 +214,8 @@ async def download_(client, message):
             file_url, file_name = await dl_client.gdrive(url)
         except BaseException as e:
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
-        if file_url == None:
-            return await s.edit(f"**Failed To GET Direct Link**")
+        if file_url is None:
+            return await s.edit("**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code>"
         await upload_file(client, msg, s, file, caption)
@@ -218,8 +229,8 @@ async def download_(client, message):
             file_url, file_name, file_size, file_upload_date, caption_, scan_result = await dl_client.media_fire_dl(url)
         except BaseException as e:
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
-        if file_url == None:
-            return await s.edit(f"**Failed To GET Direct Link**")
+        if file_url is None:
+            return await s.edit("**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code> \n<b>File Upload Date :</b> <code>{file_upload_date}</code> \n<b>File Scan Result :</b> <code>{scan_result}</code> \n<code>{caption_}</code>"
         await upload_file(client, msg, s, file, caption)
@@ -235,8 +246,8 @@ async def download_(client, message):
             file_url, file_name, file_size = await dl_client.mega_dl(link)
         except BaseException as e:
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
-        if file_url == None:
-            return await s.edit(f"**Failed To GET Direct Link**")
+        if file_url is None:
+            return await s.edit("**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
         file_size = humanbytes(file_size)
         caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
@@ -251,12 +262,9 @@ async def download_(client, message):
             file_url, file_size, file_name = await dl_client.anon_files_dl(link)
         except BaseException as e:
             return await s.edit(f"**Failed To GET Direct Link ::** `{e}`")
-        if file_url == None:
-            return await s.edit(f"**Failed To GET Direct Link**")
+        if file_url is None:
+            return await s.edit("**Failed To GET Direct Link**")
         file = await download_file(s, file_url, file_name)
-        caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
-        await upload_file(client, msg, s, file, caption)
-        return os.remove(file)
     else:
         url_ = url.split('|')
         if len(url_) != 2:
@@ -268,7 +276,8 @@ async def download_(client, message):
         except BaseException as e:
             return await s.edit(f"**Failed To Download ::** `{e}`")
         file_size = humanbytes(os.stat(file).st_size)
-        caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
-        await upload_file(client, msg, s, file, caption)
-        return os.remove(file)
+
+    caption = f"<b><u>File Downloaded & Uploaded</b></u> \n<b>File Name :</b> <code>{file_name}</code> \n<b>File Size :</b> <code>{file_size}</code>"
+    await upload_file(client, msg, s, file, caption)
+    return os.remove(file)
      

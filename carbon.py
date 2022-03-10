@@ -35,10 +35,10 @@ def make_carbon(code, driver, lang="auto"):
     type_ = '//*[@id="__next"]/main/div[2]/div[2]/div[1]/div[1]/div/span[2]'
     em = "export-menu"
     png_xpath = '//*[@id="export-png"]'
-    four_x_path = '//*[@id="__next"]/main/div[2]/div[2]/div[1]/div[3]/div[4]/div[3]/div[2]/div[3]/div/button[3]' 
+    four_x_path = '//*[@id="__next"]/main/div[2]/div[2]/div[1]/div[3]/div[4]/div[3]/div[2]/div[3]/div/button[3]'
     color_used_xpath = '/html/body/div[1]/main/div[2]/div[2]/div[1]/div[1]/div/span[2]/input'
     random_int = random.randint(1, 29)
-    value_ = "downshift-0-item-" + str(random_int)
+    value_ = f"downshift-0-item-{str(random_int)}"
     wait = WebDriverWait(driver, 20)
     wait.until(EC.visibility_of_element_located((By.XPATH, type_))).click()
     wait.until(EC.visibility_of_element_located((By.ID, value_))).click()

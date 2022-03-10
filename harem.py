@@ -87,10 +87,7 @@ async def remove_nsfw(client, message):
 async def is_harem_enabled(f, client, message):
     if Config.ENABLE_WAIFU_FOR_ALL_CHATS:
         return bool(True)
-    if await is_chat_in_db(int(message.chat.id)):
-        return bool(True)
-    else:
-        return bool(False)
+    return bool(True) if await is_chat_in_db(int(message.chat.id)) else bool(False)
 
 async def harem_event(f, client, message):
     if not message:
@@ -117,11 +114,11 @@ def get_data(img):
 harem_event = filters.create(func=harem_event, name="harem_event")
 is_harem_enabled = filters.create(func=is_harem_enabled, name="is_harem_enabled")
 
-@listen(filters.user([int(792028928)]) & ~filters.edited & is_harem_enabled & harem_event & filters.group)
+@listen(filters.user([792028928]) & ~filters.edited & is_harem_enabled & harem_event & filters.group)
 async def harem_catcher(client, message):
     img = await message.download()
     fetchUrl = await get_data(img)
-    match = await ParseSauce(fetchUrl + "&preferences?hl=en&fg=1#languages")
+    match = await ParseSauce(f'{fetchUrl}&preferences?hl=en&fg=1#languages')
     guessp = match["best_guess"]
     if not guessp:
        return logging.info("(Waifu Catch Failed.) \nERROR : 404: Waifu Not Found.")

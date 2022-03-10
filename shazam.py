@@ -66,7 +66,7 @@ async def shazam_(client, message):
     size_ = humanbytes(os.stat(music_file).st_size)
     dur = datetime.timedelta(seconds=dur)
     thumb, by, title = await shazam(music_file)
-    if title == None:
+    if title is None:
         return await msg.edit("`No Results Found.`")
     etime = time.time()
     t_k = round(etime - stime)
