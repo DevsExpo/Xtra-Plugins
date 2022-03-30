@@ -33,9 +33,7 @@ class AnyDL:
         url = f'{drive}/uc?export=download&id={file_id}'
         download = requests.get(url, stream=True, allow_redirects=False)
         cookies = download.cookies
-        dl_url = None
-        if download.headers:
-            dl_url = download.headers.get("location")
+        dl_url = download.headers.get("location") if download.headers else None
         if not dl_url:
             page = BeautifulSoup(download.content, 'lxml')
             export = drive + page.find('a', {'id': 'uc-download-url'}).get('href')
@@ -48,7 +46,7 @@ class AnyDL:
     
     async def mega_dl(self, url):
         path = parse_url(url).split('!')
-        if path == None:
+        if path is None:
             return None, None, None
         file_handle = path[0]
         file_key = path[1]

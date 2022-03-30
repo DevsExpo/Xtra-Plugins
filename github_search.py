@@ -54,5 +54,5 @@ async def git(client, message):
         if qw.get("created_at"):
             txt += f'<b>Created At :</b> <code>{qw.get("created_at")}</code>'
         if qw.get("archived") == True:
-            txt += f"<b>This Project is Archived</b>"
+            txt += "<b>This Project is Archived</b>"
         await pablo.edit(txt, disable_web_page_preview=True)
