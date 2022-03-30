@@ -95,5 +95,5 @@ def find_between(start_string, end_string, to_find):
     result = re.search(_to_, to_find)
     if not result:
         return None
-    return result.group(1)
+    return result[1]
    

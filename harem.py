@@ -86,19 +86,19 @@ async def remove_nsfw(client, message):
 
 async def is_harem_enabled(f, client, message):
     if Config.ENABLE_WAIFU_FOR_ALL_CHATS:
-        return bool(True)
-    return bool(True) if await is_chat_in_db(int(message.chat.id)) else bool(False)
+        return True
+    return bool(await is_chat_in_db(int(message.chat.id)))
 
 async def harem_event(f, client, message):
     if not message:
-        return bool(False)
+        return False
     if not message.photo:
-        return bool(False)
+        return False
     if not message.caption:
-        return bool(False)
+        return False
     if "add" in message.caption.lower():
-            return bool(True)
-    return bool(False)
+        return True
+    return False
 
 @run_in_exc
 def get_data(img):
