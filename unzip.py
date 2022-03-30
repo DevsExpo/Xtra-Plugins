@@ -45,8 +45,9 @@ async def test(client, message):
     end = datetime.now()
     ms = (end - start).seconds
     await Pablo.edit(
-        "Stored the zip to `{}` in {} seconds.".format(downloaded_file_name, ms)
+        f"Stored the zip to `{downloaded_file_name}` in {ms} seconds."
     )
+
     try:
         with zipfile.ZipFile(downloaded_file_name, "r") as zip_ref:
             zip_ref.extractall(extracted)

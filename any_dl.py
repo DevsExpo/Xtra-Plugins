@@ -68,10 +68,10 @@ async def download_file(message, url, file_name):
                             pass
     return file_name
 
-image_ext = tuple([".jpg", ".png", ".jpeg"])
-vid_ext = tuple([".mp4", ".mkv"])
-sticker_ext = tuple([".wepb", ".tgs"])
-song_ext = tuple([".mp3", ".wav", ".m4a"])
+image_ext = ".jpg", ".png", ".jpeg"
+vid_ext = ".mp4", ".mkv"
+sticker_ext = ".wepb", ".tgs"
+song_ext = ".mp3", ".wav", ".m4a"
 
 async def upload_file(client, reply_message, message, file_path, caption):
     rndm = uuid.uuid4().hex
